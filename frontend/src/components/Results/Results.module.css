@@ -1,0 +1,21 @@
+/* Results.module.css */
+.heading {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+/* Each row: label on left, value on right */
+.resultRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.label {
+  color: #333;
+}
+
+.value {
+  font-weight: bold;
+  color: #000;
+}
