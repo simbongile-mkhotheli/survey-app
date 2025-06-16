@@ -2,10 +2,10 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import SurveyForm from './components/Survey/SurveyForm';
-import Results    from './components/Results/Results';
-import Nav        from "./components/Nav";
+import Results from './components/Results/Results';
+import Nav from './components/Nav';
 
-import appStyles  from './App.module.css';
+import appStyles from './App.module.css';
 import surveyStyles from './components/Survey/SurveyForm.module.css';
 
 const App: React.FC = () => (
@@ -17,8 +17,8 @@ const App: React.FC = () => (
 
     <main>
       <Routes>
-        <Route path="/"        element={<SurveyForm />} />
-        <Route path="/results" element={<Results />}   />
+        <Route path="/" element={<SurveyForm />} />
+        <Route path="/results" element={<Results />} />
       </Routes>
     </main>
   </div>

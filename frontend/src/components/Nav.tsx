@@ -12,18 +12,14 @@ export default function Nav() {
       <NavLink
         to={ROUTES.HOME}
         end
-        className={({ isActive }) =>
-          isActive ? styles.active : styles.link
-        }
+        className={({ isActive }) => (isActive ? styles.active : styles.link)}
       >
         Fill Out Survey
       </NavLink>
 
       <NavLink
         to={ROUTES.RESULTS}
-        className={({ isActive }) =>
-          isActive ? styles.active : styles.link
-        }
+        className={({ isActive }) => (isActive ? styles.active : styles.link)}
       >
         View Survey Results
       </NavLink>

@@ -10,14 +10,10 @@ export const SurveySchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
-  contactNumber: z.string().regex(
-    /^\+?\d{7,15}$/, 
-    'Invalid contact number'
-  ),
+  contactNumber: z.string().regex(/^\+?\d{7,15}$/, 'Invalid contact number'),
 
-  dateOfBirth: z
-    .string()
-    .refine(val => {
+  dateOfBirth: z.string().refine(
+    (val) => {
       const dob = new Date(val);
       if (isNaN(dob.getTime())) return false;
 
@@ -30,9 +26,12 @@ export const SurveySchema = z.object({
         age -= 1;
       }
       return age >= 5 && age <= 120;
-    }, {
-      message: 'Date of birth must correspond to an age between 5 and 120 years',
-    }),
+    },
+    {
+      message:
+        'Date of birth must correspond to an age between 5 and 120 years',
+    },
+  ),
 
   foods: z.array(z.string()).min(1, 'Select at least one food'),
 

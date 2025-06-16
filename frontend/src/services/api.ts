@@ -12,20 +12,20 @@ import type { SurveyFormValues } from '../validation';
  * Returns the Axios response containing the new record’s ID.
  */
 export async function submitSurvey(
-  data: SurveyFormValues
+  data: SurveyFormValues,
 ): Promise<{ id: number }> {
   // Build payload exactly as the backend expects
   const payload = {
-    firstName:     data.firstName,
-    lastName:      data.lastName,
-    email:         data.email,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
     contactNumber: data.contactNumber,
-    dateOfBirth:   data.dateOfBirth,
-    foods:         data.foods,          // string[]
-    ratingMovies:  Number(data.ratingMovies),
-    ratingRadio:   Number(data.ratingRadio),
-    ratingEatOut:  Number(data.ratingEatOut),
-    ratingTV:      Number(data.ratingTV),
+    dateOfBirth: data.dateOfBirth,
+    foods: data.foods, // string[]
+    ratingMovies: Number(data.ratingMovies),
+    ratingRadio: Number(data.ratingRadio),
+    ratingEatOut: Number(data.ratingEatOut),
+    ratingTV: Number(data.ratingTV),
   };
 
   const response = await axios.post<{ id: number }>('/api/survey', payload);

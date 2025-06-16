@@ -5,7 +5,7 @@ export type SurveyResults = ResultsData;
 
 interface SurveyState {
   results: SurveyResults | null;
-  setResults: (r: SurveyResults | null) => void;  // now accepts null
+  setResults: (r: SurveyResults | null) => void; // now accepts null
   darkMode: boolean;
   toggleDarkMode: () => void;
 }
