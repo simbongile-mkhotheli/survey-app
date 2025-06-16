@@ -1,0 +1,32 @@
+{
+  // Use the project’s local ESLint installation
+  "eslint.nodePath": "node_modules",
+
+  // Auto‑fix ESLint errors on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+
+  // Format on save with Prettier for TS/TSX, CSS, JSON, MD
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Actually perform format on save
+  "editor.formatOnSave": true,
+
+  // Lint only TS/TSX
+  "eslint.validate": ["typescript", "typescriptreact"]
+}
