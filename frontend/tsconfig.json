@@ -1,0 +1,5 @@
+// frontend/tsconfig.json
+{
+  "extends": "./tsconfig.app.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

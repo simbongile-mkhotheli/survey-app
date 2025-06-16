@@ -1,0 +1,23 @@
+# Node modules
+node_modules/
+dist/
+build/
+
+# Env files
+.env
+.env.local
+
+# IDE settings
+.vscode/
+.idea/
+
+# Prisma
+*.db
+*.sqlite
+prisma/dev.db
+
+# Logs
+*.log
+
+# TS build artifacts
+*.tsbuildinfo
