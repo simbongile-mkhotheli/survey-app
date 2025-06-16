@@ -1,0 +1,230 @@
+:root {
+  --color-primary: #28a0e5;
+  --color-primary-light: #82caff;
+  --color-success: #2e7d32;
+  --color-error: #e53935;
+  --color-body: #ffffff;
+  --color-text: #000000;
+  --color-border: #cccccc;
+  --color-header-bg: #f7f7f7;
+}
+
+.page {
+  font-family: Arial, sans-serif;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.headerLeft {
+  font-size: 14px;
+}
+.surveysText {
+  font-style: italic;
+  color: var(--color-text);
+}
+
+.main {
+  flex: 1;
+  padding: 20px 40px;
+}
+
+/* Row layout */
+.row {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Column for labels */
+.colLabel {
+  flex-basis: 25%;
+  text-align: right;
+  padding-right: 10px;
+}
+
+/* Label text */
+.labelText {
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+/* Column for inputs */
+.colInput {
+  flex-basis: 75%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Inline column for inputs (checkboxes) */
+.colInputInline {
+  margin-bottom: 20px;
+  flex-basis: 75%;
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Full-width column */
+.colFull {
+  flex-basis: 100%;
+}
+
+/* Field group wrapper */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Field label */
+.fieldLabel {
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+/* Text input (textbox) */
+.textbox {
+  width: 250px;
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid var(--color-primary);
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+/* Textbox error state */
+.textboxError {
+  border-color: var(--color-error);
+}
+
+/* Checkbox label */
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+/* Checkbox input */
+.checkbox {
+  margin-right: 5px;
+  width: 14px;
+  height: 14px;
+}
+
+/* Instruction text above table */
+.instruction {
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+/* Table wrapper for horizontal scrolling */
+.tableWrapper {
+  overflow-x: auto;
+}
+
+/* Table styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+/* Table header cell */
+.th {
+  border: 1px solid var(--color-border);
+  padding: 6px;
+  text-align: center;
+  background-color: var(--color-header-bg);
+}
+
+/* Table header label cell */
+.thLabel {
+  border: 1px solid var(--color-border);
+  padding: 6px;
+  text-align: left;
+  background-color: var(--color-header-bg);
+  width: 35%;
+}
+
+/* Table data label cell */
+.tdLabel {
+  border: 1px solid var(--color-border);
+  padding: 6px;
+  text-align: left;
+}
+
+/* Centered table data cell */
+.tdCenter {
+  border: 1px solid var(--color-border);
+  padding: 6px;
+  text-align: center;
+}
+
+/* Even table row background */
+.rowEven {
+  background-color: yellow;
+}
+
+/* Radio button */
+.radio {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Submit button container */
+.submitContainer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Submit button */
+.submitButton {
+  width: 120px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--color-body);
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Submit button disabled state */
+.submitButtonDisabled {
+  background-color: var(--color-primary-light);
+  cursor: not-allowed;
+}
+
+/* Success banner after submission */
+.successBanner {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+/* Error message text */
+.errorText {
+  height: 1em;
+  margin: 1px 0 2px 0;
+  font-size: 0.875rem;
+  color: var(--color-error);
+  overflow: hidden;
+}

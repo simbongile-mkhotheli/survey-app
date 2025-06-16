@@ -1,0 +1,38 @@
+.evenRow {
+  background-color: #f9f9f9;
+}
+
+.labelCell {
+  border: 1px solid #ccc;
+  padding: 6px;
+  text-align: left;
+  width: 35%;
+}
+
+.cell {
+  border: 1px solid #cccccc;
+  padding: 6px;
+  text-align: center;
+}
+
+.radioInput {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.errorRow td {
+  padding: 0;
+  border: none;
+  height: 1em;
+}
+
+.errorText {
+  margin: 0;
+  height: 1em;
+  line-height: 1em;
+  font-size: 12px;
+  color: #e53935;
+  overflow: hidden;
+  white-space: nowrap;
+}
