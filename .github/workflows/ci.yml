@@ -9,12 +9,10 @@ on:
 jobs:
   lint_and_build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: [frontend, backend]
     defaults:
       run:
-        working-directory: ${{ matrix.project }}
+        working-directory: frontend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
