@@ -4,7 +4,6 @@ import type { SurveyFormValues } from '../validation';
 const API_URL = import.meta.env.VITE_API_URL as string;
 console.log('>>> API_URL is', API_URL);
 
-
 /*
  * submitSurvey
  * ----------------
@@ -17,10 +16,10 @@ export async function submitSurvey(
   data: SurveyFormValues,
 ): Promise<{ id: number }> {
   const payload = {
-    firstName: data.firstName,
+                       firstName: data.firstName,
     lastName: data.lastName,
     email: data.email,
-    contactNumber: data.contactNumber,
+                         contactNumber: data.contactNumber,
     dateOfBirth: data.dateOfBirth,
     foods: data.foods,
     ratingMovies: Number(data.ratingMovies),
