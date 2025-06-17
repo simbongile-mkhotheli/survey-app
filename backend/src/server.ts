@@ -1,8 +1,9 @@
+// backend/src/server.ts
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import 'express-async-errors'; // catch async errors automatically
+import 'express-async-errors';
 
 import surveyRouter from './routes/survey';
 import resultsRouter from './routes/results';
@@ -13,20 +14,28 @@ dotenv.config();
 const PORT = process.env.PORT || 4000;
 const app = express();
 
-// Apply CORS with preflight cache
+// Build an array of allowed origins
+const origins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
+  .split(',')
+  .map((s) => s.trim());
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: (incomingOrigin, callback) => {
+      // Allow non-browser tools (Postman, curl)
+      if (!incomingOrigin) return callback(null, true);
+      if (origins.includes(incomingOrigin)) {
+        return callback(null, true);
+      }
+      callback(new Error(`CORS denied: ${incomingOrigin}`));
+    },
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
-    maxAge: 600, // 10 minutes
+    maxAge: 600,
   })
 );
 
-// JSON body parsing
 app.use(express.json());
-
-// Rate limiting: max 100 requests per IP per 15 minutes
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -35,17 +44,11 @@ app.use(
   })
 );
 
-// API routes
 app.use('/api/survey', surveyRouter);
 app.use('/api/results', resultsRouter);
-
-// 404 for unmatched routes
 app.use((req, res) => res.status(404).json({ error: 'Not Found' }));
-
-// Global error handler (last middleware)
 app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
