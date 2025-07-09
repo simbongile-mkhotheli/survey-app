@@ -99,6 +99,11 @@ survey-app/
      DATABASE_URL="postgresql://your_username:your_password@localhost:5432/survey_db"
      ```
        cp frontend/.env.example frontend/.env
+     
+   - **`.env.example` contents**:
+   ```env
+     VITE_API_URL=http://localhost:4000
+     ```
 
 3. **Install dependencies**
 
