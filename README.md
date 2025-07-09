@@ -100,7 +100,8 @@ survey-app/
 
    ```bash
    # Frontend
-   cd frontend
+   cp frontend/.env.example frontend/.env
+   cd frontend 
    npm install
 
    # Backend
