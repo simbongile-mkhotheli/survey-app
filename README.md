@@ -63,7 +63,7 @@ survey-app/
 
 - Node.js (v18+)
 - PostgreSQL (local or managed)
-- pnpm, npm, or yarn
+- npm
 
 ### Setup Steps
 
@@ -101,11 +101,11 @@ survey-app/
    ```bash
    # Frontend
    cd frontend
-   pnpm install
+   npm install
 
    # Backend
    cd ../backend
-   pnpm install
+   npm install
    ```
 
 4. **Run database migrations**
@@ -124,14 +124,14 @@ survey-app/
 
      ```bash
      cd frontend
-     pnpm run dev
+     npm run dev
      ```
 
    - Backend ([http://localhost:4000](http://localhost:4000)):
 
      ```bash
      cd backend
-     pnpm run dev
+     npm run dev
      ```
 
 ## 📝 API Endpoints
