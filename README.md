@@ -98,6 +98,7 @@ survey-app/
        ```env
      DATABASE_URL="postgresql://your_username:your_password@localhost:5432/survey_db"
      ```
+       cp frontend/.env.example frontend/.env
 
 3. **Install dependencies**
 
