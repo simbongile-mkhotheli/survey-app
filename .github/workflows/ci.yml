@@ -63,6 +63,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Auto-format with Prettier
+        run: npx prettier --write "src/**/*.{ts,tsx,json,css,md}"
+
       - name: Run ESLint
         run: npm run lint
 
