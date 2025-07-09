@@ -37,24 +37,24 @@ A full-stack web application for collecting and analyzing survey responses, buil
 ## 🛠️ Project Structure
 
 ```
-
 survey-app/
 ├── frontend/
-│ ├── src/
-│ │ ├── components/ # UI components (SurveyForm, Results, Nav, etc.)
-│ │ ├── services/ # Axios wrappers (submitSurvey, fetchResults)
-│ │ ├── store/ # Zustand store hooks
-│ │ ├── validation/ # Shared Zod schemas
-│ │ └── App.tsx # Root component + Routes
-│ └── tsconfig.app.json
+│   ├── src/
+│   │   ├── components/      # UI (SurveyForm, Results, Nav…)  
+│   │   ├── services/        # API wrappers (submitSurvey, fetchResults)  
+│   │   ├── store/           # Zustand hooks  
+│   │   ├── validation/      # Shared Zod schemas  
+│   │   └── App.tsx          # Routes & root component  
+│   ├── tsconfig.app.json  
+│   └── vite.config.ts       # dev‑proxy for `/api` → localhost:4000  
 └── backend/
-├── src/
-│ ├── controllers/ # Express route handlers
-│ ├── validation/ # Zod schemas
-│ ├── prisma/ # schema.prisma & migrations
-│ └── server.ts # Express setup
-└── tsconfig.json             # Database schema and migrations
-
+    ├── prisma/              # schema.prisma & migrations  
+    ├── src/
+    │   ├── controllers/     # Express route handlers  
+    │   ├── validation/      # Zod schemas  
+    │   ├── middleware/      # errorHandler, rateLimit, CORS setup  
+    │   └── server.ts        # Express app setup  
+    └── tsconfig.json  
 ```
 
 ## 🚦 Getting Started
