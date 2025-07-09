@@ -1,15 +1,17 @@
-##.github/workflows/ci.yml
 name: CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - chore/**        # run on feature branches matching this pattern
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   autoformat:
-    if: github.event_name == 'pull_request'
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -18,9 +20,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          persist-credentials: true   # allow pushing back
-          fetch-depth: 0             # full history, so branch refs exist
-          ref: ${{ github.head_ref }} # check out the PR’s branch
+          persist-credentials: true
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
 
       - name: Use Node.js 18.x
         uses: actions/setup-node@v4
@@ -42,16 +44,13 @@ jobs:
 
       - name: Push formatting changes
         run: |
-          # push back into the same branch (not HEAD detached)
           git push origin HEAD:${{ github.head_ref }}
 
   lint_and_build:
-    needs: [autoformat]
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
