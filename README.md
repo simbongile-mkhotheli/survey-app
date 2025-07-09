@@ -63,7 +63,7 @@ survey-app/
 
 - Node.js (v18+)
 - PostgreSQL (local or managed)
-- npm
+- npm 
 
 ### Setup Steps
 
@@ -100,7 +100,8 @@ survey-app/
 
    ```bash
    # Frontend
-   cd frontend
+   cp frontend/.env.example frontend/.env
+   cd frontend 
    npm install
 
    # Backend
