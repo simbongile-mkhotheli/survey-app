@@ -63,7 +63,7 @@ survey-app/
 
 - Node.js (v18+)
 - PostgreSQL (local or managed)
-- npm
+- npm 
 
 ### Setup Steps
 
