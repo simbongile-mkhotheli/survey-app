@@ -1,4 +1,4 @@
-# Survey Application
+## Survey Application
 
 A full-stack web application for collecting and analyzing survey responses, built with modern technologies and best practices.
 
