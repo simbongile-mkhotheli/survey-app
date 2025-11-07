@@ -2,7 +2,7 @@
 
 🏆 **Enterprise-grade survey management system** built with **SOLID principles** and **industry best practices**.
 
-> **Perfect for OfferZen technical assessments** - Demonstrates professional software engineering skills with comprehensive testing, monitoring, and documentation.
+> **Production-ready full-stack application** - Demonstrates professional software engineering skills with comprehensive testing, monitoring, and DevOps practices.
 
 ## 🌟 Enterprise Features
 
