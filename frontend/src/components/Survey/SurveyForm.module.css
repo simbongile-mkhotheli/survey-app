@@ -97,6 +97,7 @@
   display: flex;
   gap: var(--spacing-3);
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* Checkbox label */
