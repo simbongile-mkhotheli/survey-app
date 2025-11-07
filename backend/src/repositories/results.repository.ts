@@ -73,10 +73,10 @@ export class ResultsRepository implements IResultsRepository {
     // Process food distribution in application layer
     const foodCounts = new Map<string, number>();
     
-    responses.forEach(response => {
+    responses.forEach((response: { foods: string }) => {
       if (response.foods && response.foods.trim()) {
-        const foods = response.foods.split(',').map(food => food.trim()).filter(food => food);
-        foods.forEach(food => {
+        const foods = response.foods.split(',').map((food: string) => food.trim()).filter((food: string) => food);
+        foods.forEach((food: string) => {
           foodCounts.set(food, (foodCounts.get(food) || 0) + 1);
         });
       }
@@ -155,9 +155,9 @@ export class ResultsRepository implements IResultsRepository {
 
     // Calculate ages
     const currentYear = new Date().getFullYear();
-    const ages = responses.map(r => currentYear - r.dateOfBirth.getFullYear());
+    const ages = responses.map((r: { dateOfBirth: Date }) => currentYear - r.dateOfBirth.getFullYear());
     
-    const avgAge = ages.reduce((sum, age) => sum + age, 0) / ages.length;
+    const avgAge = ages.reduce((sum: number, age: number) => sum + age, 0) / ages.length;
     const minAge = Math.min(...ages);
     const maxAge = Math.max(...ages);
 
