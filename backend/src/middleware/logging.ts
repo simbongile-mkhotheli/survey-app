@@ -207,7 +207,7 @@ export function errorLogging(error: Error, req: Request, res: Response, next: Ne
 /**
  * Performance logging for slow operations
  */
-export function logSlowOperation(operation: string, duration: number, requestId?: string, metadata?: any): void {
+export function logSlowOperation(operation: string, duration: number, requestId?: string, metadata?: Record<string, unknown>): void {
   if (duration > 1000) { // Log operations slower than 1 second
     logWithContext.performance('Slow operation detected', {
       requestId,

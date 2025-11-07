@@ -70,7 +70,13 @@ class ErrorStore {
     return filtered.slice(-limit).reverse(); // Most recent first
   }
 
-  getErrorStats(): Record<string, any> {
+  getErrorStats(): {
+    totalErrors: number;
+    recentErrors: number;
+    errorsByType: Record<string, number>;
+    errorsBySeverity: Record<string, number>;
+    topErrors: Array<{ message: string; count: number; lastSeen: string }>;
+  } {
     const now = Date.now();
     const hourAgo = now - (60 * 60 * 1000);
     const dayAgo = now - (24 * 60 * 60 * 1000);
