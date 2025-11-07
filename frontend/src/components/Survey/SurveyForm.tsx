@@ -130,12 +130,10 @@ export default function SurveyForm() {
 
         {/* Favorite Foods */}
         <div className={styles.row}>
-          <div className={styles.colLabel}>
+          <div className={styles.colFull}>
             <span className={styles.labelText}>
               What is your favorite food?
             </span>
-          </div>
-          <div className={styles.colInputInline}>
             <div className={styles.checkboxGroup}>
               {['Pizza', 'Pasta', 'Pap and Wors', 'Other'].map((food) => (
                 <label key={food} className={styles.checkboxLabel}>
