@@ -2,8 +2,8 @@
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-4);
+  gap: var(--spacing-1);
+  margin-bottom: var(--spacing-3);
 }
 
 /* Field label */
@@ -24,21 +24,22 @@
 
 /* Text input */
 .textbox {
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-3);
   border: 2px solid var(--color-gray-300);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-size-base);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   background: var(--color-surface);
   transition: all var(--transition-fast);
   font-family: inherit;
   box-shadow: var(--shadow-sm);
+  max-width: 400px;
 }
 
 .textbox:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
   transform: translateY(-1px);
 }
 

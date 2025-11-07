@@ -65,7 +65,7 @@
 /* Column for labels */
 .colLabel {
   flex-basis: 25%;
-  text-align: right;
+  text-align: left;
   padding-right: var(--spacing-2);
 }
 
@@ -107,9 +107,9 @@
   font-size: var(--font-size-sm);
   color: var(--color-text);
   cursor: pointer;
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-3);
   border: 2px solid var(--color-gray-200);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   transition: all var(--transition-base);
   background: var(--color-white);
 }
@@ -122,8 +122,8 @@
 /* Checkbox input */
 .checkbox {
   margin-right: var(--spacing-2);
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
   accent-color: var(--color-primary);
 }
@@ -165,17 +165,18 @@
 /* Table header cell */
 .th {
   border: 1px solid var(--color-gray-200);
-  padding: var(--spacing-3);
+  padding: var(--spacing-2);
   text-align: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: var(--color-white);
   font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
 }
 
 /* Table header label cell */
 .thLabel {
   border: 1px solid var(--color-gray-200);
-  padding: var(--spacing-3);
+  padding: var(--spacing-2);
   text-align: left;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: var(--color-white);
@@ -204,8 +205,8 @@
 
 /* Radio button */
 .radio {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
   accent-color: var(--color-primary);
 }
@@ -219,14 +220,14 @@
 
 /* Submit button */
 .submitButton {
-  min-width: 200px;
-  padding: var(--spacing-4) var(--spacing-8);
-  font-size: var(--font-size-base);
+  min-width: 160px;
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-white);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-base);
   box-shadow: 0 4px 6px rgba(102, 126, 234, 0.4);
