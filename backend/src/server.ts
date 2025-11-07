@@ -2,7 +2,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import rateLimit from 'express-rate-limit';
+import rateLimit from 'express-rate-limit';  // TODO: Implement rate limiting
 import 'express-async-errors';
 import swaggerUi from 'swagger-ui-express';
 
@@ -23,8 +23,8 @@ import {
 } from '@/middleware/security';
 import { performanceTracker, performanceEndpoint } from '@/middleware/performance';
 import { requestContext, accessLogging, errorLogging } from '@/middleware/logging';
-import { metricsMiddleware, metricsEndpoint, metricsDashboard } from '@/middleware/metrics';
-import { errorTrackingMiddleware, errorAnalytics, errorSummary } from '@/middleware/errorTracking';
+import { metricsMiddleware, metricsEndpoint, _metricsDashboard } from '@/middleware/metrics';
+import { errorTrackingMiddleware, _errorAnalytics, _errorSummary } from '@/middleware/errorTracking';
 import { healthCheck, livenessProbe, readinessProbe } from '@/middleware/healthCheck';
 import { cacheManager } from '@/config/cache';
 import { logger } from '@/config/logger';

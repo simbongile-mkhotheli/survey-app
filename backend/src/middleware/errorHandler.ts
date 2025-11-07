@@ -13,7 +13,7 @@ export function errorHandler(
   err: unknown,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction  // Prefix with underscore as it's required by Express but not used
 ) {
   // Handle custom application errors
   if (err instanceof AppError) {

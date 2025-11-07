@@ -2,7 +2,7 @@
 
 import { Router } from 'express';
 import { SurveySchema } from '@/validation/validation';
-import express from 'express';
+// import express from 'express'; // Not used, Router is sufficient
 import { handleCreateSurvey } from '@/controllers/surveyController';
 import { validateInput, surveyValidation } from '@/middleware/security';
 import type { Request, Response, NextFunction } from 'express';
