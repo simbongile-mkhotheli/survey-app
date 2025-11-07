@@ -73,9 +73,12 @@ class ErrorStore {
   getErrorStats(): {
     totalErrors: number;
     recentErrors: number;
-    errorsByType: Record<string, number>;
-    errorsBySeverity: Record<string, number>;
-    topErrors: Array<{ message: string; count: number; lastSeen: string }>;
+    dailyErrors: number;
+    errorRatePerHour: number;
+    severityBreakdown: Record<string, number>;
+    categoryBreakdown: Record<string, number>;
+    topErrors: Array<{ pattern: string; count: number }>;
+    timestamp: string;
   } {
     const now = Date.now();
     const hourAgo = now - (60 * 60 * 1000);
