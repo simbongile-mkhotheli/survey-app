@@ -1,6 +1,5 @@
 
 .page {
-  font-family: Arial, sans-serif;
   color: var(--color-text);
   background-color: var(--color-bg);
   min-height: 100vh;
@@ -18,8 +17,9 @@
 }
 
 .headerLeft {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
 }
+
 .surveysText {
   font-style: italic;
   color: var(--color-text);
@@ -45,7 +45,7 @@
 
 /* Label text */
 .labelText {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   color: var(--color-text);
 }
 
@@ -78,7 +78,7 @@
 
 /* Field label */
 .fieldLabel {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   color: var(--color-text);
 }
 
@@ -86,7 +86,7 @@
 .textbox {
   width: 250px;
   padding: 6px 8px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   border: 1px solid var(--color-primary);
   border-radius: 2px;
   outline: none;
@@ -102,7 +102,7 @@
 .checkboxLabel {
   display: inline-flex;
   align-items: center;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   color: var(--color-text);
   cursor: pointer;
 }
@@ -116,7 +116,7 @@
 
 /* Instruction text above table */
 .instruction {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   margin-bottom: 8px;
   color: var(--color-text);
 }
@@ -130,7 +130,7 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
 }
 
 /* Table header cell */

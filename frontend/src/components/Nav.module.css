@@ -6,11 +6,19 @@
 
 .link {
   text-decoration: none;
-  color: #000;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--color-primary);
 }
 
 .active {
   text-decoration: none;
-  color: #28a0e5;
-  font-weight: 600;
+  color: var(--color-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
 }

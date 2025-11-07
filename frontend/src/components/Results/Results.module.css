@@ -1,9 +1,12 @@
 /* Results.module.css */
 .heading {
   text-align: center;
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
   margin-bottom: 2rem;
+  line-height: var(--line-height-tight);
 }
+
 /* Each row: label on left, value on right */
 .resultRow {
   display: flex;
@@ -12,10 +15,12 @@
 }
 
 .label {
-  color: #333;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
 }
 
 .value {
-  font-weight: bold;
-  color: #000;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
 }
