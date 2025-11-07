@@ -9,12 +9,12 @@ datasource db {
 
 model SurveyResponse {
   id            Int      @id @default(autoincrement())
-  firstName     String
-  lastName      String
-  email         String   @db.VarChar(255)
+  firstName     String   @db.VarChar(100)
+  lastName      String   @db.VarChar(100)
+  email         String   @unique @db.VarChar(255)
   contactNumber String   @db.VarChar(20)
   dateOfBirth   DateTime @db.Date
-  foods         String   @db.VarChar(100) // Temporary - will be normalized later
+  foods         String   @db.VarChar(255) // TODO: Normalize in next migration (see MIGRATION_PLAN.md)
   ratingMovies  Int      @db.SmallInt
   ratingRadio   Int      @db.SmallInt
   ratingEatOut  Int      @db.SmallInt

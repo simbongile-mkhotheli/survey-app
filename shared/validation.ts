@@ -1,5 +1,14 @@
 import { z } from 'zod';
 
+// Security: Prevent XSS and injection attacks
+const sanitizeString = (val: string) => val.trim().replace(/[<>]/g, '');
+
+// Security: Maximum lengths to prevent DOS attacks
+const MAX_NAME_LENGTH = 100;
+const MAX_EMAIL_LENGTH = 255;
+const MAX_PHONE_LENGTH = 20;
+const MAX_FOOD_NAME_LENGTH = 50;
+
 const isRatingString = (val: string) => {
   const n = Number(val);
   return Number.isInteger(n) && n >= 1 && n <= 5;
@@ -29,14 +38,32 @@ function validateAgeString(val: string) {
 
 // Frontend form schema (values produced by form inputs — ratings are strings)
 export const SurveyFormSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  email: z.string().email('Invalid email address'),
-  contactNumber: z.string().regex(/^\+?\d{10,15}$/, 'Invalid contact number'),
+  firstName: z.string()
+    .min(1, 'First name is required')
+    .max(MAX_NAME_LENGTH, `First name must be ${MAX_NAME_LENGTH} characters or less`)
+    .transform(sanitizeString),
+  lastName: z.string()
+    .min(1, 'Last name is required')
+    .max(MAX_NAME_LENGTH, `Last name must be ${MAX_NAME_LENGTH} characters or less`)
+    .transform(sanitizeString),
+  email: z.string()
+    .email('Invalid email address')
+    .max(MAX_EMAIL_LENGTH, `Email must be ${MAX_EMAIL_LENGTH} characters or less`)
+    .toLowerCase()
+    .trim(),
+  contactNumber: z.string()
+    .regex(/^\+?\d{10,15}$/, 'Invalid contact number')
+    .max(MAX_PHONE_LENGTH, 'Contact number too long'),
   dateOfBirth: z.string().refine(validateAgeString, {
     message: 'Date of birth must correspond to an age between 5 and 120 years',
   }),
-  foods: z.array(z.string()).min(1, 'Select at least one food'),
+  foods: z.array(
+    z.string()
+      .min(1, 'Food name cannot be empty')
+      .max(MAX_FOOD_NAME_LENGTH, `Food name must be ${MAX_FOOD_NAME_LENGTH} characters or less`)
+      .transform(sanitizeString)
+  ).min(1, 'Select at least one food')
+   .max(10, 'Maximum 10 foods allowed'),
   ratingMovies: ratingStringField(),
   ratingRadio: ratingStringField(),
   ratingEatOut: ratingStringField(),
@@ -47,14 +74,32 @@ export type SurveyFormValues = z.infer<typeof SurveyFormSchema>;
 
 // Backend payload schema (what the API expects — ratings are numbers)
 export const SurveyPayloadSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  email: z.string().email('Invalid email address'),
-  contactNumber: z.string().regex(/^\+?\d{10,15}$/, 'Invalid contact number'),
+  firstName: z.string()
+    .min(1, 'First name is required')
+    .max(MAX_NAME_LENGTH, `First name must be ${MAX_NAME_LENGTH} characters or less`)
+    .transform(sanitizeString),
+  lastName: z.string()
+    .min(1, 'Last name is required')
+    .max(MAX_NAME_LENGTH, `Last name must be ${MAX_NAME_LENGTH} characters or less`)
+    .transform(sanitizeString),
+  email: z.string()
+    .email('Invalid email address')
+    .max(MAX_EMAIL_LENGTH, `Email must be ${MAX_EMAIL_LENGTH} characters or less`)
+    .toLowerCase()
+    .trim(),
+  contactNumber: z.string()
+    .regex(/^\+?\d{10,15}$/, 'Invalid contact number')
+    .max(MAX_PHONE_LENGTH, 'Contact number too long'),
   dateOfBirth: z.string().refine(validateAgeString, {
     message: 'Date of birth must correspond to an age between 5 and 120 years',
   }),
-  foods: z.array(z.string()).min(1, 'Select at least one food'),
+  foods: z.array(
+    z.string()
+      .min(1, 'Food name cannot be empty')
+      .max(MAX_FOOD_NAME_LENGTH, `Food name must be ${MAX_FOOD_NAME_LENGTH} characters or less`)
+      .transform(sanitizeString)
+  ).min(1, 'Select at least one food')
+   .max(10, 'Maximum 10 foods allowed'),
   ratingMovies: ratingNumberField(),
   ratingRadio: ratingNumberField(),
   ratingEatOut: ratingNumberField(),

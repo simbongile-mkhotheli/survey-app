@@ -1,6 +1,10 @@
 // backend/src/test/setup.ts
 import { beforeAll, afterAll, afterEach } from 'vitest';
 import { Container } from '@/container';
+import dotenv from 'dotenv';
+
+// Load test environment variables
+dotenv.config({ path: '.env.test' });
 
 let container: Container;
 
