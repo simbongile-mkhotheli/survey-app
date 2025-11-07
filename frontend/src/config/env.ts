@@ -10,7 +10,7 @@ import { z } from 'zod';
 // Environment schema for validation
 const envSchema = z.object({
   VITE_API_URL: z.string().url('Invalid API URL'),
-  VITE_APP_NAME: z.string().min(1, 'App name is required'),
+  VITE_APP_NAME: z.string().min(1, 'App name is required').default('Survey Application'),
   VITE_NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   VITE_PORT: z.string().optional(),
 });

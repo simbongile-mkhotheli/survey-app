@@ -10,13 +10,16 @@ Go to: https://vercel.com/simbongile-mkhotheli/survey-app/settings/environment-v
    - Value: `https://survey-app-1ihh.onrender.com`
    - Environments: ✅ Production, ✅ Preview, ✅ Development
 
-2. **VITE_APP_NAME**
-   - Value: `Survey Application`
-   - Environments: ✅ Production, ✅ Preview, ✅ Development
-
-3. **VITE_NODE_ENV**
+2. **VITE_NODE_ENV**
    - Value: `production`
    - Environments: ✅ Production only
+
+### Optional Variables
+
+3. **VITE_APP_NAME** (has default value)
+   - Value: `Survey Application`
+   - Environments: ✅ Production, ✅ Preview, ✅ Development
+   - Default: `Survey Application` (if not set)
 
 ## Quick Setup Steps
 
