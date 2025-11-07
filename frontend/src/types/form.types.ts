@@ -9,10 +9,10 @@ import type { UseFormRegister, FieldError, FieldErrors, FieldValues } from 'reac
 /**
  * Standard props for controlled form inputs
  */
-export interface BaseInputProps {
+export interface BaseInputProps<T extends FieldValues = FieldValues> {
   id: string;
   label: string;
-  register: UseFormRegister<any>;
+  register: UseFormRegister<T>;
   error?: FieldError;
   required?: boolean;
   disabled?: boolean;
@@ -22,7 +22,7 @@ export interface BaseInputProps {
 /**
  * Props for text-based inputs
  */
-export interface TextInputProps extends BaseInputProps {
+export interface TextInputProps<T extends FieldValues = FieldValues> extends BaseInputProps<T> {
   type?: 'text' | 'email' | 'tel' | 'date' | 'password' | 'url' | 'number';
   placeholder?: string;
   autoComplete?: string;
@@ -34,7 +34,7 @@ export interface TextInputProps extends BaseInputProps {
 /**
  * Props for select/dropdown inputs
  */
-export interface SelectInputProps extends BaseInputProps {
+export interface SelectInputProps<T extends FieldValues = FieldValues> extends BaseInputProps<T> {
   options: Array<{ value: string | number; label: string }>;
   placeholder?: string;
 }
@@ -42,9 +42,9 @@ export interface SelectInputProps extends BaseInputProps {
 /**
  * Props for checkbox/radio group inputs
  */
-export interface CheckboxGroupProps extends Omit<BaseInputProps, 'register'> {
+export interface CheckboxGroupProps<T extends FieldValues = FieldValues> extends Omit<BaseInputProps<T>, 'register'> {
   options: Array<{ value: string; label: string }>;
-  register: UseFormRegister<any>;
+  register: UseFormRegister<T>;
 }
 
 /**
