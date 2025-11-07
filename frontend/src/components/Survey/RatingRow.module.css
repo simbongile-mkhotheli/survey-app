@@ -31,15 +31,27 @@
 .errorRow td {
   padding: 0;
   border: none;
-  height: 1em;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-2);
+  background-color: #fff5f5;
+  border-left: 3px solid var(--color-error);
+}
+
+.errorIcon {
+  font-size: var(--font-size-xs);
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 .errorText {
   margin: 0;
-  height: 1em;
-  line-height: var(--line-height-tight);
   font-size: var(--font-size-xs);
   color: var(--color-error);
-  overflow: hidden;
-  white-space: nowrap;
+  line-height: var(--line-height-tight);
+  font-weight: var(--font-weight-medium);
 }

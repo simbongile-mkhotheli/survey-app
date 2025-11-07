@@ -34,6 +34,11 @@
 .row {
   display: flex;
   align-items: flex-start;
+  margin-bottom: var(--spacing-5);
+}
+
+.row:last-child {
+  margin-bottom: 0;
 }
 
 /* Column for labels */
@@ -58,11 +63,17 @@
 
 /* Inline column for inputs (checkboxes) */
 .colInputInline {
-  margin-bottom: var(--spacing-5);
   flex-basis: 75%;
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+/* Checkbox group wrapper */
+.checkboxGroup {
+  display: flex;
   gap: var(--spacing-4);
+  flex-wrap: wrap;
 }
 
 /* Full-width column */

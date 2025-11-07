@@ -153,32 +153,32 @@ export default function SurveyForm() {
         </div>
 
         {/* Favorite Foods */}
-        <div className={styles.row} style={{ marginTop: 20 }}>
+        <div className={styles.row}>
           <div className={styles.colLabel}>
             <span className={styles.labelText}>
               What is your favorite food?
             </span>
           </div>
           <div className={styles.colInputInline}>
-            {['Pizza', 'Pasta', 'Pap and Wors', 'Other'].map((food) => (
-              <label key={food} className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  value={food}
-                  className={styles.checkbox}
-                  {...register('foods')}
-                />{' '}
-                {food}
-              </label>
-            ))}
-            <p className={styles.errorText} style={{ marginTop: '8px' }}>
-              {errors.foods?.message ?? '\u00A0'}
-            </p>
+            <div className={styles.checkboxGroup}>
+              {['Pizza', 'Pasta', 'Pap and Wors', 'Other'].map((food) => (
+                <label key={food} className={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    value={food}
+                    className={styles.checkbox}
+                    {...register('foods')}
+                  />{' '}
+                  {food}
+                </label>
+              ))}
+            </div>
+            <InlineError message={errors.foods?.message || ''} />
           </div>
         </div>
 
         {/* Rating Table */}
-        <div className={styles.row} style={{ marginTop: 20 }}>
+        <div className={styles.row}>
           <div className={styles.colFull}>
             <div className={styles.instruction}>
               Please rate your level of agreement on a scale from{' '}

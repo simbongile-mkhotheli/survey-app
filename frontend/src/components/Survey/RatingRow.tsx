@@ -34,12 +34,17 @@ export default function RatingRow({
         ))}
       </tr>
 
-      {/* Always render this row to reserve space for error text */}
-      <tr className={styles.errorRow}>
-        <td colSpan={6}>
-          <p className={styles.errorText}>{error ?? '\u00A0'}</p>
-        </td>
-      </tr>
+      {/* Only render error row if there's an error */}
+      {error && (
+        <tr className={styles.errorRow}>
+          <td colSpan={6}>
+            <div className={styles.errorContainer}>
+              <span className={styles.errorIcon}>⚠️</span>
+              <span className={styles.errorText}>{error}</span>
+            </div>
+          </td>
+        </tr>
+      )}
     </>
   );
 }
