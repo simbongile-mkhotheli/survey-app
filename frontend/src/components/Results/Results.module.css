@@ -1,37 +1,60 @@
 /* Results.module.css */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-8);
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-8);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
 .heading {
   text-align: center;
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
   margin-bottom: var(--spacing-8);
-  line-height: var(--line-height-tight);
+  color: var(--color-gray-900);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Each row: label on left, value on right */
 .resultRow {
   display: flex;
   justify-content: space-between;
-  padding: var(--spacing-2) 0;
-  border-bottom: 1px solid var(--color-border-light);
-  transition: background-color var(--transition-fast);
+  align-items: center;
+  padding: var(--spacing-4);
+  margin-bottom: var(--spacing-3);
+  border-radius: var(--radius-lg);
+  background: var(--color-gray-50);
+  transition: all var(--transition-fast);
+  border: 2px solid transparent;
 }
 
 .resultRow:hover {
-  background-color: var(--color-surface-hover);
-}
-
-.resultRow:last-child {
-  border-bottom: none;
+  background-color: var(--color-white);
+  border-color: var(--color-primary);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
 }
 
 .label {
-  color: var(--color-text-secondary);
+  color: var(--color-gray-700);
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-normal);
+  font-weight: var(--font-weight-semibold);
 }
 
 .value {
   font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  font-size: var(--font-size-base);
+  color: var(--color-primary);
+  font-size: var(--font-size-lg);
+  padding: var(--spacing-2) var(--spacing-4);
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: var(--radius-lg);
 }

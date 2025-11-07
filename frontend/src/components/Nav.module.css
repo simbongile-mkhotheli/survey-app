@@ -1,24 +1,35 @@
 .nav {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-4);
   align-items: center;
 }
 
 .link {
   text-decoration: none;
-  color: var(--color-text);
+  color: rgba(255, 255, 255, 0.9);
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-normal);
-  transition: color 0.2s ease;
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .link:hover {
-  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-white);
+  transform: translateY(-1px);
 }
 
 .active {
   text-decoration: none;
-  color: var(--color-primary);
+  color: var(--color-white);
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

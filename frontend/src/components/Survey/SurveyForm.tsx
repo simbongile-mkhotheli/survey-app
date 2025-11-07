@@ -66,11 +66,12 @@ export default function SurveyForm() {
 
       {/* Personal Details */}
       <main className={styles.main}>
-        <div className={styles.row}>
-          <div className={styles.colLabel}>
-            <span className={styles.labelText}>Personal Details :</span>
-          </div>
-          <div className={styles.colInput}>
+        <div className={styles.formCard}>
+          <div className={styles.row}>
+            <div className={styles.colLabel}>
+              <span className={styles.labelText}>Personal Details</span>
+            </div>
+            <div className={styles.colInput}>
             <TextField
               id="firstName"
               label="First Name"
@@ -223,6 +224,7 @@ export default function SurveyForm() {
         {isSubmitSuccessful && (
           <div className={styles.successBanner}>Thank you for submitting!</div>
         )}
+        </div>
       </main>
     </div>
   );

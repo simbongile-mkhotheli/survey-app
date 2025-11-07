@@ -79,35 +79,42 @@ export default function Results() {
   } = resultValues!;
   return (
     <div className={styles.container}>
-      <h2 className={styles.heading}>Survey Results</h2>
-      <ResultRow label="Total number of surveys" value={totalCount} />
-      <ResultRow label="Average Age" value={`${fmtDecimal(avg)}`} />
-      <ResultRow
-        label="Oldest person who participated in survey"
-        value={`${fmtInt(max)}`}
-      />
-      <ResultRow
-        label="Youngest person who participated in survey"
-        value={`${fmtInt(min)}`}
-      />
-      <div style={{ height: '1rem' }} />
-      <ResultRow
-        label="Percentage who like Pizza"
-        value={`${fmtDecimal(pizza)}%`}
-      />
-      <ResultRow
-        label="Percentage who like Pasta"
-        value={`${fmtDecimal(pasta)}%`}
-      />
-      <ResultRow
-        label="Percentage who like Pap and Wors"
-        value={`${fmtDecimal(papAndWors)}%`}
-      />
-      <div style={{ height: '1rem' }} />
-      <ResultRow label="I like to watch movies" value={fmtDecimal(movies)} />
-      <ResultRow label="I like to listen to radio" value={fmtDecimal(radio)} />
-      <ResultRow label="I like to eat out" value={fmtDecimal(eatOut)} />
-      <ResultRow label="I like to watch TV" value={fmtDecimal(tv)} />
+      <div className={styles.card}>
+        <h2 className={styles.heading}>📊 Survey Results</h2>
+        
+        <ResultRow label="Total number of surveys" value={totalCount} />
+        <ResultRow label="Average Age" value={`${fmtDecimal(avg)} years`} />
+        <ResultRow
+          label="Oldest person who participated"
+          value={`${fmtInt(max)} years`}
+        />
+        <ResultRow
+          label="Youngest person who participated"
+          value={`${fmtInt(min)} years`}
+        />
+        
+        <div style={{ height: '2rem' }} />
+        
+        <ResultRow
+          label="🍕 Percentage who like Pizza"
+          value={`${fmtDecimal(pizza)}%`}
+        />
+        <ResultRow
+          label="🍝 Percentage who like Pasta"
+          value={`${fmtDecimal(pasta)}%`}
+        />
+        <ResultRow
+          label="🍖 Percentage who like Pap and Wors"
+          value={`${fmtDecimal(papAndWors)}%`}
+        />
+        
+        <div style={{ height: '2rem' }} />
+        
+        <ResultRow label="🎬 I like to watch movies" value={fmtDecimal(movies)} />
+        <ResultRow label="📻 I like to listen to radio" value={fmtDecimal(radio)} />
+        <ResultRow label="🍽️ I like to eat out" value={fmtDecimal(eatOut)} />
+        <ResultRow label="📺 I like to watch TV" value={fmtDecimal(tv)} />
+      </div>
     </div>
   );
 }
