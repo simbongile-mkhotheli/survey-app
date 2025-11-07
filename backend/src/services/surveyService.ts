@@ -1,31 +1,59 @@
-import { PrismaClient } from '@prisma/client';
-import type { SurveyInput } from '../validation/validation';
+import type { ISurveyService, SurveyResponse } from '@/interfaces/service.interface';
+import type { ISurveyRepository, IResultsRepository } from '@/interfaces/repository.interface';
+import type { SurveyInput } from '@/validation/validation';
+import { businessMetrics } from '@/middleware/metrics';
+import { logWithContext } from '@/config/logger';
 
-const prisma = new PrismaClient();
+export class SurveyService implements ISurveyService {
+  constructor(
+    private surveyRepository: ISurveyRepository,
+    private resultsRepository: IResultsRepository
+  ) {}
 
-/**
- * Insert a new survey response into the database.
- * - Parses dateOfBirth string into Date
- * - Converts foods array into CSV string
- */
-export async function createSurvey(data: SurveyInput) {
-  const dob = new Date(data.dateOfBirth);
-  const foodsCsv = data.foods.join(',');
-
-  const created = await prisma.surveyResponse.create({
-    data: {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      contactNumber: data.contactNumber,
-      dateOfBirth: dob,
-      foods: foodsCsv,
-      ratingMovies: data.ratingMovies,
-      ratingRadio: data.ratingRadio,
-      ratingEatOut: data.ratingEatOut,
-      ratingTV: data.ratingTV,
-    },
-  });
-
-  return created;
+  /**
+   * Insert a new survey response into the database.
+   * Delegates to the repository layer following SRP
+   * Invalidates cache to ensure fresh results
+   */
+  async createSurvey(data: SurveyInput): Promise<SurveyResponse> {
+    const startTime = Date.now();
+    
+    try {
+      const result = await this.surveyRepository.create(data);
+      
+      // Invalidate cached results since new data has been added
+      await this.resultsRepository.invalidateCache();
+      
+      const duration = Date.now() - startTime;
+      
+      // Record business metrics
+      businessMetrics.recordSurveyCreated();
+      
+      // Log successful survey creation
+      logWithContext.info('Survey response created', {
+        operation: 'create_survey',
+        duration,
+        metadata: {
+          surveyId: result.id,
+          email: data.email,
+          cacheInvalidated: true
+        }
+      });
+      
+      return result;
+      
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      
+      logWithContext.error('Failed to create survey response', error as Error, {
+        operation: 'create_survey',
+        duration,
+        metadata: {
+          email: data.email
+        }
+      });
+      
+      throw error;
+    }
+  }
 }

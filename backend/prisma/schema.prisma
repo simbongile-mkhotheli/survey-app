@@ -11,13 +11,20 @@ model SurveyResponse {
   id            Int      @id @default(autoincrement())
   firstName     String
   lastName      String
-  email         String
-  contactNumber String
-  dateOfBirth   DateTime
-  foods         String   // CSV
-  ratingMovies  Int
-  ratingRadio   Int
-  ratingEatOut  Int
-  ratingTV      Int
-  submittedAt   DateTime @default(now())
+  email         String   @db.VarChar(255)
+  contactNumber String   @db.VarChar(20)
+  dateOfBirth   DateTime @db.Date
+  foods         String   @db.VarChar(100) // Temporary - will be normalized later
+  ratingMovies  Int      @db.SmallInt
+  ratingRadio   Int      @db.SmallInt
+  ratingEatOut  Int      @db.SmallInt
+  ratingTV      Int      @db.SmallInt
+  submittedAt   DateTime @default(now()) @db.Timestamp(6)
+
+  // Indexes for performance optimization
+  @@index([email], name: "idx_survey_email")
+  @@index([dateOfBirth], name: "idx_survey_dob")
+  @@index([submittedAt], name: "idx_survey_submitted")
+  @@index([submittedAt, id], name: "idx_survey_submitted_id")
+  @@map("survey_responses")
 }

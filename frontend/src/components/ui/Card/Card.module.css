@@ -1,0 +1,122 @@
+/**
+ * Card Component Styles
+ * ====================
+ * Consistent card layout and variants
+ */
+
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0 1rem;
+}
+
+.headerContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.actions {
+  flex-shrink: 0;
+}
+
+.content {
+  padding: 1rem;
+}
+
+.section {
+  padding: 0.75rem 0;
+}
+
+.section:not(:last-child) {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Variants */
+.default {
+  border: 1px solid #e5e7eb;
+}
+
+.bordered {
+  border: 2px solid #e5e7eb;
+}
+
+.elevated {
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.elevated:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .card {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+  
+  .title {
+    color: #f9fafb;
+  }
+  
+  .description {
+    color: #9ca3af;
+  }
+  
+  .section:not(:last-child) {
+    border-bottom-color: #374151;
+  }
+  
+  .bordered {
+    border-color: #4b5563;
+  }
+  
+  .elevated {
+    border-color: #374151;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .elevated:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .actions {
+    width: 100%;
+  }
+  
+  .content {
+    padding: 0.75rem;
+  }
+}

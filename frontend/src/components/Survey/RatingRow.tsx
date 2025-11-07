@@ -1,6 +1,7 @@
 import type { UseFormRegister } from 'react-hook-form';
+import type { InputHTMLAttributes } from 'react';
 import styles from './RatingRow.module.css';
-import type { SurveyFormValues } from '../../validation';
+import type { SurveyFormValues } from '@/validation';
 
 interface RatingRowProps {
   label: string;
@@ -27,7 +28,7 @@ export default function RatingRow({
               type="radio"
               value={value}
               className={styles.radioInput}
-              {...register(fieldName)}
+              {...(register(fieldName) as unknown as InputHTMLAttributes<HTMLInputElement>)}
             />
           </td>
         ))}

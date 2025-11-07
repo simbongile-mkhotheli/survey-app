@@ -1,0 +1,100 @@
+{
+  "id": "survey-api-environment",
+  "name": "Survey API - Development",
+  "values": [
+    {
+      "key": "environment_name",
+      "value": "Development",
+      "description": "Current environment name",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "description": "Base URL for the Survey API",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "api_version",
+      "value": "v1",
+      "description": "API version",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "survey_id",
+      "value": "",
+      "description": "ID of the last created survey (auto-populated)",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "test_email",
+      "value": "",
+      "description": "Dynamically generated test email (auto-populated)",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "test_phone",
+      "value": "",
+      "description": "Dynamically generated test phone (auto-populated)",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "test_dob",
+      "value": "",
+      "description": "Dynamically generated test date of birth (auto-populated)",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "test_foods",
+      "value": "",
+      "description": "Dynamically generated test food preferences (auto-populated)",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "test_rating_movies",
+      "value": "",
+      "description": "Dynamically generated movie rating (auto-populated)",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "test_rating_radio",
+      "value": "",
+      "description": "Dynamically generated radio rating (auto-populated)",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "test_rating_eatout",
+      "value": "",
+      "description": "Dynamically generated eating out rating (auto-populated)",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "test_rating_tv",
+      "value": "",
+      "description": "Dynamically generated TV rating (auto-populated)",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "request_timestamp",
+      "value": "",
+      "description": "Timestamp of the last request (auto-populated)",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2024-01-01T00:00:00.000Z",
+  "_postman_exported_using": "Postman/10.0.0"
+}

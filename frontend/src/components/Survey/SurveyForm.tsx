@@ -1,15 +1,21 @@
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 
-import { SurveySchema } from '../../validation';
-import type { SurveyFormValues } from '../../validation';
+import { SurveySchema } from '@/validation';
+import type { SurveyFormValues } from '@/validation';
+import { submitSurvey } from '@/services/api';
+import { useErrorHandler } from '@/components/ErrorBoundary';
+import { Loading, ErrorMessage, InlineError } from '@/components/ui';
 
 import RatingRow from './RatingRow';
-import { submitSurvey } from '../../services/api';
 import styles from './SurveyForm.module.css';
 
 export default function SurveyForm() {
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { handleError } = useErrorHandler({ logToStore: false });
+
   const {
     register,
     handleSubmit,
@@ -23,15 +29,41 @@ export default function SurveyForm() {
 
   const onSubmit: SubmitHandler<SurveyFormValues> = async (data) => {
     try {
+      setSubmitError(null);
       await submitSurvey(data);
       reset();
     } catch (err) {
-      console.error('Submission error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit survey';
+      setSubmitError(errorMessage);
+      handleError(err instanceof Error ? err : new Error(errorMessage), 'Survey submission');
     }
   };
 
   return (
     <div className={styles.page}>
+      {/* Loading State */}
+      {isSubmitting && <Loading text="Submitting survey..." overlay />}
+      
+      {/* Error State */}
+      {submitError && (
+        <ErrorMessage 
+          message={submitError}
+          title="Submission Failed"
+          severity="error"
+          showRetry
+          onRetry={() => setSubmitError(null)}
+        />
+      )}
+      
+      {/* Success State */}
+      {isSubmitSuccessful && (
+        <ErrorMessage 
+          message="Your survey has been submitted successfully! Thank you for your participation."
+          title="Success!"
+          severity="info"
+        />
+      )}
+
       {/* Personal Details */}
       <main className={styles.main}>
         <div className={styles.row}>
@@ -52,10 +84,7 @@ export default function SurveyForm() {
                 }`}
                 {...register('firstName')}
               />
-              {/* always-rendered error */}
-              <p className={styles.errorText}>
-                {errors.firstName?.message ?? '\u00A0'}
-              </p>
+              <InlineError message={errors.firstName?.message || ''} />
             </div>
 
             <div className={styles.fieldGroup}>

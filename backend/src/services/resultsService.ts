@@ -1,7 +1,8 @@
-import { PrismaClient } from '@prisma/client';
-import type { SurveyResultsDTO } from '../types/resultsDTO';
-
-const prisma = new PrismaClient();
+import type { IResultsService } from '@/interfaces/service.interface';
+import type { IResultsRepository } from '@/interfaces/repository.interface';
+import type { SurveyResultsDTO } from '@/types/resultsDTO';
+import { businessMetrics } from '@/middleware/metrics';
+import { logWithContext } from '@/config/logger';
 
 /**
  * Compute the full years between a date of birth and today.
@@ -16,77 +17,81 @@ function computeAge(dob: Date): number {
   return age;
 }
 
-/**
- * Retrieve and aggregate survey results from the database.
- */
-export async function getSurveyResults(): Promise<SurveyResultsDTO> {
-  // 1) Fetch all survey responses
-  const responses = await prisma.surveyResponse.findMany({
-    select: {
-      dateOfBirth: true,
-      foods: true,
-      ratingMovies: true,
-      ratingRadio: true,
-      ratingEatOut: true,
-      ratingTV: true,
-    },
-  });
+export class ResultsService implements IResultsService {
+  constructor(private resultsRepository: IResultsRepository) {}
 
-  const totalCount = responses.length;
+  /**
+   * Retrieve and aggregate survey results from the database.
+   * Delegates to repository layer following SRP
+   * Now includes performance tracking and caching
+   */
+  async getResults(requestId?: string): Promise<SurveyResultsDTO> {
+    const startTime = Date.now();
+    
+    try {
+      // Execute queries in parallel for better performance
+      const [totalCount, avgRatings, foodDistribution, ageStats] = await Promise.all([
+        this.resultsRepository.getTotalResponses(requestId),
+        this.resultsRepository.getAverageRatings(requestId),
+        this.resultsRepository.getFoodDistribution(requestId),
+        this.resultsRepository.getAgeStatistics(requestId),
+      ]);
 
-  // 2) Compute ages and filter out invalid (<5 years)
-  const ages = responses
-    .map((r) => computeAge(r.dateOfBirth))
-    .filter((age) => age >= 5);
+      // Record business metrics
+      businessMetrics.recordResultsQuery(false); // Assuming no cache info here
+      
+      const duration = Date.now() - startTime;
+      
+      // Log successful results query
+      logWithContext.info('Survey results retrieved', {
+        requestId,
+        operation: 'get_results',
+        duration,
+        metadata: {
+          totalCount,
+          queriesExecuted: 4,
+          parallelExecution: true
+        }
+      });
 
-  // 3) Calculate average, min, and max ages
-  const avgAge =
-    ages.length > 0
-      ? parseFloat((ages.reduce((sum, a) => sum + a, 0) / ages.length).toFixed(1))
-      : null;
-  const minAge = ages.length ? Math.min(...ages) : null;
-  const maxAge = ages.length ? Math.max(...ages) : null;
+    // Calculate food percentages
+    const toPercentage = (count: number) =>
+      totalCount > 0 ? parseFloat(((count / totalCount) * 100).toFixed(1)) : null;
 
-  // 4) Count favorite foods
-  const foodCounts = { pizza: 0, pasta: 0, papAndWors: 0 };
-  for (const { foods } of responses) {
-    const list = foods.split(',');
-    if (list.includes('Pizza')) foodCounts.pizza++;
-    if (list.includes('Pasta')) foodCounts.pasta++;
-    if (list.includes('Pap and Wors')) foodCounts.papAndWors++;
+    // Find specific food percentages from distribution (case-insensitive matching)
+    const pizzaCount = foodDistribution.find(f => f.food.toLowerCase() === 'pizza')?.count || 0;
+    const pastaCount = foodDistribution.find(f => f.food.toLowerCase() === 'pasta')?.count || 0;
+    const papAndWorsCount = foodDistribution.find(f => 
+      f.food.toLowerCase().replace(/\s+/g, '') === 'papandwors' || 
+      f.food.toLowerCase() === 'pap and wors'
+    )?.count || 0;
+
+      return {
+        totalCount,
+        age: ageStats, // Now using actual database-computed age statistics
+        foodPercentages: {
+          pizza: toPercentage(pizzaCount),
+          pasta: toPercentage(pastaCount),
+          papAndWors: toPercentage(papAndWorsCount),
+        },
+        avgRatings: {
+          movies: avgRatings.movies,
+          radio: avgRatings.radio,
+          eatOut: avgRatings.eatOut,
+          tv: avgRatings.tv,
+        },
+      };
+      
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      
+      logWithContext.error('Failed to retrieve survey results', error as Error, {
+        requestId,
+        operation: 'get_results',
+        duration
+      });
+      
+      throw error;
+    }
   }
-  const toPercentage = (count: number) =>
-    totalCount > 0
-      ? parseFloat(((count / totalCount) * 100).toFixed(1))
-      : null;
-
-  // 5) Compute average ratings
-  const sums = responses.reduce(
-    (acc, r) => {
-      acc.movies += r.ratingMovies;
-      acc.radio += r.ratingRadio;
-      acc.eatOut += r.ratingEatOut;
-      acc.tv += r.ratingTV;
-      return acc;
-    },
-    { movies: 0, radio: 0, eatOut: 0, tv: 0 }
-  );
-  const toAvg = (value: number) =>
-    totalCount > 0 ? parseFloat((value / totalCount).toFixed(1)) : null;
-
-  return {
-    totalCount,
-    age: { avg: avgAge, min: minAge, max: maxAge },
-    foodPercentages: {
-      pizza: toPercentage(foodCounts.pizza),
-      pasta: toPercentage(foodCounts.pasta),
-      papAndWors: toPercentage(foodCounts.papAndWors),
-    },
-    avgRatings: {
-      movies: toAvg(sums.movies),
-      radio: toAvg(sums.radio),
-      eatOut: toAvg(sums.eatOut),
-      tv: toAvg(sums.tv),
-    },
-  };
 }

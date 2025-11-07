@@ -1,0 +1,175 @@
+/**
+ * Error Boundary Styles
+ * ====================
+ * Consistent styling for error states across different boundary levels
+ */
+
+.errorBoundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid #f87171;
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.errorContent {
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+/* Error Level Variations */
+.critical {
+  min-height: 50vh;
+  background-color: #991b1b;
+  color: white;
+  border-color: #7f1d1d;
+}
+
+.page {
+  min-height: 200px;
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.component {
+  min-height: 100px;
+  background-color: #fffbeb;
+  border-color: #fed7aa;
+  color: #d97706;
+}
+
+/* Typography */
+.title {
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.critical .title {
+  font-size: 2rem;
+}
+
+.page .title {
+  font-size: 1.5rem;
+}
+
+.component .title {
+  font-size: 1.25rem;
+}
+
+.message {
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+/* Error Details */
+.errorDetails {
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.errorDetails summary {
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.errorDetails summary:hover {
+  opacity: 0.8;
+}
+
+.errorText {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  margin: 0.5rem 0 0 0;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retry {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.retry:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.reload {
+  background-color: #6b7280;
+  color: white;
+  border-color: #6b7280;
+}
+
+.reload:hover {
+  background-color: #4b5563;
+  border-color: #4b5563;
+}
+
+.component .retry,
+.component .reload {
+  background-color: #d97706;
+  border-color: #d97706;
+}
+
+.component .retry:hover,
+.component .reload:hover {
+  background-color: #b45309;
+  border-color: #b45309;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .errorBoundary {
+    padding: 1rem;
+  }
+  
+  .critical .title {
+    font-size: 1.5rem;
+  }
+  
+  .page .title {
+    font-size: 1.25rem;
+  }
+  
+  .component .title {
+    font-size: 1.125rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .button {
+    width: 100%;
+  }
+}

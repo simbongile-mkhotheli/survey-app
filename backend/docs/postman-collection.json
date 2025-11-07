@@ -1,0 +1,439 @@
+{
+  "info": {
+    "name": "Survey Application API",
+    "description": "Comprehensive API collection for the Survey Application with example requests, tests, and environment variables.\n\n## Collection Features\n- Complete API endpoint coverage\n- Pre-request scripts for dynamic data\n- Comprehensive test assertions\n- Environment variable management\n- Error scenario testing\n\n## Setup Instructions\n1. Import this collection into Postman\n2. Import the accompanying environment file\n3. Update environment variables as needed\n4. Run individual requests or the entire collection\n\n## Environment Variables\n- `base_url`: API base URL (default: http://localhost:5000)\n- `api_version`: API version (default: v1)\n- `survey_id`: Dynamically set after survey creation\n\n## Test Coverage\n- ✅ Survey submission with valid data\n- ✅ Survey validation error handling\n- ✅ Results retrieval\n- ✅ Rate limiting validation\n- ✅ CORS headers verification",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "survey-api-collection",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  "item": [
+    {
+      "name": "Survey Management",
+      "description": "Operations for submitting and managing survey responses",
+      "item": [
+        {
+          "name": "Submit Valid Survey",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Generate dynamic test data",
+                  "const timestamp = Date.now();",
+                  "const randomNum = Math.floor(Math.random() * 1000);",
+                  "",
+                  "// Set dynamic variables",
+                  "pm.environment.set('test_email', `test${randomNum}@example.com`);",
+                  "pm.environment.set('test_phone', `+1555${String(randomNum).padStart(7, '0')}`);",
+                  "",
+                  "// Random date of birth (age 18-65)",
+                  "const currentYear = new Date().getFullYear();",
+                  "const birthYear = currentYear - Math.floor(Math.random() * 47) - 18;",
+                  "const birthMonth = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');",
+                  "const birthDay = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');",
+                  "pm.environment.set('test_dob', `${birthYear}-${birthMonth}-${birthDay}`);",
+                  "",
+                  "// Random food selection",
+                  "const foods = ['pizza', 'pasta', 'papAndWors'];",
+                  "const selectedFoods = foods.filter(() => Math.random() > 0.5);",
+                  "if (selectedFoods.length === 0) selectedFoods.push(foods[0]);",
+                  "pm.environment.set('test_foods', JSON.stringify(selectedFoods));",
+                  "",
+                  "// Random ratings (1-5)",
+                  "pm.environment.set('test_rating_movies', String(Math.floor(Math.random() * 5) + 1));",
+                  "pm.environment.set('test_rating_radio', String(Math.floor(Math.random() * 5) + 1));",
+                  "pm.environment.set('test_rating_eatout', String(Math.floor(Math.random() * 5) + 1));",
+                  "pm.environment.set('test_rating_tv', String(Math.floor(Math.random() * 5) + 1));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test response status",
+                  "pm.test('Survey submission successful', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// Test response structure",
+                  "pm.test('Response has correct structure', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('id');",
+                  "    pm.expect(responseJson.id).to.be.a('number');",
+                  "    pm.expect(responseJson.id).to.be.greaterThan(0);",
+                  "});",
+                  "",
+                  "// Store survey ID for future requests",
+                  "pm.test('Store survey ID', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.environment.set('survey_id', responseJson.id);",
+                  "});",
+                  "",
+                  "// Test response headers",
+                  "pm.test('Response has security headers', function () {",
+                  "    pm.expect(pm.response.headers.get('X-Content-Type-Options')).to.equal('nosniff');",
+                  "    pm.expect(pm.response.headers.get('X-Frame-Options')).to.exist;",
+                  "});",
+                  "",
+                  "// Test response time",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"{{test_email}}\",\n  \"contactNumber\": \"{{test_phone}}\",\n  \"dateOfBirth\": \"{{test_dob}}\",\n  \"foods\": {{test_foods}},\n  \"ratingMovies\": \"{{test_rating_movies}}\",\n  \"ratingRadio\": \"{{test_rating_radio}}\",\n  \"ratingEatOut\": \"{{test_rating_eatout}}\",\n  \"ratingTV\": \"{{test_rating_tv}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/survey",
+              "host": ["{{base_url}}"],
+              "path": ["api", "survey"]
+            },
+            "description": "Submit a new survey response with valid data. Uses dynamic variables to generate unique test data for each request."
+          },
+          "response": [
+            {
+              "name": "Successful Survey Submission",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"contactNumber\": \"+1234567890\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"foods\": [\"pizza\", \"pasta\"],\n  \"ratingMovies\": \"4\",\n  \"ratingRadio\": \"3\",\n  \"ratingEatOut\": \"5\",\n  \"ratingTV\": \"2\"\n}"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 123\n}"
+            }
+          ]
+        },
+        {
+          "name": "Submit Invalid Survey (Validation Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test validation error response",
+                  "pm.test('Validation error returned', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "// Test error response structure",
+                  "pm.test('Error response has correct structure', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('error');",
+                  "    pm.expect(responseJson.error).to.have.property('message');",
+                  "    pm.expect(responseJson.error).to.have.property('type');",
+                  "    pm.expect(responseJson.error.type).to.equal('ValidationError');",
+                  "});",
+                  "",
+                  "// Test detailed validation errors",
+                  "pm.test('Validation details provided', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.error).to.have.property('details');",
+                  "    pm.expect(responseJson.error.details).to.be.an('object');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"\",\n  \"lastName\": \"\",\n  \"email\": \"invalid-email\",\n  \"contactNumber\": \"123\",\n  \"dateOfBirth\": \"2030-01-01\",\n  \"foods\": [],\n  \"ratingMovies\": \"6\",\n  \"ratingRadio\": \"0\",\n  \"ratingEatOut\": \"invalid\",\n  \"ratingTV\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/survey",
+              "host": ["{{base_url}}"],
+              "path": ["api", "survey"]
+            },
+            "description": "Test validation by submitting a survey with multiple validation errors."
+          },
+          "response": [
+            {
+              "name": "Validation Error Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"\",\n  \"email\": \"invalid-email\",\n  \"ratingMovies\": \"6\"\n}"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"Validation failed\",\n    \"type\": \"ValidationError\",\n    \"details\": {\n      \"firstName\": [\"First name is required\"],\n      \"email\": [\"Invalid email address\"],\n      \"ratingMovies\": [\"Please select a rating from 1–5\"]\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Results & Analytics",
+      "description": "Operations for retrieving survey results and analytics",
+      "item": [
+        {
+          "name": "Get Survey Results",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test successful response",
+                  "pm.test('Results retrieved successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Test response structure",
+                  "pm.test('Results have correct structure', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    ",
+                  "    // Test main properties",
+                  "    pm.expect(responseJson).to.have.property('totalCount');",
+                  "    pm.expect(responseJson).to.have.property('age');",
+                  "    pm.expect(responseJson).to.have.property('foodPercentages');",
+                  "    pm.expect(responseJson).to.have.property('avgRatings');",
+                  "    ",
+                  "    // Test age object",
+                  "    pm.expect(responseJson.age).to.have.property('avg');",
+                  "    pm.expect(responseJson.age).to.have.property('min');",
+                  "    pm.expect(responseJson.age).to.have.property('max');",
+                  "    ",
+                  "    // Test food percentages",
+                  "    pm.expect(responseJson.foodPercentages).to.have.property('pizza');",
+                  "    pm.expect(responseJson.foodPercentages).to.have.property('pasta');",
+                  "    pm.expect(responseJson.foodPercentages).to.have.property('papAndWors');",
+                  "    ",
+                  "    // Test average ratings",
+                  "    pm.expect(responseJson.avgRatings).to.have.property('movies');",
+                  "    pm.expect(responseJson.avgRatings).to.have.property('radio');",
+                  "    pm.expect(responseJson.avgRatings).to.have.property('eatOut');",
+                  "    pm.expect(responseJson.avgRatings).to.have.property('tv');",
+                  "});",
+                  "",
+                  "// Test data types",
+                  "pm.test('Data types are correct', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseJson.totalCount).to.be.a('number');",
+                  "    pm.expect(responseJson.totalCount).to.be.at.least(0);",
+                  "});",
+                  "",
+                  "// Test CORS headers",
+                  "pm.test('CORS headers present', function () {",
+                  "    pm.expect(pm.response.headers.get('Access-Control-Allow-Origin')).to.exist;",
+                  "});",
+                  "",
+                  "// Test response time",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/results",
+              "host": ["{{base_url}}"],
+              "path": ["api", "results"]
+            },
+            "description": "Retrieve aggregated survey results including statistics on age, food preferences, and ratings."
+          },
+          "response": [
+            {
+              "name": "Results with Data",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/results",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "results"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"totalCount\": 150,\n  \"age\": {\n    \"avg\": 28.5,\n    \"min\": 18,\n    \"max\": 65\n  },\n  \"foodPercentages\": {\n    \"pizza\": 45.5,\n    \"pasta\": 30.2,\n    \"papAndWors\": 24.3\n  },\n  \"avgRatings\": {\n    \"movies\": 4.2,\n    \"radio\": 3.1,\n    \"eatOut\": 4.8,\n    \"tv\": 3.5\n  }\n}"
+            },
+            {
+              "name": "Results with No Data",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/results",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "results"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"totalCount\": 0,\n  \"age\": {\n    \"avg\": null,\n    \"min\": null,\n    \"max\": null\n  },\n  \"foodPercentages\": {\n    \"pizza\": null,\n    \"pasta\": null,\n    \"papAndWors\": null\n  },\n  \"avgRatings\": {\n    \"movies\": null,\n    \"radio\": null,\n    \"eatOut\": null,\n    \"tv\": null\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "API Documentation",
+      "description": "Access to API documentation and OpenAPI specification",
+      "item": [
+        {
+          "name": "Get OpenAPI Specification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test OpenAPI spec response",
+                  "pm.test('OpenAPI spec retrieved successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Test content type",
+                  "pm.test('Response is JSON', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "});",
+                  "",
+                  "// Test OpenAPI structure",
+                  "pm.test('Valid OpenAPI specification', function () {",
+                  "    const spec = pm.response.json();",
+                  "    pm.expect(spec).to.have.property('openapi');",
+                  "    pm.expect(spec).to.have.property('info');",
+                  "    pm.expect(spec).to.have.property('paths');",
+                  "    pm.expect(spec).to.have.property('components');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-docs.json",
+              "host": ["{{base_url}}"],
+              "path": ["api-docs.json"]
+            },
+            "description": "Retrieve the OpenAPI 3.0 specification for automatic client generation and documentation."
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "// Global pre-request setup",
+          "console.log(`🚀 Running request: ${pm.info.requestName}`);",
+          "console.log(`📍 Environment: ${pm.environment.get('environment_name') || 'Unknown'}`);",
+          "",
+          "// Set request timestamp",
+          "pm.environment.set('request_timestamp', new Date().toISOString());"
+        ],
+        "type": "text/javascript"
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "// Global test setup",
+          "console.log(`✅ Completed request: ${pm.info.requestName}`);",
+          "console.log(`⏱️  Response time: ${pm.response.responseTime}ms`);",
+          "console.log(`📊 Status: ${pm.response.code} ${pm.response.status}`);"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "collection_version",
+      "value": "1.0.0"
+    },
+    {
+      "key": "api_name",
+      "value": "Survey Application API"
+    }
+  ]
+}

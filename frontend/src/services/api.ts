@@ -1,8 +1,41 @@
 import axios from 'axios';
 import type { SurveyFormValues } from '../validation';
+import { formToPayload } from '../shared/validation';
+import { config } from '@/config/env';
 
-const API_URL = import.meta.env.VITE_API_URL as string;
-console.log('>>> API_URL is', API_URL);
+// Configure axios instance with environment-based settings
+const apiClient = axios.create({
+  baseURL: config.apiUrl,
+  timeout: config.apiTimeout,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add request interceptor for debugging in development
+if (config.isDevelopment) {
+  apiClient.interceptors.request.use(
+    (config) => {
+      console.log('🔄 API Request:', config.method?.toUpperCase(), config.url);
+      return config;
+    },
+    (error) => {
+      console.error('❌ API Request Error:', error);
+      return Promise.reject(error);
+    }
+  );
+
+  apiClient.interceptors.response.use(
+    (response) => {
+      console.log('✅ API Response:', response.status, response.config.url);
+      return response;
+    },
+    (error) => {
+      console.error('❌ API Response Error:', error.response?.status, error.config?.url);
+      return Promise.reject(error);
+    }
+  );
+}
 
 /*
  * submitSurvey
@@ -15,21 +48,10 @@ console.log('>>> API_URL is', API_URL);
 export async function submitSurvey(
   data: SurveyFormValues,
 ): Promise<{ id: number }> {
-  const payload = {
-                       firstName: data.firstName,
-    lastName: data.lastName,
-    email: data.email,
-                         contactNumber: data.contactNumber,
-    dateOfBirth: data.dateOfBirth,
-    foods: data.foods,
-    ratingMovies: Number(data.ratingMovies),
-    ratingRadio: Number(data.ratingRadio),
-    ratingEatOut: Number(data.ratingEatOut),
-    ratingTV: Number(data.ratingTV),
-  };
+  const payload = formToPayload(data);
 
-  const response = await axios.post<{ id: number }>(
-    `${API_URL}/api/survey`,
+  const response = await apiClient.post<{ id: number }>(
+    '/api/survey',
     payload,
   );
   return response.data;
@@ -39,24 +61,25 @@ export async function submitSurvey(
  * ResultsData
  * ----------------
  * Matches the shape returned from GET /api/results.
+ * Updated to match backend SurveyResultsDTO exactly
  */
 export type ResultsData = {
   totalCount: number;
   age: {
-    avg: number | string | null;
-    min: number | string | null;
-    max: number | string | null;
+    avg: number | null;
+    min: number | null;
+    max: number | null;
   };
   foodPercentages: {
-    pizza: number | string | null;
-    pasta: number | string | null;
-    papAndWors: number | string | null;
+    pizza: number | null;
+    pasta: number | null;
+    papAndWors: number | null;
   };
   avgRatings: {
-    movies: number | string | null;
-    radio: number | string | null;
-    eatOut: number | string | null;
-    tv: number | string | null;
+    movies: number | null;
+    radio: number | null;
+    eatOut: number | null;
+    tv: number | null;
   };
 };
 
@@ -66,6 +89,6 @@ export type ResultsData = {
  * Sends a GET to ${API_URL}/api/results and returns the parsed JSON.
  */
 export async function fetchResults(): Promise<ResultsData> {
-  const response = await axios.get<ResultsData>(`${API_URL}/api/results`);
+  const response = await apiClient.get<ResultsData>('/api/results');
   return response.data;
 }

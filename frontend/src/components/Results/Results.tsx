@@ -1,6 +1,6 @@
-import { useEffect, useState, useMemo } from 'react';
-import { fetchResults } from '../../services/api';
-import { useSurveyStore } from '../../store/useSurveyStore';
+import { useEffect, useMemo, useRef } from 'react';
+import { useResults } from '@/store/useSurveyStore';
+import { Loading, ErrorMessage } from '@/components/ui';
 import styles from './Results.module.css';
 // Utility functions moved outside component
 const fmtDecimal = (n: number | string | null) => {
@@ -27,25 +27,16 @@ const ResultRow = ({
   </div>
 );
 export default function Results() {
-  const results = useSurveyStore((s) => s.results);
-  const setResults = useSurveyStore((s) => s.setResults);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: results, loading, error, fetchResults } = useResults();
+  const hasFetched = useRef(false);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetchResults();
-        setResults(res);
-      } catch (err) {
-        console.error(err);
-        setError('Failed to load survey results');
-        setResults(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [setResults]);
+    // Fetch results if not already loaded and not already fetching
+    if (!results && !loading && !error && !hasFetched.current) {
+      hasFetched.current = true;
+      fetchResults();
+    }
+  }, [results, loading, error]); // Remove fetchResults from dependencies
   // Memoize destructured values to prevent unnecessary re-renders
   const resultValues = useMemo(() => {
     if (!results) return null;
@@ -57,13 +48,28 @@ export default function Results() {
     };
   }, [results]);
   if (loading) {
-    return <div className={styles.message}>Loading results...</div>;
+    return <Loading text="Loading survey results..." />;
   }
-  if (error || !results) {
-    return <div className={styles.error}>{error || 'Error loading data.'}</div>;
+  
+  if (error) {
+    return (
+      <ErrorMessage 
+        message={error}
+        title="Failed to Load Results"
+        showRetry
+        onRetry={fetchResults}
+      />
+    );
   }
-  if (results.totalCount === 0) {
-    return <div className={styles.message}>No Surveys Available.</div>;
+
+  if (!results || results.totalCount === 0) {
+    return (
+      <ErrorMessage 
+        message="No survey responses available yet. Be the first to submit a survey!"
+        title="No Data"
+        severity="info"
+      />
+    );
   }
   const {
     totalCount,
