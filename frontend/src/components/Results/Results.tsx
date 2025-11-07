@@ -80,7 +80,7 @@ export default function Results() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <h2 className={styles.heading}>📊 Survey Results</h2>
+  <h2 className={styles.heading}><span aria-hidden="true">📊 </span><span>Survey Results</span></h2>
         
         <ResultRow label="Total number of surveys" value={totalCount} />
         <ResultRow label="Average Age" value={`${fmtDecimal(avg)} years`} />

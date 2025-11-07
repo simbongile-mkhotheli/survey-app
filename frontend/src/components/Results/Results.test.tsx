@@ -73,11 +73,11 @@ describe('Results', () => {
     
     render(<Results />);
     
-    expect(screen.getByText('Survey Results')).toBeInTheDocument();
+  expect(screen.getByText('Survey Results')).toBeInTheDocument();
     expect(screen.getByText('Total number of surveys')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
     expect(screen.getByText('Average Age')).toBeInTheDocument();
-    expect(screen.getByText('28.5')).toBeInTheDocument();
+  expect(screen.getByText(/28\.5/)).toBeInTheDocument();
   });
 
   it('displays error message when API call fails', async () => {

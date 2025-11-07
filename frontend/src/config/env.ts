@@ -18,10 +18,14 @@ const envSchema = z.object({
 // Parse and validate environment variables
 const parseEnv = () => {
   try {
+    const mode = import.meta.env.MODE || import.meta.env.VITE_NODE_ENV || 'development';
+    // In test mode, allow a safe default API URL so unit tests don't fail on missing env
+    const fallbackApiUrl = mode === 'test' ? 'http://localhost:3000' : undefined;
+
     return envSchema.parse({
-      VITE_API_URL: import.meta.env.VITE_API_URL,
+      VITE_API_URL: import.meta.env.VITE_API_URL ?? fallbackApiUrl,
       VITE_APP_NAME: import.meta.env.VITE_APP_NAME,
-      VITE_NODE_ENV: import.meta.env.VITE_NODE_ENV || import.meta.env.MODE,
+      VITE_NODE_ENV: (import.meta.env.VITE_NODE_ENV || mode) as 'development' | 'production' | 'test',
       VITE_PORT: import.meta.env.VITE_PORT,
     });
   } catch (error) {
