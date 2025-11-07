@@ -56,7 +56,9 @@ jobs:
         run: |
           git push origin HEAD:${{ github.head_ref }}
 
-  lint_and_build:
+  # Combined Frontend Code Quality and Build
+  frontend-quality-build:
+    name: Frontend — ESLint + TypeScript + Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -69,6 +71,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -76,21 +80,34 @@ jobs:
       - name: Auto-format with Prettier
         run: npx prettier --write "src/**/*.{ts,tsx,json,css,md}"
 
-      - name: Run ESLint
-        run: npm run lint
-      - name: Typecheck (TS)
-        run: npm run typecheck --if-present
+      - name: ESLint + TypeScript Check
+        run: |
+          echo "🔍 Running ESLint..."
+          npm run lint
+          echo "✅ ESLint passed"
+          
+          echo "🔍 Running TypeScript type checking..."
+          npm run typecheck --if-present
+          echo "✅ TypeScript check passed"
 
       - name: Check Prettier formatting
         run: npx prettier --check "src/**/*.{ts,tsx,json,css,md}"
 
-      - name: Build
-        run: npm run build
-      - name: Run Tests (if any)
-        run: npm test --if-present
+      - name: Build application
+        run: |
+          echo "🏗️ Building frontend..."
+          npm run build
+          echo "✅ Frontend build completed"
 
-  backend:
-    name: Backend — typecheck & build
+      - name: Run tests
+        run: |
+          echo "🧪 Running frontend tests..."
+          npm test --if-present
+          echo "✅ Frontend tests completed"
+
+  # Combined Backend Code Quality and Build  
+  backend-quality-build:
+    name: Backend — ESLint + TypeScript + Build + Tests
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -103,23 +120,42 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Typecheck (TS)
-        run: npm run typecheck --if-present
+      - name: ESLint + TypeScript Check
+        run: |
+          echo "🔍 Running ESLint..."
+          npm run lint --if-present
+          echo "✅ ESLint passed"
+          
+          echo "🔍 Running TypeScript type checking..."
+          npm run typecheck --if-present
+          echo "✅ TypeScript check passed"
 
       - name: Generate Prisma client
-        run: npx prisma generate
+        run: |
+          echo "🔧 Generating Prisma client for tests..."
+          npx prisma generate --schema=./prisma/schema.test.prisma
+          npx prisma db push --schema=./prisma/schema.test.prisma
 
       - name: Run tests
-        run: npm test
+        run: |
+          echo "🧪 Running backend tests..."
+          npm test
+          echo "✅ Backend tests completed"
         env:
-          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
+          NODE_ENV: test
+          DATABASE_URL: "file:./test.db"
 
-      - name: Build
-        run: npm run build
+      - name: Build application
+        run: |
+          echo "🏗️ Building backend..."
+          npm run build
+          echo "✅ Backend build completed"
 
   # Security and Quality Checks
   security:
@@ -150,7 +186,7 @@ jobs:
   docker:
     name: Docker Build & Test
     runs-on: ubuntu-latest
-    needs: [lint_and_build, backend]
+    needs: [frontend-quality-build, backend-quality-build]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -187,7 +223,7 @@ jobs:
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
-    needs: [lint_and_build, backend, security, docker]
+    needs: [frontend-quality-build, backend-quality-build, security, docker]
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     # Note: If you use GitHub Environments (with protection rules), uncomment below and
     # ensure an environment named "staging" exists in your repository settings.
@@ -236,7 +272,7 @@ jobs:
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: [lint_and_build, backend, security, docker]
+    needs: [frontend-quality-build, backend-quality-build, security, docker]
     if: startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push'
     # Note: If you use GitHub Environments (with protection rules), uncomment below and
     # ensure an environment named "production" exists in your repository settings.
