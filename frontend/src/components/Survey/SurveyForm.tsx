@@ -125,8 +125,8 @@ export default function SurveyForm() {
               required
               autoComplete="bday"
             />
+            </div>
           </div>
-        </div>
 
         {/* Favorite Foods */}
         <div className={styles.row}>
