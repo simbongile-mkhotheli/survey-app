@@ -415,7 +415,7 @@ npm start
 1. **Documentation**: Check this guide and API docs
 2. **Issues**: Create GitHub issues for bugs
 3. **Discussions**: Use GitHub discussions for questions
-4. **Email**: developer-support@survey-app.com
+4. **Email**: mkotelisimbo@gmail.com
 
 ### Common Issues
 

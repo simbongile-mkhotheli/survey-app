@@ -110,7 +110,7 @@ survey-app/
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/survey-app.git
+   git clone https://github.com/simbongile-mkhotheli/survey-app.git
    cd survey-app
    ```
 
