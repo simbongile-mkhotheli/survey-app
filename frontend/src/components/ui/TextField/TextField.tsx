@@ -1,13 +1,13 @@
-import type { UseFormRegister, FieldError } from 'react-hook-form';
+import type { UseFormRegister, FieldError, FieldValues } from 'react-hook-form';
 import { InlineError } from '@/components/ui';
 import styles from './TextField.module.css';
 
-interface TextFieldProps {
+interface TextFieldProps<T extends FieldValues = FieldValues> {
   id: string;
   label: string;
   type?: 'text' | 'email' | 'tel' | 'date' | 'password' | 'url';
   placeholder?: string;
-  register: UseFormRegister<any>;
+  register: UseFormRegister<T>;
   error?: FieldError;
   required?: boolean;
   autoComplete?: string;
