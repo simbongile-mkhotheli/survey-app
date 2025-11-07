@@ -3,18 +3,25 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import request from 'supertest';
 import app from '@/server';
 import { createMockSurveyInput } from '@/test/utils/test-helpers';
+import { setupTestDatabasePostgres, cleanTestDatabase, teardownTestDatabase } from '@/test/utils/db-setup-postgres';
+import { PrismaClient } from '@prisma/client';
 
 describe('Survey API Integration Tests', () => {
+  let testDb: PrismaClient;
+
   beforeAll(async () => {
-    // Setup test database or mock external dependencies
+    // Setup PostgreSQL test database connection
+    testDb = await setupTestDatabasePostgres();
   });
 
   afterAll(async () => {
-    // Cleanup test database or connections
+    // Cleanup test database connections
+    await teardownTestDatabase();
   });
 
   beforeEach(async () => {
-    // Clean up data before each test
+    // Clean up data before each test to ensure isolation
+    await cleanTestDatabase(testDb);
   });
 
   describe('POST /api/survey', () => {
