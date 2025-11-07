@@ -12,7 +12,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: var(--spacing-2) var(--spacing-5);
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -27,7 +27,7 @@
 
 .main {
   flex: 1;
-  padding: 20px 40px;
+  padding: var(--spacing-5) var(--spacing-10);
 }
 
 /* Row layout */
@@ -40,7 +40,7 @@
 .colLabel {
   flex-basis: 25%;
   text-align: right;
-  padding-right: 10px;
+  padding-right: var(--spacing-2);
 }
 
 /* Label text */
@@ -58,11 +58,11 @@
 
 /* Inline column for inputs (checkboxes) */
 .colInputInline {
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-5);
   flex-basis: 75%;
   display: inline-flex;
   align-items: center;
-  gap: 15px;
+  gap: var(--spacing-4);
 }
 
 /* Full-width column */
@@ -85,12 +85,17 @@
 /* Text input (textbox) */
 .textbox {
   width: 250px;
-  padding: 6px 8px;
+  padding: var(--spacing-2) var(--spacing-2);
   font-size: var(--font-size-sm);
   border: 1px solid var(--color-primary);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--transition-base);
+}
+
+.textbox:focus {
+  border-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-focus);
 }
 
 /* Textbox error state */
@@ -109,15 +114,16 @@
 
 /* Checkbox input */
 .checkbox {
-  margin-right: 5px;
+  margin-right: var(--spacing-1);
   width: 14px;
   height: 14px;
+  cursor: pointer;
 }
 
 /* Instruction text above table */
 .instruction {
   font-size: var(--font-size-xs);
-  margin-bottom: 8px;
+  margin-bottom: var(--spacing-2);
   color: var(--color-text);
 }
 
@@ -136,37 +142,37 @@
 /* Table header cell */
 .th {
   border: 1px solid var(--color-border);
-  padding: 6px;
+  padding: var(--spacing-2);
   text-align: center;
-  background-color: var(--color-header-bg);
+  background-color: var(--color-bg-header);
 }
 
 /* Table header label cell */
 .thLabel {
   border: 1px solid var(--color-border);
-  padding: 6px;
+  padding: var(--spacing-2);
   text-align: left;
-  background-color: var(--color-header-bg);
+  background-color: var(--color-bg-header);
   width: 35%;
 }
 
 /* Table data label cell */
 .tdLabel {
   border: 1px solid var(--color-border);
-  padding: 6px;
+  padding: var(--spacing-2);
   text-align: left;
 }
 
 /* Centered table data cell */
 .tdCenter {
   border: 1px solid var(--color-border);
-  padding: 6px;
+  padding: var(--spacing-2);
   text-align: center;
 }
 
 /* Even table row background */
 .rowEven {
-  background-color: yellow;
+  background-color: var(--color-bg-row-even);
 }
 
 /* Radio button */
@@ -178,7 +184,7 @@
 
 /* Submit button container */
 .submitContainer {
-  margin-top: 30px;
+  margin-top: var(--spacing-8);
   display: flex;
   justify-content: center;
 }
@@ -186,14 +192,24 @@
 /* Submit button */
 .submitButton {
   width: 120px;
-  padding: 8px 0;
-  font-size: 13px;
-  color: var(--color-body);
+  padding: var(--spacing-2) 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-inverse);
   background-color: var(--color-primary);
   border: none;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--transition-base);
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.submitButton:focus {
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 /* Submit button disabled state */

@@ -5,17 +5,23 @@
  */
 
 .card {
-  background-color: white;
-  border-radius: 0.5rem;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1rem 0 1rem;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-4) 0 var(--spacing-4);
 }
 
 .headerContent {
@@ -24,17 +30,18 @@
 }
 
 .title {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #111827;
+  margin: 0 0 var(--spacing-1) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  line-height: var(--line-height-tight);
 }
 
 .description {
   margin: 0;
-  font-size: 0.875rem;
-  color: #6b7280;
-  line-height: 1.5;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
 }
 
 .actions {
@@ -42,11 +49,11 @@
 }
 
 .content {
-  padding: 1rem;
+  padding: var(--spacing-4);
 }
 
 .section {
-  padding: 0.75rem 0;
+  padding: var(--spacing-3) 0;
 }
 
 .section:not(:last-child) {

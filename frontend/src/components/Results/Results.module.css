@@ -3,7 +3,7 @@
   text-align: center;
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-8);
   line-height: var(--line-height-tight);
 }
 
@@ -11,12 +11,23 @@
 .resultRow {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
+  padding: var(--spacing-2) 0;
+  border-bottom: 1px solid var(--color-border-light);
+  transition: background-color var(--transition-fast);
+}
+
+.resultRow:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.resultRow:last-child {
+  border-bottom: none;
 }
 
 .label {
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
 }
 
 .value {
