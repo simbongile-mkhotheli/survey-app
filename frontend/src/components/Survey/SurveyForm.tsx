@@ -72,7 +72,7 @@ export default function SurveyForm() {
               <span className={styles.labelText}>Personal Details</span>
             </div>
             <div className={styles.colInput}>
-            <TextField
+            <TextField<SurveyFormValues>
               id="firstName"
               label="First Name"
               type="text"
@@ -83,7 +83,7 @@ export default function SurveyForm() {
               autoComplete="given-name"
             />
 
-            <TextField
+            <TextField<SurveyFormValues>
               id="lastName"
               label="Last Name"
               type="text"
@@ -94,7 +94,7 @@ export default function SurveyForm() {
               autoComplete="family-name"
             />
 
-            <TextField
+            <TextField<SurveyFormValues>
               id="email"
               label="Email"
               type="email"
@@ -105,7 +105,7 @@ export default function SurveyForm() {
               autoComplete="email"
             />
 
-            <TextField
+            <TextField<SurveyFormValues>
               id="contactNumber"
               label="Contact Number"
               type="tel"
@@ -116,7 +116,7 @@ export default function SurveyForm() {
               autoComplete="tel"
             />
 
-            <TextField
+            <TextField<SurveyFormValues>
               id="dateOfBirth"
               label="Date of Birth"
               type="date"

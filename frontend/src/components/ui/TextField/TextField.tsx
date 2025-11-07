@@ -1,9 +1,9 @@
-import type { UseFormRegister, FieldError, FieldValues } from 'react-hook-form';
+import type { UseFormRegister, FieldError, FieldValues, Path } from 'react-hook-form';
 import { InlineError } from '@/components/ui';
 import styles from './TextField.module.css';
 
 interface TextFieldProps<T extends FieldValues = FieldValues> {
-  id: string;
+  id: Path<T>;
   label: string;
   type?: 'text' | 'email' | 'tel' | 'date' | 'password' | 'url';
   placeholder?: string;
@@ -13,7 +13,7 @@ interface TextFieldProps<T extends FieldValues = FieldValues> {
   autoComplete?: string;
 }
 
-export default function TextField({
+export default function TextField<T extends FieldValues = FieldValues>({
   id,
   label,
   type = 'text',
@@ -22,7 +22,7 @@ export default function TextField({
   error,
   required = false,
   autoComplete,
-}: TextFieldProps) {
+}: TextFieldProps<T>) {
   return (
     <div className={styles.fieldGroup}>
       <label htmlFor={id} className={styles.fieldLabel}>
