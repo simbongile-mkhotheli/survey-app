@@ -101,6 +101,12 @@
 /* Textbox error state */
 .textboxError {
   border-color: var(--color-error);
+  background-color: #fff5f5;
+}
+
+.textboxError:focus {
+  border-color: var(--color-error);
+  box-shadow: var(--shadow-focus-error);
 }
 
 /* Checkbox label */
@@ -218,19 +224,21 @@
   cursor: not-allowed;
 }
 
-/* Success banner after submission */
-.successBanner {
-  margin-top: 20px;
-  text-align: center;
-  color: var(--color-success);
-  font-weight: 600;
-}
-
 /* Error message text */
 .errorText {
-  height: 1em;
-  margin: 1px 0 2px 0;
-  font-size: 0.875rem;
+  display: block;
+  min-height: 1.25rem;
+  margin: var(--spacing-1) 0;
+  padding-left: var(--spacing-1);
+  font-size: var(--font-size-xs);
   color: var(--color-error);
-  overflow: hidden;
+  line-height: var(--line-height-tight);
+}
+
+/* Success banner after submission */
+.successBanner {
+  margin-top: var(--spacing-5);
+  text-align: center;
+  color: var(--color-success);
+  font-weight: var(--font-weight-semibold);
 }

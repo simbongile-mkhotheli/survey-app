@@ -105,19 +105,23 @@
 .inlineError {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0;
-  color: #dc2626;
-  font-size: 0.875rem;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) 0;
+  min-height: 1.25rem;
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-tight);
 }
 
 .inlineIcon {
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   flex-shrink: 0;
+  line-height: 1;
 }
 
 .inlineMessage {
-  line-height: 1.4;
+  line-height: var(--line-height-tight);
+  word-break: break-word;
 }
 
 /* Dark mode support */

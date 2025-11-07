@@ -100,9 +100,7 @@ export default function SurveyForm() {
                 }`}
                 {...register('lastName')}
               />
-              <p className={styles.errorText}>
-                {errors.lastName?.message ?? '\u00A0'}
-              </p>
+              <InlineError message={errors.lastName?.message || ''} />
             </div>
 
             <div className={styles.fieldGroup}>
@@ -118,9 +116,7 @@ export default function SurveyForm() {
                 }`}
                 {...register('email')}
               />
-              <p className={styles.errorText}>
-                {errors.email?.message ?? '\u00A0'}
-              </p>
+              <InlineError message={errors.email?.message || ''} />
             </div>
 
             <div className={styles.fieldGroup}>
@@ -136,9 +132,7 @@ export default function SurveyForm() {
                 }`}
                 {...register('contactNumber')}
               />
-              <p className={styles.errorText}>
-                {errors.contactNumber?.message ?? '\u00A0'}
-              </p>
+              <InlineError message={errors.contactNumber?.message || ''} />
             </div>
 
             <div className={styles.fieldGroup}>
@@ -153,9 +147,7 @@ export default function SurveyForm() {
                 }`}
                 {...register('dateOfBirth')}
               />
-              <p className={styles.errorText}>
-                {errors.dateOfBirth?.message ?? '\u00A0'}
-              </p>
+              <InlineError message={errors.dateOfBirth?.message || ''} />
             </div>
           </div>
         </div>
