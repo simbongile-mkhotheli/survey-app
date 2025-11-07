@@ -12,6 +12,9 @@ export type { LoadingProps } from './Loading/Loading';
 export { ErrorMessage, InlineError } from './ErrorMessage/ErrorMessage';
 export type { ErrorMessageProps, InlineErrorProps } from './ErrorMessage/ErrorMessage';
 
+// Form Components
+export { TextField } from './TextField';
+
 // Button Components
 export { Button } from './Button/Button';
 export type { ButtonProps } from './Button/Button';

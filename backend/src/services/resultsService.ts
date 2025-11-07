@@ -17,6 +17,24 @@ function computeAge(dob: Date): number {
   return age;
 }
 
+/**
+ * Find the count of a specific food in the distribution array.
+ * Handles case-insensitive matching and variations like "Pap and Wors"
+ */
+function findFoodCount(
+  foodDistribution: Array<{ food: string; count: number }>,
+  searchTerms: string[]
+): number {
+  const found = foodDistribution.find(f => {
+    const normalized = f.food.toLowerCase().replace(/\s+/g, '');
+    return searchTerms.some(term => 
+      f.food.toLowerCase() === term.toLowerCase() ||
+      normalized === term.toLowerCase().replace(/\s+/g, '')
+    );
+  });
+  return found?.count || 0;
+}
+
 export class ResultsService implements IResultsService {
   constructor(private resultsRepository: IResultsRepository) {}
 
@@ -58,13 +76,10 @@ export class ResultsService implements IResultsService {
     const toPercentage = (count: number) =>
       totalCount > 0 ? parseFloat(((count / totalCount) * 100).toFixed(1)) : null;
 
-    // Find specific food percentages from distribution (case-insensitive matching)
-    const pizzaCount = foodDistribution.find(f => f.food.toLowerCase() === 'pizza')?.count || 0;
-    const pastaCount = foodDistribution.find(f => f.food.toLowerCase() === 'pasta')?.count || 0;
-    const papAndWorsCount = foodDistribution.find(f => 
-      f.food.toLowerCase().replace(/\s+/g, '') === 'papandwors' || 
-      f.food.toLowerCase() === 'pap and wors'
-    )?.count || 0;
+    // Find specific food counts using helper function
+    const pizzaCount = findFoodCount(foodDistribution, ['pizza']);
+    const pastaCount = findFoodCount(foodDistribution, ['pasta']);
+    const papAndWorsCount = findFoodCount(foodDistribution, ['pap and wors', 'papandwors']);
 
       return {
         totalCount,

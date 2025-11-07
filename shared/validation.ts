@@ -7,6 +7,12 @@ const isRatingString = (val: string) => {
 const isRatingNumber = (val: number) => Number.isInteger(val) && val >= 1 && val <= 5;
 const ratingError = { message: 'Please select a rating from 1–5' };
 
+// Helper to create string-based rating field
+const ratingStringField = () => z.string().refine(isRatingString, ratingError);
+
+// Helper to create number-based rating field
+const ratingNumberField = () => z.number().int().refine(isRatingNumber, ratingError);
+
 function validateAgeString(val: string) {
   const dob = new Date(val);
   if (isNaN(dob.getTime())) return false;
@@ -31,10 +37,10 @@ export const SurveyFormSchema = z.object({
     message: 'Date of birth must correspond to an age between 5 and 120 years',
   }),
   foods: z.array(z.string()).min(1, 'Select at least one food'),
-  ratingMovies: z.string().refine(isRatingString, ratingError),
-  ratingRadio: z.string().refine(isRatingString, ratingError),
-  ratingEatOut: z.string().refine(isRatingString, ratingError),
-  ratingTV: z.string().refine(isRatingString, ratingError),
+  ratingMovies: ratingStringField(),
+  ratingRadio: ratingStringField(),
+  ratingEatOut: ratingStringField(),
+  ratingTV: ratingStringField(),
 });
 
 export type SurveyFormValues = z.infer<typeof SurveyFormSchema>;
@@ -49,10 +55,10 @@ export const SurveyPayloadSchema = z.object({
     message: 'Date of birth must correspond to an age between 5 and 120 years',
   }),
   foods: z.array(z.string()).min(1, 'Select at least one food'),
-  ratingMovies: z.number().int().refine(isRatingNumber, ratingError),
-  ratingRadio: z.number().int().refine(isRatingNumber, ratingError),
-  ratingEatOut: z.number().int().refine(isRatingNumber, ratingError),
-  ratingTV: z.number().int().refine(isRatingNumber, ratingError),
+  ratingMovies: ratingNumberField(),
+  ratingRadio: ratingNumberField(),
+  ratingEatOut: ratingNumberField(),
+  ratingTV: ratingNumberField(),
 });
 
 export type SurveyInput = z.infer<typeof SurveyPayloadSchema>;

@@ -7,7 +7,7 @@ import { SurveySchema } from '@/validation';
 import type { SurveyFormValues } from '@/validation';
 import { submitSurvey } from '@/services/api';
 import { useErrorHandler } from '@/components/ErrorBoundary';
-import { Loading, ErrorMessage, InlineError } from '@/components/ui';
+import { Loading, ErrorMessage, InlineError, TextField } from '@/components/ui';
 
 import RatingRow from './RatingRow';
 import styles from './SurveyForm.module.css';
@@ -71,84 +71,59 @@ export default function SurveyForm() {
             <span className={styles.labelText}>Personal Details :</span>
           </div>
           <div className={styles.colInput}>
-            <div className={styles.fieldGroup}>
-              <label htmlFor="firstName" className={styles.fieldLabel}>
-                First Name
-              </label>
-              <input
-                id="firstName"
-                type="text"
-                placeholder="Enter first name"
-                className={`${styles.textbox} ${
-                  errors.firstName ? styles.textboxError : ''
-                }`}
-                {...register('firstName')}
-              />
-              <InlineError message={errors.firstName?.message || ''} />
-            </div>
+            <TextField
+              id="firstName"
+              label="First Name"
+              type="text"
+              placeholder="Enter first name"
+              register={register}
+              error={errors.firstName}
+              required
+              autoComplete="given-name"
+            />
 
-            <div className={styles.fieldGroup}>
-              <label htmlFor="lastName" className={styles.fieldLabel}>
-                Last Name
-              </label>
-              <input
-                id="lastName"
-                type="text"
-                placeholder="Enter last name"
-                className={`${styles.textbox} ${
-                  errors.lastName ? styles.textboxError : ''
-                }`}
-                {...register('lastName')}
-              />
-              <InlineError message={errors.lastName?.message || ''} />
-            </div>
+            <TextField
+              id="lastName"
+              label="Last Name"
+              type="text"
+              placeholder="Enter last name"
+              register={register}
+              error={errors.lastName}
+              required
+              autoComplete="family-name"
+            />
 
-            <div className={styles.fieldGroup}>
-              <label htmlFor="email" className={styles.fieldLabel}>
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                className={`${styles.textbox} ${
-                  errors.email ? styles.textboxError : ''
-                }`}
-                {...register('email')}
-              />
-              <InlineError message={errors.email?.message || ''} />
-            </div>
+            <TextField
+              id="email"
+              label="Email"
+              type="email"
+              placeholder="you@example.com"
+              register={register}
+              error={errors.email}
+              required
+              autoComplete="email"
+            />
 
-            <div className={styles.fieldGroup}>
-              <label htmlFor="contactNumber" className={styles.fieldLabel}>
-                Contact Number
-              </label>
-              <input
-                id="contactNumber"
-                type="tel"
-                placeholder="+1234567890"
-                className={`${styles.textbox} ${
-                  errors.contactNumber ? styles.textboxError : ''
-                }`}
-                {...register('contactNumber')}
-              />
-              <InlineError message={errors.contactNumber?.message || ''} />
-            </div>
+            <TextField
+              id="contactNumber"
+              label="Contact Number"
+              type="tel"
+              placeholder="+1234567890"
+              register={register}
+              error={errors.contactNumber}
+              required
+              autoComplete="tel"
+            />
 
-            <div className={styles.fieldGroup}>
-              <label htmlFor="dateOfBirth" className={styles.fieldLabel}>
-                Date of Birth
-              </label>
-              <input
-                id="dateOfBirth"
-                type="date"
-                className={`${styles.textbox} ${
-                  errors.dateOfBirth ? styles.textboxError : ''
-                }`}
-                {...register('dateOfBirth')}
-              />
-              <InlineError message={errors.dateOfBirth?.message || ''} />
-            </div>
+            <TextField
+              id="dateOfBirth"
+              label="Date of Birth"
+              type="date"
+              register={register}
+              error={errors.dateOfBirth}
+              required
+              autoComplete="bday"
+            />
           </div>
         </div>
 

@@ -87,14 +87,15 @@ export function ErrorMessage({
 export interface InlineErrorProps {
   message: string;
   className?: string;
+  id?: string;
 }
 
-export function InlineError({ message, className = '' }: InlineErrorProps) {
+export function InlineError({ message, className = '', id }: InlineErrorProps) {
   if (!message) return null;
   
   return (
-    <div className={`${styles.inlineError} ${className}`}>
-      <span className={styles.inlineIcon}>⚠️</span>
+    <div className={`${styles.inlineError} ${className}`} id={id} role="alert" aria-live="polite">
+      <span className={styles.inlineIcon} aria-hidden="true">⚠️</span>
       <span className={styles.inlineMessage}>{message}</span>
     </div>
   );
