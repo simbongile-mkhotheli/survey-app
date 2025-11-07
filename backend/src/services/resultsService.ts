@@ -5,19 +5,6 @@ import { businessMetrics } from '@/middleware/metrics';
 import { logWithContext } from '@/config/logger';
 
 /**
- * Compute the full years between a date of birth and today.
- */
-function computeAge(dob: Date): number {
-  const today = new Date();
-  let age = today.getFullYear() - dob.getFullYear();
-  const monthDiff = today.getMonth() - dob.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-    age--;
-  }
-  return age;
-}
-
-/**
  * Find the count of a specific food in the distribution array.
  * Handles case-insensitive matching and variations like "Pap and Wors"
  */

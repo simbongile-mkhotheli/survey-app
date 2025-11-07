@@ -2,7 +2,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
 import { logWithContext } from '@/config/logger';
-import { config } from '@/config/env';
 
 /**
  * Application Metrics System
@@ -135,7 +134,7 @@ export function metricsMiddleware(req: Request, res: Response, next: NextFunctio
 
   // Override res.end to capture metrics when response completes
   const originalEnd = res.end;
-  res.end = function(chunk?: any) {
+  res.end = function(_chunk?: any) {
     const duration = (Date.now() - startTime) / 1000; // Convert to seconds
     const statusCode = res.statusCode;
     const statusClass = `${Math.floor(statusCode / 100)}xx`;

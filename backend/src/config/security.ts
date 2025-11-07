@@ -267,7 +267,7 @@ export const securityUtils = {
       }
       
       return { isValid: true, age };
-    } catch (error) {
+    } catch {
       return { isValid: false, error: 'Invalid date format' };
     }
   },

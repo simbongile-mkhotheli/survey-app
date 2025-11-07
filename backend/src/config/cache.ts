@@ -83,7 +83,7 @@ class RedisClient {
           this.isConnected = true;
         });
 
-        this.client.on('error', (error) => {
+        this.client.on('error', (_error) => {
           this.isConnected = false;
         });
 
@@ -91,7 +91,7 @@ class RedisClient {
           this.isConnected = false;
         });
       }
-    } catch (error) {
+    } catch {
       // Redis initialization failed, will fall back to memory cache
     }
   }
@@ -102,7 +102,7 @@ class RedisClient {
     try {
       const value = await this.client.get(key);
       return value ? JSON.parse(value) : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -118,7 +118,7 @@ class RedisClient {
         await this.client.set(key, serialized);
       }
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -129,7 +129,7 @@ class RedisClient {
     try {
       await this.client.del(Array.isArray(key) ? key : [key]);
       return true;
-    } catch (error) {
+    } catch {
       // Redis DEL error silently handled
       return false;
     }
@@ -144,7 +144,7 @@ class RedisClient {
         await this.client.del(keys);
       }
       return true;
-    } catch (error) {
+    } catch {
       // Redis FLUSH PATTERN error silently handled
       return false;
     }
@@ -179,11 +179,11 @@ class MemoryCache {
       useClones: false, // Better performance, be careful with object mutations
     });
 
-    this.cache.on('expired', (key: string) => {
+    this.cache.on('expired', (_key: string) => {
       // Cache key expired (logged by winston if needed)
     });
 
-    this.cache.on('del', (key: string) => {
+    this.cache.on('del', (_key: string) => {
       // Cache key deleted (logged by winston if needed)
     });
   }

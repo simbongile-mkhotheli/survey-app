@@ -66,11 +66,11 @@ export async function cleanupTestDatabase(prismaClient: PrismaClient, dbPath?: s
     if (dbPath && fs.existsSync(dbPath)) {
       fs.unlinkSync(dbPath);
     }
-  } catch (error) {
+  } catch {
     try {
       // Ensure disconnect even if cleanup fails
       await prismaClient.$disconnect();
-    } catch (disconnectError) {
+    } catch {
       // Ignore disconnect errors
     }
     
@@ -78,7 +78,7 @@ export async function cleanupTestDatabase(prismaClient: PrismaClient, dbPath?: s
     if (dbPath && fs.existsSync(dbPath)) {
       try {
         fs.unlinkSync(dbPath);
-      } catch (fileError) {
+      } catch {
         // Ignore file deletion errors
       }
     }

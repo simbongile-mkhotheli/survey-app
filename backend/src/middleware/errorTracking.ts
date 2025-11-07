@@ -1,6 +1,6 @@
 // backend/src/middleware/errorTracking.ts
 import type { Request, Response, NextFunction } from 'express';
-import { logWithContext, securityLogger } from '@/config/logger';
+import { logWithContext } from '@/config/logger';
 import { errorMetrics } from './metrics';
 import { config } from '@/config/env';
 
@@ -201,7 +201,7 @@ function categorizeError(error: Error, context: Partial<ErrorContext>): string {
 /**
  * Check if error indicates a security incident
  */
-function isSecurityIncident(error: Error, context: Partial<ErrorContext>): boolean {
+function isSecurityIncident(error: Error, _context: Partial<ErrorContext>): boolean {
   const securityIndicators = [
     'authentication',
     'authorization',

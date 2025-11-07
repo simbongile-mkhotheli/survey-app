@@ -1,7 +1,7 @@
 // backend/src/middleware/logging.ts
 import type { Request, Response, NextFunction } from 'express';
 import { randomUUID } from 'crypto';
-import { logWithContext, accessLogger } from '@/config/logger';
+import { logWithContext } from '@/config/logger';
 
 /**
  * Request Logging Middleware
@@ -74,7 +74,6 @@ export function accessLogging(req: Request, res: Response, next: NextFunction): 
   const originalEnd = res.end;
   const originalWrite = res.write;
   
-  const responseBody = '';
   let responseSize = 0;
 
   // Intercept response writes to capture size
@@ -86,7 +85,7 @@ export function accessLogging(req: Request, res: Response, next: NextFunction): 
   };
 
   // Override end function to log when response completes
-  res.end = function(chunk: any, ...args: any[]) {
+  res.end = function(chunk: any, ..._args: any[]) {
     if (chunk) {
       responseSize += Buffer.isBuffer(chunk) ? chunk.length : Buffer.byteLength(chunk);
     }
