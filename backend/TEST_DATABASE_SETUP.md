@@ -1,6 +1,6 @@
 # Test Database Setup
 
-This project uses **PostgreSQL** for both production and testing to ensure consistency and avoid SQLite compatibility issues.
+This project uses **PostgreSQL** for both production and testing to ensure consistency.
 
 ## Quick Start
 
@@ -126,7 +126,7 @@ DATABASE_URL="postgresql://test:test@localhost:5432/survey_app_test?schema=publi
 ## Why PostgreSQL for Tests?
 
 1. **Production Parity**: Same database engine as production eliminates compatibility issues
-2. **Type Consistency**: PostgreSQL types (JSONB, Arrays) behave differently than SQLite
+2. **Type Consistency**: PostgreSQL types (JSONB, Arrays) behave correctly
 3. **Constraint Validation**: Tests database constraints exactly as they work in production
 4. **Performance**: PostgreSQL performance characteristics match production
 5. **Migration Testing**: Validates migrations work correctly before deploying

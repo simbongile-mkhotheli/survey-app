@@ -118,9 +118,9 @@ npm test -- --run
 
 Expected: All 48 tests should pass ✅
 
-## Why PostgreSQL Instead of SQLite?
+## Why PostgreSQL for Tests?
 
-✅ **Production Parity**: Same database engine as production
-✅ **Type Safety**: PostgreSQL types behave correctly
-✅ **Constraint Testing**: Tests actual database constraints
+✅ **Production Parity**: Same database engine as production  
+✅ **Type Safety**: PostgreSQL types behave correctly  
+✅ **Constraint Testing**: Tests actual database constraints  
 ✅ **No Surprises**: What works in tests works in production
