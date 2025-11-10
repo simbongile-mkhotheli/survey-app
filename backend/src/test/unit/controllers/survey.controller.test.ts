@@ -37,7 +37,7 @@ describe('SurveyController', () => {
   });
 
   describe('handleCreateSurvey', () => {
-    it('should create survey and return 201 with id', async () => {
+    it('should create survey successfully and return 201 with generated id', async () => {
       // Arrange
       const mockInput = createMockSurveyInput();
       const mockCreated = createMockSurveyResponse({ id: 123 });
@@ -47,30 +47,45 @@ describe('SurveyController', () => {
       // Act
       await handleCreateSurvey(mockRequest, mockResponse, mockNext);
 
-      // Assert
+      // Assert - Verify service was called with exact input data
+      expect(mockSurveyService.createSurvey).toHaveBeenCalledOnce();
       expect(mockSurveyService.createSurvey).toHaveBeenCalledWith(mockInput);
+      
+      // Assert - Verify 201 Created status code
+      expect(mockResponse.status).toHaveBeenCalledOnce();
       expect(mockResponse.status).toHaveBeenCalledWith(201);
-      expect(mockResponse.json).toHaveBeenCalledWith({ id: 123 });
+      
+      // Assert - Verify only id is returned (not full survey data)
+      expect(mockResponse.json).toHaveBeenCalledOnce();
+      const responseData = mockResponse.json.mock.calls[0][0];
+      expect(responseData).toEqual({ id: 123 });
+      expect(responseData).toHaveProperty('id');
+      expect(typeof responseData.id).toBe('number');
+      
+      // Assert - Verify error handler was NOT invoked
       expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('should call next with error when service throws', async () => {
+    it('should delegate error handling to middleware when service fails', async () => {
       // Arrange
       const mockInput = createMockSurveyInput();
-      const error = new Error('Service error');
+      const databaseError = new Error('Unique constraint violation on email');
       mockRequest.body = mockInput;
-      mockSurveyService.createSurvey.mockRejectedValue(error);
+      mockSurveyService.createSurvey.mockRejectedValue(databaseError);
 
       // Act
       await handleCreateSurvey(mockRequest, mockResponse, mockNext);
 
-      // Assert
-      expect(mockNext).toHaveBeenCalledWith(error);
+      // Assert - Verify error was passed to error handling middleware
+      expect(mockNext).toHaveBeenCalledOnce();
+      expect(mockNext).toHaveBeenCalledWith(databaseError);
+      
+      // Assert - Verify response methods were NOT called (error handler takes over)
       expect(mockResponse.status).not.toHaveBeenCalled();
       expect(mockResponse.json).not.toHaveBeenCalled();
     });
 
-    it('should get container instance', async () => {
+    it('should retrieve container instance for dependency injection', async () => {
       // Arrange
       const mockInput = createMockSurveyInput();
       const mockCreated = createMockSurveyResponse();
@@ -80,8 +95,8 @@ describe('SurveyController', () => {
       // Act
       await handleCreateSurvey(mockRequest, mockResponse, mockNext);
 
-      // Assert
-      expect(Container.getInstance).toHaveBeenCalledTimes(1);
+      // Assert - Verify container singleton pattern is used
+      expect(Container.getInstance).toHaveBeenCalledOnce();
     });
   });
 });

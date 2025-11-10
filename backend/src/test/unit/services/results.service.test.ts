@@ -20,7 +20,7 @@ describe('ResultsService', () => {
   });
 
   describe('getResults', () => {
-    it('should aggregate results from repository successfully', async () => {
+    it('should aggregate and transform results from all repository methods', async () => {
       // Arrange
       const mockTotalCount = 100;
       const mockAvgRatings = {
@@ -45,31 +45,42 @@ describe('ResultsService', () => {
       // Act
       const result = await resultsService.getResults();
 
-      // Assert
-      expect(mockResultsRepository.getTotalResponses).toHaveBeenCalledTimes(1);
-      expect(mockResultsRepository.getAverageRatings).toHaveBeenCalledTimes(1);
-      expect(mockResultsRepository.getFoodDistribution).toHaveBeenCalledTimes(1);
-      expect(mockResultsRepository.getAgeStatistics).toHaveBeenCalledTimes(1);
+      // Assert - Verify all repository methods were called exactly once
+      expect(mockResultsRepository.getTotalResponses).toHaveBeenCalledOnce();
+      expect(mockResultsRepository.getAverageRatings).toHaveBeenCalledOnce();
+      expect(mockResultsRepository.getFoodDistribution).toHaveBeenCalledOnce();
+      expect(mockResultsRepository.getAgeStatistics).toHaveBeenCalledOnce();
 
-      expect(result).toEqual({
-        totalCount: 100,
-        age: { avg: null, min: null, max: null },
-        foodPercentages: {
-          pizza: 60.0,
-          pasta: 40.0,
-          papAndWors: 30.0, // "Pap and Wors" found in test data with count 30
-        },
-        avgRatings: {
-          movies: 4.2,
-          radio: 3.8,
-          eatOut: 4.5,
-          tv: 3.9,
-        },
+      // Assert - Verify result structure matches expected DTO
+      expect(result).toHaveProperty('totalCount');
+      expect(result).toHaveProperty('age');
+      expect(result).toHaveProperty('foodPercentages');
+      expect(result).toHaveProperty('avgRatings');
+
+      // Assert - Verify totalCount is passed through unchanged
+      expect(result.totalCount).toBe(100);
+      
+      // Assert - Verify age stats are passed through unchanged
+      expect(result.age).toEqual({ avg: null, min: null, max: null });
+      
+      // Assert - Verify food distribution is transformed to percentages
+      expect(result.foodPercentages).toEqual({
+        pizza: 60.0,
+        pasta: 40.0,
+        papAndWors: 30.0, // Normalized key from "Pap and Wors"
+      });
+      
+      // Assert - Verify average ratings are passed through unchanged
+      expect(result.avgRatings).toEqual({
+        movies: 4.2,
+        radio: 3.8,
+        eatOut: 4.5,
+        tv: 3.9,
       });
     });
 
-    it('should handle missing food items gracefully', async () => {
-      // Arrange
+    it('should return zero percentages for missing food items', async () => {
+      // Arrange - Some foods have no responses
       const mockTotalCount = 50;
       const mockAvgRatings = {
         movies: 4.0,
@@ -80,7 +91,7 @@ describe('ResultsService', () => {
       const mockFoodDistribution = [
         { food: 'Pizza', count: 30 },
         { food: 'Burger', count: 20 },
-        // Missing Pasta and Pap and Wors
+        // Missing Pasta and Pap and Wors intentionally
       ];
       const mockAgeStats = { avg: null, min: null, max: null };
 
@@ -92,16 +103,18 @@ describe('ResultsService', () => {
       // Act
       const result = await resultsService.getResults();
 
-      // Assert
-      expect(result.foodPercentages).toEqual({
-        pizza: 60.0,
-        pasta: 0,
-        papAndWors: 0,
-      });
+      // Assert - Verify missing foods are represented as 0, not undefined or null
+      expect(result.foodPercentages).toBeDefined();
+      expect(result.foodPercentages.pizza).toBe(60.0);
+      expect(result.foodPercentages.pasta).toBe(0);
+      expect(result.foodPercentages.papAndWors).toBe(0);
+      
+      // Assert - Verify food percentages structure always has all three keys
+      expect(Object.keys(result.foodPercentages)).toEqual(['pizza', 'pasta', 'papAndWors']);
     });
 
-    it('should handle zero total count', async () => {
-      // Arrange
+    it('should return null percentages when totalCount is zero', async () => {
+      // Arrange - Simulating empty database (no surveys submitted)
       const mockTotalCount = 0;
       const mockAvgRatings = {
         movies: 0,
@@ -120,26 +133,28 @@ describe('ResultsService', () => {
       // Act
       const result = await resultsService.getResults();
 
-      // Assert
-      expect(result).toEqual({
-        totalCount: 0,
-        age: { avg: null, min: null, max: null },
-        foodPercentages: {
-          pizza: null,
-          pasta: null,
-          papAndWors: null,
-        },
-        avgRatings: {
-          movies: 0,
-          radio: 0,
-          eatOut: 0,
-          tv: 0,
-        },
+      // Assert - Verify zero total count is handled
+      expect(result.totalCount).toBe(0);
+      
+      // Assert - Verify food percentages are null (not 0 or undefined) when no data
+      expect(result.foodPercentages.pizza).toBeNull();
+      expect(result.foodPercentages.pasta).toBeNull();
+      expect(result.foodPercentages.papAndWors).toBeNull();
+      
+      // Assert - Verify age stats are null
+      expect(result.age).toEqual({ avg: null, min: null, max: null });
+      
+      // Assert - Verify ratings are 0 (not null) when no data
+      expect(result.avgRatings).toEqual({
+        movies: 0,
+        radio: 0,
+        eatOut: 0,
+        tv: 0,
       });
     });
 
-    it('should calculate percentages correctly', async () => {
-      // Arrange
+    it('should calculate food percentages accurately with decimal precision', async () => {
+      // Arrange - Test percentage calculation edge case
       const mockTotalCount = 200;
       const mockAvgRatings = {
         movies: 4.0,
@@ -148,9 +163,9 @@ describe('ResultsService', () => {
         tv: 3.0,
       };
       const mockFoodDistribution = [
-        { food: 'Pizza', count: 150 }, // 75%
-        { food: 'Pasta', count: 100 }, // 50%
-        { food: 'Pap and Wors', count: 50 }, // 25%
+        { food: 'Pizza', count: 150 }, // Expected: 75%
+        { food: 'Pasta', count: 100 }, // Expected: 50%
+        { food: 'Pap and Wors', count: 50 }, // Expected: 25%
       ];
       const mockAgeStats = { avg: 25.5, min: 18, max: 65 };
 
@@ -162,24 +177,26 @@ describe('ResultsService', () => {
       // Act
       const result = await resultsService.getResults();
 
-      // Assert
-      expect(result.foodPercentages).toEqual({
-        pizza: 75.0,
-        pasta: 50.0,
-        papAndWors: 25.0,
-      });
+      // Assert - Verify percentage calculation accuracy
+      expect(result.foodPercentages.pizza).toBe(75.0);
+      expect(result.foodPercentages.pasta).toBe(50.0);
+      expect(result.foodPercentages.papAndWors).toBe(25.0);
+      
+      // Assert - Verify percentages are numbers, not strings
+      expect(typeof result.foodPercentages.pizza).toBe('number');
     });
 
-    it('should propagate repository errors', async () => {
-      // Arrange
-      const errorMessage = 'Database connection failed';
-      (mockResultsRepository.getTotalResponses as any).mockRejectedValue(new Error(errorMessage));
+    it('should propagate repository errors without catching them', async () => {
+      // Arrange - Simulate database failure
+      const databaseError = new Error('Database connection failed');
+      (mockResultsRepository.getTotalResponses as any).mockRejectedValue(databaseError);
       (mockResultsRepository.getAverageRatings as any).mockResolvedValue({});
       (mockResultsRepository.getFoodDistribution as any).mockResolvedValue([]);
       (mockResultsRepository.getAgeStatistics as any).mockResolvedValue({});
 
-      // Act & Assert
-      await expect(resultsService.getResults()).rejects.toThrow(errorMessage);
+      // Act & Assert - Verify error is thrown (not caught)
+      await expect(resultsService.getResults()).rejects.toThrow('Database connection failed');
+      await expect(resultsService.getResults()).rejects.toThrow(databaseError);
     });
   });
 });

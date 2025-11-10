@@ -38,7 +38,7 @@ describe('ResultsController', () => {
   });
 
   describe('handleGetSurveyResults', () => {
-    it('should return results and 200 status', async () => {
+    it('should return results with 200 status when service succeeds', async () => {
       // Arrange
       const mockResults = {
         totalCount: 100,
@@ -61,58 +61,76 @@ describe('ResultsController', () => {
       // Act
       await handleGetSurveyResults(mockRequest, mockResponse, mockNext);
 
-      // Assert
-      expect(mockResultsService.getResults).toHaveBeenCalledTimes(1);
+      // Assert - Verify service was called with correct parameters
+      expect(mockResultsService.getResults).toHaveBeenCalledOnce();
+      expect(mockResultsService.getResults).toHaveBeenCalledWith('test-request-id');
+      
+      // Assert - Verify response structure and status
+      expect(mockResponse.status).toHaveBeenCalledOnce();
       expect(mockResponse.status).toHaveBeenCalledWith(200);
+      
+      // Assert - Verify response data matches exactly what service returned
+      expect(mockResponse.json).toHaveBeenCalledOnce();
       expect(mockResponse.json).toHaveBeenCalledWith(mockResults);
+      
+      // Assert - Verify error handler was NOT invoked
       expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('should call next with error when service throws', async () => {
+    it('should delegate error handling to middleware when service throws', async () => {
       // Arrange
-      const error = new Error('Service error');
+      const serviceError = new Error('Database connection failed');
       mockRequest.query = {};
-      mockResultsService.getResults.mockRejectedValue(error);
+      mockResultsService.getResults.mockRejectedValue(serviceError);
 
       // Act
       await handleGetSurveyResults(mockRequest, mockResponse, mockNext);
 
-      // Assert
-      expect(mockNext).toHaveBeenCalledWith(error);
+      // Assert - Verify error was passed to error handling middleware
+      expect(mockNext).toHaveBeenCalledOnce();
+      expect(mockNext).toHaveBeenCalledWith(serviceError);
+      
+      // Assert - Verify response methods were NOT called (error handler takes over)
       expect(mockResponse.status).not.toHaveBeenCalled();
       expect(mockResponse.json).not.toHaveBeenCalled();
     });
 
-    it('should validate query parameters', async () => {
-      // Arrange
-      mockRequest.query = {}; // Empty query should be valid
-      const mockResults = {
+    it('should handle empty results with null values correctly', async () => {
+      // Arrange - Simulate empty database state
+      mockRequest.query = {};
+      const emptyResults = {
         totalCount: 0,
         age: { avg: null, min: null, max: null },
         foodPercentages: { pizza: null, pasta: null, papAndWors: null },
         avgRatings: { movies: null, radio: null, eatOut: null, tv: null },
       };
-      mockResultsService.getResults.mockResolvedValue(mockResults);
+      mockResultsService.getResults.mockResolvedValue(emptyResults);
 
       // Act
       await handleGetSurveyResults(mockRequest, mockResponse, mockNext);
 
-      // Assert
+      // Assert - Verify 200 status even with empty data
       expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith(mockResults);
+      
+      // Assert - Verify structure of empty results is preserved
+      const responseData = mockResponse.json.mock.calls[0][0];
+      expect(responseData).toEqual(emptyResults);
+      expect(responseData.totalCount).toBe(0);
+      expect(responseData.age.avg).toBeNull();
+      expect(responseData.foodPercentages.pizza).toBeNull();
     });
 
-    it('should get container instance', async () => {
+    it('should retrieve container instance for dependency injection', async () => {
       // Arrange
       mockRequest.query = {};
-      const mockResults = { totalCount: 0 };
+      const mockResults = { totalCount: 0, age: {}, foodPercentages: {}, avgRatings: {} };
       mockResultsService.getResults.mockResolvedValue(mockResults);
 
       // Act
       await handleGetSurveyResults(mockRequest, mockResponse, mockNext);
 
-      // Assert
-      expect(Container.getInstance).toHaveBeenCalledTimes(1);
+      // Assert - Verify container singleton pattern is used
+      expect(Container.getInstance).toHaveBeenCalledOnce();
     });
   });
 });
