@@ -1,5 +1,6 @@
 // backend/src/test/unit/controllers/results.controller.test.ts
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { Request, Response, NextFunction } from 'express';
 import { handleGetSurveyResults } from '@/controllers/resultsController';
 import { Container } from '@/container';
 import { createMockRequest, createMockResponse, createMockNext } from '@/test/utils/test-helpers';
@@ -11,12 +12,18 @@ vi.mock('@/container', () => ({
   },
 }));
 
+interface MockContainer {
+  resultsService: {
+    getResults: ReturnType<typeof vi.fn>;
+  };
+}
+
 describe('ResultsController', () => {
-  let mockContainer: any;
-  let mockResultsService: any;
-  let mockRequest: any;
-  let mockResponse: any;
-  let mockNext: any;
+  let mockContainer: MockContainer;
+  let mockResultsService: MockContainer['resultsService'];
+  let mockRequest: Request;
+  let mockResponse: Response;
+  let mockNext: NextFunction;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -29,7 +36,7 @@ describe('ResultsController', () => {
       resultsService: mockResultsService,
     };
 
-    (Container.getInstance as any).mockReturnValue(mockContainer);
+    vi.mocked(Container.getInstance).mockReturnValue(mockContainer as never);
     
     mockRequest = createMockRequest();
     mockRequest.headers = { 'x-request-id': 'test-request-id' }; // Add required header
@@ -113,7 +120,7 @@ describe('ResultsController', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       
       // Assert - Verify structure of empty results is preserved
-      const responseData = mockResponse.json.mock.calls[0][0];
+      const responseData = vi.mocked(mockResponse.json).mock.calls[0][0];
       expect(responseData).toEqual(emptyResults);
       expect(responseData.totalCount).toBe(0);
       expect(responseData.age.avg).toBeNull();

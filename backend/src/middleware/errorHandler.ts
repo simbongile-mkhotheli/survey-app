@@ -41,16 +41,18 @@ export function errorHandler(
   // Handle Prisma database errors
   if (err && typeof err === 'object' && 'code' in err) {
     const dbError = new DatabaseError('Database operation failed');
+    const prismaError = err as { code: string };
     return res.status(dbError.statusCode).json({
       error: {
         message: dbError.message,
         type: dbError.name,
-        ...(process.env.NODE_ENV === 'development' && { code: (err as any).code })
+        ...(process.env.NODE_ENV === 'development' && { code: prismaError.code })
       }
     });
   }
 
   // Handle unexpected errors
+  // eslint-disable-next-line no-console
   console.error('Unexpected error:', err);
   return res.status(500).json({
     error: {

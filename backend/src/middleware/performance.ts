@@ -26,7 +26,7 @@ export interface QueryMetric {
   query: string;
   duration: number;
   timestamp: number;
-  params?: any[];
+  params?: unknown[];
 }
 
 // In-memory storage for metrics (use Redis in production)
@@ -42,6 +42,10 @@ function generateRequestId(): string {
   return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
+interface RequestWithId extends Request {
+  requestId: string;
+}
+
 /**
  * Request performance tracking middleware
  */
@@ -50,7 +54,7 @@ export function performanceTracker(req: Request, res: Response, next: NextFuncti
   const startTime = performance.now();
 
   // Attach request ID to request object for correlation
-  (req as any).requestId = requestId;
+  (req as RequestWithId).requestId = requestId;
 
   // Initialize performance metrics
   const metrics: PerformanceMetrics = {
@@ -76,7 +80,7 @@ export function performanceTracker(req: Request, res: Response, next: NextFuncti
 
   // Override response.json to capture response time
   const originalJson = res.json;
-  res.json = function (body: any) {
+  res.json = function (body: unknown) {
     const endTime = performance.now();
     const duration = endTime - startTime;
 
@@ -87,15 +91,19 @@ export function performanceTracker(req: Request, res: Response, next: NextFuncti
 
     // Log slow requests
     if (duration > config.SLOW_QUERY_THRESHOLD) {
+      // eslint-disable-next-line no-console
       console.warn(`⚠️  Slow request detected: ${req.method} ${req.path} - ${duration.toFixed(2)}ms`);
     }
 
     // Log performance metrics in development
     if (config.NODE_ENV === 'development' && config.ENABLE_QUERY_LOGGING) {
+      // eslint-disable-next-line no-console
       console.log(`📊 ${requestId}: ${req.method} ${req.path} - ${duration.toFixed(2)}ms (${res.statusCode})`);
       if (metrics.dbQueries && metrics.dbQueries.length > 0) {
+        // eslint-disable-next-line no-console
         console.log(`   📀 DB Queries: ${metrics.dbQueries.length}, Total: ${metrics.dbQueries.reduce((sum, q) => sum + q.duration, 0).toFixed(2)}ms`);
       }
+      // eslint-disable-next-line no-console
       console.log(`   💾 Cache: ${metrics.cacheHits} hits, ${metrics.cacheMisses} misses`);
     }
 
@@ -123,7 +131,7 @@ export class QueryPerformanceTracker {
   /**
    * Track database query execution time
    */
-  public trackQuery(requestId: string, query: string, params?: any[]): QueryTracker {
+  public trackQuery(requestId: string, query: string, params?: unknown[]): QueryTracker {
     return new QueryTracker(requestId, query, params);
   }
 
@@ -144,6 +152,7 @@ export class QueryPerformanceTracker {
           slowQueries.shift();
         }
 
+        // eslint-disable-next-line no-console
         console.warn(`🐌 Slow database query: ${metric.duration.toFixed(2)}ms - ${metric.query.substring(0, 100)}...`);
       }
     }
@@ -208,9 +217,9 @@ export class QueryTracker {
   private startTime: number;
   private requestId: string;
   private query: string;
-  private params?: any[];
+  private params?: unknown[];
 
-  constructor(requestId: string, query: string, params?: any[]) {
+  constructor(requestId: string, query: string, params?: unknown[]) {
     this.requestId = requestId;
     this.query = query;
     this.params = params;

@@ -34,14 +34,14 @@ export interface HealthStatus {
     averageResponseTime?: number;
     requestCount?: number;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ComponentHealth {
   status: 'healthy' | 'degraded' | 'unhealthy';
   responseTime?: number;
   message?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   lastCheck: string;
 }
 

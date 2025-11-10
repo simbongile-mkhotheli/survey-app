@@ -1,5 +1,6 @@
 // backend/src/test/unit/controllers/survey.controller.test.ts
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { Request, Response, NextFunction } from 'express';
 import { handleCreateSurvey } from '@/controllers/surveyController';
 import { Container } from '@/container';
 import { createMockRequest, createMockResponse, createMockNext, createMockSurveyInput, createMockSurveyResponse } from '@/test/utils/test-helpers';
@@ -11,12 +12,18 @@ vi.mock('@/container', () => ({
   },
 }));
 
+interface MockContainer {
+  surveyService: {
+    createSurvey: ReturnType<typeof vi.fn>;
+  };
+}
+
 describe('SurveyController', () => {
-  let mockContainer: any;
-  let mockSurveyService: any;
-  let mockRequest: any;
-  let mockResponse: any;
-  let mockNext: any;
+  let mockContainer: MockContainer;
+  let mockSurveyService: MockContainer['surveyService'];
+  let mockRequest: Request;
+  let mockResponse: Response;
+  let mockNext: NextFunction;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -29,7 +36,7 @@ describe('SurveyController', () => {
       surveyService: mockSurveyService,
     };
 
-    (Container.getInstance as any).mockReturnValue(mockContainer);
+    vi.mocked(Container.getInstance).mockReturnValue(mockContainer as never);
     
     mockRequest = createMockRequest();
     mockResponse = createMockResponse();
@@ -57,7 +64,7 @@ describe('SurveyController', () => {
       
       // Assert - Verify only id is returned (not full survey data)
       expect(mockResponse.json).toHaveBeenCalledOnce();
-      const responseData = mockResponse.json.mock.calls[0][0];
+      const responseData = vi.mocked(mockResponse.json).mock.calls[0][0];
       expect(responseData).toEqual({ id: 123 });
       expect(responseData).toHaveProperty('id');
       expect(typeof responseData.id).toBe('number');

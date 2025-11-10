@@ -39,8 +39,9 @@ const logFormat = winston.format.combine(
     
     // Remove undefined values for cleaner logs
     Object.keys(logEntry).forEach(key => {
-      if ((logEntry as any)[key] === undefined) {
-        delete (logEntry as any)[key];
+      const typedEntry = logEntry as Record<string, unknown>;
+      if (typedEntry[key] === undefined) {
+        delete typedEntry[key];
       }
     });
     
@@ -220,7 +221,8 @@ export interface LogContext {
   userId?: string;
   operation?: string;
   duration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
+  error?: Record<string, unknown>;
 }
 
 export const logWithContext = {

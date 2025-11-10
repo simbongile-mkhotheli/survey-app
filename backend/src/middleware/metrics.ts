@@ -134,7 +134,7 @@ export function metricsMiddleware(req: Request, res: Response, next: NextFunctio
 
   // Override res.end to capture metrics when response completes
   const originalEnd = res.end;
-  res.end = function(_chunk?: any) {
+  res.end = function(this: Response, ...args: Parameters<typeof originalEnd>) {
     const duration = (Date.now() - startTime) / 1000; // Convert to seconds
     const statusCode = res.statusCode;
     const statusClass = `${Math.floor(statusCode / 100)}xx`;
@@ -150,8 +150,8 @@ export function metricsMiddleware(req: Request, res: Response, next: NextFunctio
       errorsByType.labels(errorType, 'http', statusCode >= 500 ? 'high' : 'medium').inc();
     }
 
-    return originalEnd.apply(this, arguments as any);
-  };
+    return originalEnd.apply(this, args);
+  } as typeof res.end;
 
   next();
 }
@@ -278,7 +278,7 @@ export async function metricsEndpoint(req: Request, res: Response): Promise<void
  */
 export async function metricsDashboard(req: Request, res: Response): Promise<void> {
   try {
-    const metrics = await register.getMetricsAsJSON();
+    const metrics = (await register.getMetricsAsJSON()) as Metric[];
     
     // Create simplified dashboard data
     const dashboard = {
@@ -314,16 +314,28 @@ export async function metricsDashboard(req: Request, res: Response): Promise<voi
   }
 }
 
+interface MetricValue {
+  value: number;
+  labels?: Record<string, string>;
+  metricName?: string;
+}
+
+interface Metric {
+  name: string;
+  type: unknown; // Use unknown to accept MetricType from prom-client
+  values?: MetricValue[];
+}
+
 /**
  * Helper function to extract metric values
  */
-function getMetricValue(metrics: any[], metricName: string, labelName?: string): number {
+function getMetricValue(metrics: Metric[], metricName: string, labelName?: string): number {
   const metric = metrics.find(m => m.name === metricName);
   if (!metric) return 0;
   
   if (metric.type === 'counter' || metric.type === 'gauge') {
     if (labelName && metric.values) {
-      const value = metric.values.find((v: any) => v.labels && v.labels.type === labelName);
+      const value = metric.values.find((v: MetricValue) => v.labels && v.labels.type === labelName);
       return value ? value.value : 0;
     }
     return metric.values && metric.values[0] ? metric.values[0].value : 0;
@@ -332,8 +344,8 @@ function getMetricValue(metrics: any[], metricName: string, labelName?: string):
   if (metric.type === 'histogram' && metric.values) {
     // For histograms, return the average if requested
     if (labelName === 'avg') {
-      const sum = metric.values.find((v: any) => v.labels && v.labels.le === '+Inf');
-      const count = metric.values.find((v: any) => v.metricName?.includes('_count'));
+      const sum = metric.values.find((v: MetricValue) => v.labels && v.labels.le === '+Inf');
+      const count = metric.values.find((v: MetricValue) => v.metricName?.includes('_count'));
       if (sum && count && count.value > 0) {
         return sum.value / count.value;
       }

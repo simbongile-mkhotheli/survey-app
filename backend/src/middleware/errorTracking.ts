@@ -37,7 +37,7 @@ export interface ErrorReport {
   type: string;
   stack?: string;
   context: ErrorContext;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 // Error storage for analysis (in-memory for now, could be moved to database)

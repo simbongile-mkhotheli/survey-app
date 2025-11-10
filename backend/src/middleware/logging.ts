@@ -70,23 +70,24 @@ export function requestContext(req: Request, res: Response, next: NextFunction):
 export function accessLogging(req: Request, res: Response, next: NextFunction): void {
   const startTime = Date.now();
   
-  // Capture original end function
+  // Capture original functions
   const originalEnd = res.end;
   const originalWrite = res.write;
   
   let responseSize = 0;
 
   // Intercept response writes to capture size
-  res.write = function(chunk: any) {
+  res.write = function(this: Response, chunk: Buffer | string) {
     if (chunk) {
       responseSize += Buffer.isBuffer(chunk) ? chunk.length : Buffer.byteLength(chunk);
     }
-    return originalWrite.apply(this, arguments as any);
-  };
+    return originalWrite.apply(this, arguments as never);
+  } as typeof res.write;
 
   // Override end function to log when response completes
-  res.end = function(chunk: any, ..._args: any[]) {
-    if (chunk) {
+  res.end = function(this: Response, ...args: Parameters<typeof originalEnd>) {
+    const [chunk] = args;
+    if (chunk && (typeof chunk === 'string' || Buffer.isBuffer(chunk))) {
       responseSize += Buffer.isBuffer(chunk) ? chunk.length : Buffer.byteLength(chunk);
     }
 
@@ -157,8 +158,8 @@ export function accessLogging(req: Request, res: Response, next: NextFunction): 
       });
     }
 
-    return originalEnd.apply(this, arguments as any);
-  };
+    return originalEnd.apply(this, args);
+  } as typeof res.end;
 
   next();
 }

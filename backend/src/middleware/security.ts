@@ -2,7 +2,7 @@
 import helmet from 'helmet';
 import hpp from 'hpp';
 import compression from 'compression';
-import { body, validationResult } from 'express-validator';
+import { body, validationResult, type ValidationChain } from 'express-validator';
 import type { Request, Response, NextFunction } from 'express';
 import { config } from '@/config/env';
 import { ValidationError } from '@/errors/AppError';
@@ -67,7 +67,7 @@ export const hppConfig = hpp({
  * This middleware focuses on general input cleaning and XSS prevention
  */
 export const inputSanitizeConfig = (req: Request, res: Response, next: NextFunction) => {
-  const sanitizeValue = (value: any): any => {
+  const sanitizeValue = (value: unknown): unknown => {
     if (typeof value === 'string') {
       // Basic input cleaning - focus on XSS and dangerous characters
       return value
@@ -78,9 +78,12 @@ export const inputSanitizeConfig = (req: Request, res: Response, next: NextFunct
         .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ''); // Remove control characters
     }
     if (typeof value === 'object' && value !== null) {
-      const sanitized: any = Array.isArray(value) ? [] : {};
+      if (Array.isArray(value)) {
+        return value.map(item => sanitizeValue(item));
+      }
+      const sanitized: Record<string, unknown> = {};
       for (const key in value) {
-        sanitized[key] = sanitizeValue(value[key]);
+        sanitized[key] = sanitizeValue((value as Record<string, unknown>)[key]);
       }
       return sanitized;
     }
@@ -89,20 +92,18 @@ export const inputSanitizeConfig = (req: Request, res: Response, next: NextFunct
 
   // Sanitize request body
   if (req.body) {
-    req.body = sanitizeValue(req.body);
+    req.body = sanitizeValue(req.body) as typeof req.body;
   }
 
-  // Sanitize query parameters  
+  // Sanitize query parameters
   if (req.query) {
-    req.query = sanitizeValue(req.query);
+    req.query = sanitizeValue(req.query) as typeof req.query;
   }
 
   // Sanitize URL parameters
   if (req.params) {
-    req.params = sanitizeValue(req.params);
-  }
-
-  next();
+    req.params = sanitizeValue(req.params) as typeof req.params;
+  }  next();
 };
 
 /**
@@ -179,7 +180,7 @@ export const rateLimitByIP = (req: Request, res: Response, next: NextFunction) =
  * Input validation middleware factory
  * Creates express-validator middleware with custom error formatting
  */
-export const validateInput = (validations: any[]) => {
+export const validateInput = (validations: ValidationChain[]) => {
   return [
     ...validations,
     (req: Request, res: Response, next: NextFunction) => {

@@ -18,7 +18,12 @@ export class ResultsRepository implements IResultsRepository {
   }> {
     // Check cache first
     const cacheKey = CACHE_KEYS.ratingAverages;
-    const cached = await cacheManager.get<any>(cacheKey);
+    const cached = await cacheManager.get<{
+      movies: number;
+      radio: number;
+      eatOut: number;
+      tv: number;
+    }>(cacheKey);
     
     if (cached) {
       return cached;
@@ -27,7 +32,7 @@ export class ResultsRepository implements IResultsRepository {
     // Track query performance
     const queryTracker = requestId ? this.queryTracker.trackQuery(requestId, 'aggregate_ratings') : null;
     
-    const result = await (this.prisma as any).surveyResponse.aggregate({
+    const result = await this.prisma.surveyResponse.aggregate({
       _avg: {
         ratingMovies: true,
         ratingRadio: true,
@@ -106,7 +111,7 @@ export class ResultsRepository implements IResultsRepository {
     // Track query performance
     const queryTracker = requestId ? this.queryTracker.trackQuery(requestId, 'count_responses') : null;
     
-    const count = await (this.prisma as any).surveyResponse.count();
+    const count = await this.prisma.surveyResponse.count();
 
     queryTracker?.end();
 
@@ -126,7 +131,11 @@ export class ResultsRepository implements IResultsRepository {
   }> {
     // Check cache first
     const cacheKey = CACHE_KEYS.ageStatistics;
-    const cached = await cacheManager.get<any>(cacheKey);
+    const cached = await cacheManager.get<{
+      avg: number | null;
+      min: number | null;
+      max: number | null;
+    }>(cacheKey);
     
     if (cached) {
       return cached;
