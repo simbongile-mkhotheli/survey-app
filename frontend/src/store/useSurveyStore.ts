@@ -22,7 +22,7 @@ export const useAppStore = create<AppStore>()(
         loading: false,
         error: null,
 
-        // App Settings State  
+        // App Settings State
         darkMode: false,
         language: 'en',
 
@@ -31,17 +31,18 @@ export const useAppStore = create<AppStore>()(
           const state = get();
           // Prevent multiple concurrent requests
           if (state.loading) return;
-          
+
           set({ loading: true, error: null });
 
           try {
             const results = await fetchResultsAPI();
             set({ data: results, loading: false });
           } catch (error) {
-            const errorMessage = error instanceof Error 
-              ? error.message 
-              : 'Failed to fetch survey results';
-            
+            const errorMessage =
+              error instanceof Error
+                ? error.message
+                : 'Failed to fetch survey results';
+
             set({ error: errorMessage, loading: false });
           }
         },
@@ -68,12 +69,12 @@ export const useAppStore = create<AppStore>()(
           darkMode: state.darkMode,
           language: state.language,
         }),
-      }
+      },
     ),
     {
       name: 'survey-app-store',
-    }
-  )
+    },
+  ),
 );
 
 // Selectors for better performance
@@ -86,16 +87,17 @@ export const useResults = () =>
       fetchResults: state.fetchResults,
       setResults: state.setResults,
       reset: state.reset,
-    }))
+    })),
   );
 
-export const useSettings = () => useAppStore((state) => ({
-  darkMode: state.darkMode,
-  language: state.language,
-  toggleDarkMode: state.toggleDarkMode,
-  setLanguage: state.setLanguage,
-  resetSettings: state.resetSettings,
-}));
+export const useSettings = () =>
+  useAppStore((state) => ({
+    darkMode: state.darkMode,
+    language: state.language,
+    toggleDarkMode: state.toggleDarkMode,
+    setLanguage: state.setLanguage,
+    resetSettings: state.resetSettings,
+  }));
 
 // Legacy export for backward compatibility
 export const useSurveyStore = useAppStore;

@@ -4,7 +4,8 @@ const isRatingString = (val: string) => {
   const n = Number(val);
   return Number.isInteger(n) && n >= 1 && n <= 5;
 };
-const isRatingNumber = (val: number) => Number.isInteger(val) && val >= 1 && val <= 5;
+const isRatingNumber = (val: number) =>
+  Number.isInteger(val) && val >= 1 && val <= 5;
 const ratingError = { message: 'Please select a rating from 1–5' };
 
 function validateAgeString(val: string) {

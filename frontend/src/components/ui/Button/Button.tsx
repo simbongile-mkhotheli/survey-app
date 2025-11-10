@@ -39,14 +39,12 @@ export function Button({
     fullWidth && styles.fullWidth,
     loading && styles.loading,
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <button
-      className={buttonClasses}
-      disabled={disabled || loading}
-      {...props}
-    >
+    <button className={buttonClasses} disabled={disabled || loading} {...props}>
       {loading ? (
         <>
           <span className={styles.spinner} />

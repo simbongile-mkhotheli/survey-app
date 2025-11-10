@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@testcontainers/postgresql": "^11.8.0",
     "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.18",
     "@types/express": "^4.17.17",

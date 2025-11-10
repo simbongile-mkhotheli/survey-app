@@ -35,7 +35,9 @@ export function Loading({
     styles[size],
     overlay && styles.overlay,
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const renderIndicator = () => {
     switch (variant) {

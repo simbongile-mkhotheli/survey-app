@@ -30,11 +30,9 @@ export function Card({
   variant = 'default',
   className = '',
 }: CardProps) {
-  const cardClasses = [
-    styles.card,
-    styles[variant],
-    className,
-  ].filter(Boolean).join(' ');
+  const cardClasses = [styles.card, styles[variant], className]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={cardClasses}>
@@ -47,10 +45,8 @@ export function Card({
           {actions && <div className={styles.actions}>{actions}</div>}
         </div>
       )}
-      
-      <div className={styles.content}>
-        {children}
-      </div>
+
+      <div className={styles.content}>{children}</div>
     </div>
   );
 }
@@ -66,9 +62,5 @@ export interface CardSectionProps {
 }
 
 export function CardSection({ children, className = '' }: CardSectionProps) {
-  return (
-    <div className={`${styles.section} ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`${styles.section} ${className}`}>{children}</div>;
 }

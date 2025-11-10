@@ -19,21 +19,21 @@ const App: React.FC = () => (
 
       <main>
         <Routes>
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
               <ErrorBoundary level="page">
                 <SurveyForm />
               </ErrorBoundary>
-            } 
+            }
           />
-          <Route 
-            path="/results" 
+          <Route
+            path="/results"
             element={
               <ErrorBoundary level="page">
                 <Results />
               </ErrorBoundary>
-            } 
+            }
           />
         </Routes>
       </main>

@@ -65,7 +65,6 @@ export class ResultsRepository implements IResultsRepository {
     const queryTracker = requestId ? this.queryTracker.trackQuery(requestId, 'food_distribution_optimized') : null;
     
     // Get all responses and process food distribution in application layer
-    // This ensures compatibility with both PostgreSQL and SQLite
     const responses = await this.prisma.surveyResponse.findMany({
       select: { foods: true }
     });
@@ -137,7 +136,6 @@ export class ResultsRepository implements IResultsRepository {
     const queryTracker = requestId ? this.queryTracker.trackQuery(requestId, 'age_statistics') : null;
     
     // Get all birth dates and calculate ages in application layer
-    // This ensures compatibility with both PostgreSQL and SQLite
     const responses = await this.prisma.surveyResponse.findMany({
       select: { dateOfBirth: true },
       where: {

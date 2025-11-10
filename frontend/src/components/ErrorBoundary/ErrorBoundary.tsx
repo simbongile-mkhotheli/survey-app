@@ -17,17 +17,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
 
   static getDerivedStateFromError(error: Error): ErrorState {
     // Update state so the next render will show the fallback UI
-    return { 
-      hasError: true, 
-      error, 
-      errorInfo: null 
+    return {
+      hasError: true,
+      error,
+      errorInfo: null,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log the error
     console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+
     // Store error info in state
     this.setState({
       error,
@@ -71,7 +71,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
               <div className={styles.criticalError}>
                 <h1 className={styles.title}>🚨 Application Error</h1>
                 <p className={styles.message}>
-                  A critical error has occurred. Please refresh the page or contact support.
+                  A critical error has occurred. Please refresh the page or
+                  contact support.
                 </p>
               </div>
             ) : level === 'page' ? (
@@ -89,18 +90,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
                 </p>
               </div>
             )}
-            
+
             {error && (
               <details className={styles.errorDetails}>
                 <summary>Error Details</summary>
-                <pre className={styles.errorText}>
-                  {error.toString()}
-                </pre>
+                <pre className={styles.errorText}>{error.toString()}</pre>
               </details>
             )}
-            
+
             <div className={styles.actions}>
-              <button 
+              <button
                 className={`${styles.button} ${styles.retry}`}
                 onClick={this.handleRetry}
                 type="button"
@@ -108,7 +107,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
                 Try Again
               </button>
               {level === 'critical' && (
-                <button 
+                <button
                   className={`${styles.button} ${styles.reload}`}
                   onClick={this.handleReload}
                   type="button"

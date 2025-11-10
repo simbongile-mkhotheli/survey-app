@@ -36,14 +36,14 @@ build/
 .DS_Store
 Thumbs.db
 
-# Database files
-*.db
-*.db-journal
-*.sqlite
-*.sqlite3
-test_*.db
-
 # Temporary files
 *.tmp
 *.temp
 .cache/
+
+# Private files (do not push to GitHub)
+.github/workflows/test.yml
+application-summary.md
+message-to-dinielia.md
+SETUP_POSTGRES_TESTS.md
+backend/TEST_DATABASE_SETUP.md

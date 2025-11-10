@@ -10,10 +10,11 @@ import { useAppStore } from '../../store/useSurveyStore';
 // Utility to safely check environment (compatible with all environments)
 const isDevelopment = () => {
   // In browser with Vite, check for development indicators
-  return typeof window !== 'undefined' && (
-    window.location.hostname === 'localhost' || 
-    window.location.hostname === '127.0.0.1' ||
-    window.location.port !== ''
+  return (
+    typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.port !== '')
   );
 };
 
@@ -30,16 +31,14 @@ export interface ErrorHandlerOptions {
 export function useErrorHandler(options: ErrorHandlerOptions = {}) {
   // Select only the setter to avoid re-renders on unrelated store state changes
   const setError = useAppStore((s) => s.setError);
-  const {
-    logToStore = true,
-    logToConsole = true,
-    showToast = false,
-  } = options;
+  const { logToStore = true, logToConsole = true, showToast = false } = options;
 
   const handleError = useCallback(
     (error: Error | string, context?: string) => {
       const errorMessage = typeof error === 'string' ? error : error.message;
-      const fullMessage = context ? `${context}: ${errorMessage}` : errorMessage;
+      const fullMessage = context
+        ? `${context}: ${errorMessage}`
+        : errorMessage;
 
       // Log to console in development
       if (logToConsole && isDevelopment()) {
@@ -62,7 +61,7 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
         // Example: ErrorReportingService.report(error, context);
       }
     },
-    [setError, logToStore, logToConsole, showToast]
+    [setError, logToStore, logToConsole, showToast],
   );
 
   const clearError = useCallback(() => {
