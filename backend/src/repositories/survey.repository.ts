@@ -4,8 +4,6 @@ import type { ISurveyRepository } from '@/interfaces/repository.interface';
 import type { SurveyInput } from '@/validation/validation';
 import type { SurveyResponse } from '@/interfaces/service.interface';
 
-// Note: Using (this.prisma as any) is a temporary workaround for Prisma client type issues
-
 export class SurveyRepository implements ISurveyRepository {
   constructor(private prisma: PrismaClient) {}
 
@@ -13,7 +11,7 @@ export class SurveyRepository implements ISurveyRepository {
     const dob = new Date(data.dateOfBirth);
     const foodsCsv = data.foods.join(',');
 
-    const created = await (this.prisma as any).surveyResponse.create({
+    const created = await this.prisma.surveyResponse.create({
       data: {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -32,18 +30,18 @@ export class SurveyRepository implements ISurveyRepository {
   }
 
   async findById(id: number): Promise<SurveyResponse | null> {
-    const survey = await (this.prisma as any).surveyResponse.findUnique({
+    const survey = await this.prisma.surveyResponse.findUnique({
       where: { id },
     });
     return survey as SurveyResponse | null;
   }
 
   async findAll(): Promise<SurveyResponse[]> {
-    const surveys = await (this.prisma as any).surveyResponse.findMany();
+    const surveys = await this.prisma.surveyResponse.findMany();
     return surveys as SurveyResponse[];
   }
 
   async count(): Promise<number> {
-    return (this.prisma as any).surveyResponse.count();
+    return this.prisma.surveyResponse.count();
   }
 }

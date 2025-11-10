@@ -37,10 +37,10 @@ describe('ResultsService', () => {
       ];
       const mockAgeStats = { avg: null, min: null, max: null };
 
-      (mockResultsRepository.getTotalResponses as any).mockResolvedValue(mockTotalCount);
-      (mockResultsRepository.getAverageRatings as any).mockResolvedValue(mockAvgRatings);
-      (mockResultsRepository.getFoodDistribution as any).mockResolvedValue(mockFoodDistribution);
-      (mockResultsRepository.getAgeStatistics as any).mockResolvedValue(mockAgeStats);
+      vi.mocked(mockResultsRepository.getTotalResponses).mockResolvedValue(mockTotalCount);
+      vi.mocked(mockResultsRepository.getAverageRatings).mockResolvedValue(mockAvgRatings);
+      vi.mocked(mockResultsRepository.getFoodDistribution).mockResolvedValue(mockFoodDistribution);
+      vi.mocked(mockResultsRepository.getAgeStatistics).mockResolvedValue(mockAgeStats);
 
       // Act
       const result = await resultsService.getResults();
@@ -95,10 +95,10 @@ describe('ResultsService', () => {
       ];
       const mockAgeStats = { avg: null, min: null, max: null };
 
-      (mockResultsRepository.getTotalResponses as any).mockResolvedValue(mockTotalCount);
-      (mockResultsRepository.getAverageRatings as any).mockResolvedValue(mockAvgRatings);
-      (mockResultsRepository.getFoodDistribution as any).mockResolvedValue(mockFoodDistribution);
-      (mockResultsRepository.getAgeStatistics as any).mockResolvedValue(mockAgeStats);
+      vi.mocked(mockResultsRepository.getTotalResponses).mockResolvedValue(mockTotalCount);
+      vi.mocked(mockResultsRepository.getAverageRatings).mockResolvedValue(mockAvgRatings);
+      vi.mocked(mockResultsRepository.getFoodDistribution).mockResolvedValue(mockFoodDistribution);
+      vi.mocked(mockResultsRepository.getAgeStatistics).mockResolvedValue(mockAgeStats);
 
       // Act
       const result = await resultsService.getResults();
@@ -125,10 +125,10 @@ describe('ResultsService', () => {
       const mockFoodDistribution: Array<{ food: string; count: number }> = [];
       const mockAgeStats = { avg: null, min: null, max: null };
 
-      (mockResultsRepository.getTotalResponses as any).mockResolvedValue(mockTotalCount);
-      (mockResultsRepository.getAverageRatings as any).mockResolvedValue(mockAvgRatings);
-      (mockResultsRepository.getFoodDistribution as any).mockResolvedValue(mockFoodDistribution);
-      (mockResultsRepository.getAgeStatistics as any).mockResolvedValue(mockAgeStats);
+      vi.mocked(mockResultsRepository.getTotalResponses).mockResolvedValue(mockTotalCount);
+      vi.mocked(mockResultsRepository.getAverageRatings).mockResolvedValue(mockAvgRatings);
+      vi.mocked(mockResultsRepository.getFoodDistribution).mockResolvedValue(mockFoodDistribution);
+      vi.mocked(mockResultsRepository.getAgeStatistics).mockResolvedValue(mockAgeStats);
 
       // Act
       const result = await resultsService.getResults();
@@ -169,10 +169,10 @@ describe('ResultsService', () => {
       ];
       const mockAgeStats = { avg: 25.5, min: 18, max: 65 };
 
-      (mockResultsRepository.getTotalResponses as any).mockResolvedValue(mockTotalCount);
-      (mockResultsRepository.getAverageRatings as any).mockResolvedValue(mockAvgRatings);
-      (mockResultsRepository.getFoodDistribution as any).mockResolvedValue(mockFoodDistribution);
-      (mockResultsRepository.getAgeStatistics as any).mockResolvedValue(mockAgeStats);
+      vi.mocked(mockResultsRepository.getTotalResponses).mockResolvedValue(mockTotalCount);
+      vi.mocked(mockResultsRepository.getAverageRatings).mockResolvedValue(mockAvgRatings);
+      vi.mocked(mockResultsRepository.getFoodDistribution).mockResolvedValue(mockFoodDistribution);
+      vi.mocked(mockResultsRepository.getAgeStatistics).mockResolvedValue(mockAgeStats);
 
       // Act
       const result = await resultsService.getResults();
@@ -189,10 +189,19 @@ describe('ResultsService', () => {
     it('should propagate repository errors without catching them', async () => {
       // Arrange - Simulate database failure
       const databaseError = new Error('Database connection failed');
-      (mockResultsRepository.getTotalResponses as any).mockRejectedValue(databaseError);
-      (mockResultsRepository.getAverageRatings as any).mockResolvedValue({});
-      (mockResultsRepository.getFoodDistribution as any).mockResolvedValue([]);
-      (mockResultsRepository.getAgeStatistics as any).mockResolvedValue({});
+      vi.mocked(mockResultsRepository.getTotalResponses).mockRejectedValue(databaseError);
+      vi.mocked(mockResultsRepository.getAverageRatings).mockResolvedValue({
+        movies: 0,
+        radio: 0,
+        eatOut: 0,
+        tv: 0,
+      });
+      vi.mocked(mockResultsRepository.getFoodDistribution).mockResolvedValue([]);
+      vi.mocked(mockResultsRepository.getAgeStatistics).mockResolvedValue({
+        avg: null,
+        min: null,
+        max: null,
+      });
 
       // Act & Assert - Verify error is thrown (not caught)
       await expect(resultsService.getResults()).rejects.toThrow('Database connection failed');

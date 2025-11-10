@@ -33,7 +33,7 @@ describe('SurveyService', () => {
       // Arrange
       const mockInput = createMockSurveyInput();
       const mockResponse = createMockSurveyResponse();
-      (mockSurveyRepository.create as any).mockResolvedValue(mockResponse);
+      vi.mocked(mockSurveyRepository.create).mockResolvedValue(mockResponse);
 
       // Act
       const result = await surveyService.createSurvey(mockInput);
@@ -50,7 +50,7 @@ describe('SurveyService', () => {
         email: 'jane@example.com',
       });
       const mockResponse = createMockSurveyResponse();
-      (mockSurveyRepository.create as any).mockResolvedValue(mockResponse);
+      vi.mocked(mockSurveyRepository.create).mockResolvedValue(mockResponse);
 
       // Act
       await surveyService.createSurvey(mockInput);
@@ -64,7 +64,7 @@ describe('SurveyService', () => {
       // Arrange
       const mockInput = createMockSurveyInput();
       const errorMessage = 'Database connection failed';
-      (mockSurveyRepository.create as any).mockRejectedValue(new Error(errorMessage));
+      vi.mocked(mockSurveyRepository.create).mockRejectedValue(new Error(errorMessage));
 
       // Act & Assert
       await expect(surveyService.createSurvey(mockInput)).rejects.toThrow(errorMessage);
