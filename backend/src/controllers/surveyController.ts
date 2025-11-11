@@ -10,12 +10,12 @@ import type { SurveyInput } from '@/validation/validation';
 export async function handleCreateSurvey(
   req: Request<{}, { id: number }, SurveyInput>,
   res: Response<{ id: number }>,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const container = Container.getInstance();
     const surveyService = container.surveyService;
-    
+
     const data = req.body;
     const created = await surveyService.createSurvey(data);
     return res.status(201).json({ id: created.id });

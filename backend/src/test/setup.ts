@@ -11,7 +11,7 @@ let container: Container;
 beforeAll(async () => {
   // Set test environment
   process.env.NODE_ENV = 'test';
-  
+
   // Initialize container for testing
   container = Container.getInstance();
 });

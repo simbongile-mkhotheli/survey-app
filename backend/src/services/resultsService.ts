@@ -10,13 +10,14 @@ import { logWithContext } from '@/config/logger';
  */
 function findFoodCount(
   foodDistribution: Array<{ food: string; count: number }>,
-  searchTerms: string[]
+  searchTerms: string[],
 ): number {
-  const found = foodDistribution.find(f => {
+  const found = foodDistribution.find((f) => {
     const normalized = f.food.toLowerCase().replace(/\s+/g, '');
-    return searchTerms.some(term => 
-      f.food.toLowerCase() === term.toLowerCase() ||
-      normalized === term.toLowerCase().replace(/\s+/g, '')
+    return searchTerms.some(
+      (term) =>
+        f.food.toLowerCase() === term.toLowerCase() ||
+        normalized === term.toLowerCase().replace(/\s+/g, ''),
     );
   });
   return found?.count || 0;
@@ -32,21 +33,22 @@ export class ResultsService implements IResultsService {
    */
   async getResults(requestId?: string): Promise<SurveyResultsDTO> {
     const startTime = Date.now();
-    
+
     try {
       // Execute queries in parallel for better performance
-      const [totalCount, avgRatings, foodDistribution, ageStats] = await Promise.all([
-        this.resultsRepository.getTotalResponses(requestId),
-        this.resultsRepository.getAverageRatings(requestId),
-        this.resultsRepository.getFoodDistribution(requestId),
-        this.resultsRepository.getAgeStatistics(requestId),
-      ]);
+      const [totalCount, avgRatings, foodDistribution, ageStats] =
+        await Promise.all([
+          this.resultsRepository.getTotalResponses(requestId),
+          this.resultsRepository.getAverageRatings(requestId),
+          this.resultsRepository.getFoodDistribution(requestId),
+          this.resultsRepository.getAgeStatistics(requestId),
+        ]);
 
       // Record business metrics
       businessMetrics.recordResultsQuery(false); // Assuming no cache info here
-      
+
       const duration = Date.now() - startTime;
-      
+
       // Log successful results query
       logWithContext.info('Survey results retrieved', {
         requestId,
@@ -55,18 +57,23 @@ export class ResultsService implements IResultsService {
         metadata: {
           totalCount,
           queriesExecuted: 4,
-          parallelExecution: true
-        }
+          parallelExecution: true,
+        },
       });
 
-    // Calculate food percentages
-    const toPercentage = (count: number) =>
-      totalCount > 0 ? parseFloat(((count / totalCount) * 100).toFixed(1)) : null;
+      // Calculate food percentages
+      const toPercentage = (count: number) =>
+        totalCount > 0
+          ? parseFloat(((count / totalCount) * 100).toFixed(1))
+          : null;
 
-    // Find specific food counts using helper function
-    const pizzaCount = findFoodCount(foodDistribution, ['pizza']);
-    const pastaCount = findFoodCount(foodDistribution, ['pasta']);
-    const papAndWorsCount = findFoodCount(foodDistribution, ['pap and wors', 'papandwors']);
+      // Find specific food counts using helper function
+      const pizzaCount = findFoodCount(foodDistribution, ['pizza']);
+      const pastaCount = findFoodCount(foodDistribution, ['pasta']);
+      const papAndWorsCount = findFoodCount(foodDistribution, [
+        'pap and wors',
+        'papandwors',
+      ]);
 
       return {
         totalCount,
@@ -83,16 +90,19 @@ export class ResultsService implements IResultsService {
           tv: avgRatings.tv,
         },
       };
-      
     } catch (error) {
       const duration = Date.now() - startTime;
-      
-      logWithContext.error('Failed to retrieve survey results', error as Error, {
-        requestId,
-        operation: 'get_results',
-        duration
-      });
-      
+
+      logWithContext.error(
+        'Failed to retrieve survey results',
+        error as Error,
+        {
+          requestId,
+          operation: 'get_results',
+          duration,
+        },
+      );
+
       throw error;
     }
   }

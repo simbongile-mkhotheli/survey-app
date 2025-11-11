@@ -1,4 +1,9 @@
-import type { UseFormRegister, FieldError, FieldValues, Path } from 'react-hook-form';
+import type {
+  UseFormRegister,
+  FieldError,
+  FieldValues,
+  Path,
+} from 'react-hook-form';
 import { InlineError } from '@/components/ui';
 import styles from './TextField.module.css';
 

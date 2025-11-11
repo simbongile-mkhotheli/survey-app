@@ -2,7 +2,11 @@
 import helmet from 'helmet';
 import hpp from 'hpp';
 import compression from 'compression';
-import { body, validationResult, type ValidationChain } from 'express-validator';
+import {
+  body,
+  validationResult,
+  type ValidationChain,
+} from 'express-validator';
 import type { Request, Response, NextFunction } from 'express';
 import { config } from '@/config/env';
 import { ValidationError } from '@/errors/AppError';
@@ -22,7 +26,7 @@ export const helmetConfig = helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
@@ -66,20 +70,27 @@ export const hppConfig = hpp({
  * Note: Prisma already provides excellent SQL injection protection via parameterized queries
  * This middleware focuses on general input cleaning and XSS prevention
  */
-export const inputSanitizeConfig = (req: Request, res: Response, next: NextFunction) => {
+export const inputSanitizeConfig = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const sanitizeValue = (value: unknown): unknown => {
     if (typeof value === 'string') {
       // Basic input cleaning - focus on XSS and dangerous characters
-      return value
-        .trim()
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
-        .replace(/javascript:/gi, '') // Remove javascript: protocol
-        .replace(/on\w+\s*=/gi, '') // Remove event handlers like onclick=
-        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ''); // Remove control characters
+      return (
+        value
+          .trim()
+          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
+          .replace(/javascript:/gi, '') // Remove javascript: protocol
+          .replace(/on\w+\s*=/gi, '') // Remove event handlers like onclick=
+          // eslint-disable-next-line no-control-regex
+          .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+      ); // Remove control characters
     }
     if (typeof value === 'object' && value !== null) {
       if (Array.isArray(value)) {
-        return value.map(item => sanitizeValue(item));
+        return value.map((item) => sanitizeValue(item));
       }
       const sanitized: Record<string, unknown> = {};
       for (const key in value) {
@@ -103,17 +114,22 @@ export const inputSanitizeConfig = (req: Request, res: Response, next: NextFunct
   // Sanitize URL parameters
   if (req.params) {
     req.params = sanitizeValue(req.params) as typeof req.params;
-  }  next();
+  }
+  next();
 };
 
 /**
  * Request size limiting middleware
  * Prevents DoS attacks through large payloads
  */
-export const requestSizeLimit = (req: Request, res: Response, next: NextFunction) => {
+export const requestSizeLimit = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const maxSize = 1024 * 1024; // 1MB limit
   const contentLength = parseInt(req.headers['content-length'] || '0', 10);
-  
+
   if (contentLength > maxSize) {
     return res.status(413).json({
       error: {
@@ -123,7 +139,7 @@ export const requestSizeLimit = (req: Request, res: Response, next: NextFunction
       },
     });
   }
-  
+
   next();
 };
 
@@ -133,29 +149,33 @@ export const requestSizeLimit = (req: Request, res: Response, next: NextFunction
  */
 const requestCounts = new Map<string, { count: number; resetTime: number }>();
 
-export const rateLimitByIP = (req: Request, res: Response, next: NextFunction) => {
+export const rateLimitByIP = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const ip = req.ip || req.connection.remoteAddress || 'unknown';
   const now = Date.now();
   const windowMs = config.RATE_LIMIT_WINDOW_MS;
   const maxRequests = config.RATE_LIMIT_MAX_REQUESTS;
-  
+
   const record = requestCounts.get(ip);
-  
+
   if (!record || now > record.resetTime) {
     requestCounts.set(ip, { count: 1, resetTime: now + windowMs });
     return next();
   }
-  
+
   if (record.count >= maxRequests) {
     const retryAfter = Math.ceil((record.resetTime - now) / 1000);
-    
+
     res.set({
       'Retry-After': retryAfter.toString(),
       'X-RateLimit-Limit': maxRequests.toString(),
       'X-RateLimit-Remaining': '0',
       'X-RateLimit-Reset': new Date(record.resetTime).toISOString(),
     });
-    
+
     return res.status(429).json({
       error: {
         message: 'Too many requests from this IP',
@@ -164,15 +184,15 @@ export const rateLimitByIP = (req: Request, res: Response, next: NextFunction) =
       },
     });
   }
-  
+
   record.count++;
-  
+
   res.set({
     'X-RateLimit-Limit': maxRequests.toString(),
     'X-RateLimit-Remaining': (maxRequests - record.count).toString(),
     'X-RateLimit-Reset': new Date(record.resetTime).toISOString(),
   });
-  
+
   next();
 };
 
@@ -191,12 +211,15 @@ export const validateInput = (validations: ValidationChain[]) => {
           error: {
             message: validationError.message,
             type: validationError.name,
-            details: errors.array().reduce((acc, error) => {
-              if ('param' in error && typeof error.param === 'string') {
-                acc[error.param] = error.msg;
-              }
-              return acc;
-            }, {} as Record<string, string>),
+            details: errors.array().reduce(
+              (acc, error) => {
+                if ('param' in error && typeof error.param === 'string') {
+                  acc[error.param] = error.msg;
+                }
+                return acc;
+              },
+              {} as Record<string, string>,
+            ),
           },
         });
       }
@@ -216,14 +239,14 @@ export const surveyValidation = [
     .withMessage('First name must be between 1-50 characters')
     .matches(/^[a-zA-Z\s'-]+$/)
     .withMessage('First name contains invalid characters'),
-    
+
   body('lastName')
     .trim()
     .isLength({ min: 1, max: 50 })
     .withMessage('Last name must be between 1-50 characters')
     .matches(/^[a-zA-Z\s'-]+$/)
     .withMessage('Last name contains invalid characters'),
-    
+
   body('email')
     .trim()
     .normalizeEmail()
@@ -231,12 +254,13 @@ export const surveyValidation = [
     .withMessage('Please provide a valid email address')
     .isLength({ max: 100 })
     .withMessage('Email must not exceed 100 characters'),
-    
+
   body('contactNumber')
     .trim()
+    // eslint-disable-next-line no-useless-escape
     .matches(/^\+?[\d\s\-\(\)]{10,20}$/)
     .withMessage('Please provide a valid phone number'),
-    
+
   body('dateOfBirth')
     .isISO8601({ strict: true })
     .withMessage('Date of birth must be a valid date (YYYY-MM-DD)')
@@ -249,31 +273,38 @@ export const surveyValidation = [
       }
       return true;
     }),
-    
+
   body('foods')
     .isArray({ min: 1, max: 10 })
     .withMessage('Please select 1-10 food preferences')
     .custom((foods: string[]) => {
-      const allowedFoods = ['Pizza', 'Pasta', 'Pap and Wors', 'Chicken stir fry', 'Beef stir fry', 'Other'];
-      const invalid = foods.filter(food => !allowedFoods.includes(food));
+      const allowedFoods = [
+        'Pizza',
+        'Pasta',
+        'Pap and Wors',
+        'Chicken stir fry',
+        'Beef stir fry',
+        'Other',
+      ];
+      const invalid = foods.filter((food) => !allowedFoods.includes(food));
       if (invalid.length > 0) {
         throw new Error(`Invalid food options: ${invalid.join(', ')}`);
       }
       return true;
     }),
-    
+
   body('ratingMovies')
     .isInt({ min: 1, max: 5 })
     .withMessage('Movie rating must be between 1-5'),
-    
+
   body('ratingRadio')
     .isInt({ min: 1, max: 5 })
     .withMessage('Radio rating must be between 1-5'),
-    
+
   body('ratingEatOut')
     .isInt({ min: 1, max: 5 })
     .withMessage('Eat out rating must be between 1-5'),
-    
+
   body('ratingTV')
     .isInt({ min: 1, max: 5 })
     .withMessage('TV rating must be between 1-5'),
@@ -283,10 +314,14 @@ export const surveyValidation = [
  * Security headers middleware
  * Additional custom security headers
  */
-export const securityHeaders = (req: Request, res: Response, next: NextFunction) => {
+export const securityHeaders = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   // Remove server fingerprinting
   res.removeHeader('X-Powered-By');
-  
+
   // Additional security headers
   res.set({
     'X-Content-Type-Options': 'nosniff',
@@ -296,7 +331,7 @@ export const securityHeaders = (req: Request, res: Response, next: NextFunction)
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Feature-Policy': "camera 'none'; microphone 'none'; geolocation 'self'",
   });
-  
+
   next();
 };
 
@@ -304,8 +339,16 @@ export const securityHeaders = (req: Request, res: Response, next: NextFunction)
  * HTTPS redirect middleware for production
  * Enforces HTTPS connections in production environment
  */
-export const httpsRedirect = (req: Request, res: Response, next: NextFunction) => {
-  if (config.NODE_ENV === 'production' && !req.secure && req.get('X-Forwarded-Proto') !== 'https') {
+export const httpsRedirect = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (
+    config.NODE_ENV === 'production' &&
+    !req.secure &&
+    req.get('X-Forwarded-Proto') !== 'https'
+  ) {
     return res.redirect(301, `https://${req.get('Host')}${req.url}`);
   }
   next();

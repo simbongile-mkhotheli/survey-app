@@ -28,7 +28,9 @@ export default function RatingRow({
               type="radio"
               value={value}
               className={styles.radioInput}
-              {...(register(fieldName) as unknown as InputHTMLAttributes<HTMLInputElement>)}
+              {...(register(
+                fieldName,
+              ) as unknown as InputHTMLAttributes<HTMLInputElement>)}
             />
           </td>
         ))}

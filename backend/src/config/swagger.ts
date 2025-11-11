@@ -97,7 +97,8 @@ const swaggerDefinition = {
           dateOfBirth: {
             type: 'string',
             format: 'date',
-            description: 'Date of birth (must result in age between 5-120 years)',
+            description:
+              'Date of birth (must result in age between 5-120 years)',
             example: '1990-05-15',
           },
           foods: {
@@ -383,11 +384,7 @@ const swaggerDefinition = {
 
 const options = {
   definition: swaggerDefinition,
-  apis: [
-    './src/routes/*.ts',
-    './src/controllers/*.ts',
-    './src/types/*.ts',
-  ],
+  apis: ['./src/routes/*.ts', './src/controllers/*.ts', './src/types/*.ts'],
 };
 
 export const swaggerSpec = swaggerJSDoc(options);

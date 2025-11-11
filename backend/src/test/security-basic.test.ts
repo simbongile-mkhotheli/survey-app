@@ -2,13 +2,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import request from 'supertest';
 import express, { Request, Response } from 'express';
-import { 
-  helmetConfig, 
-  compressionConfig, 
-  hppConfig, 
+import {
+  helmetConfig,
+  compressionConfig,
+  hppConfig,
   inputSanitizeConfig,
   requestSizeLimit,
-  securityHeaders
+  securityHeaders,
 } from '@/middleware/security';
 
 describe('Basic Security Middleware Tests', () => {
@@ -22,26 +22,30 @@ describe('Basic Security Middleware Tests', () => {
   describe('Security Headers Middleware', () => {
     it('should set custom security headers', async () => {
       app.use(securityHeaders);
-      app.get('/test', (req: Request, res: Response) => res.json({ success: true }));
+      app.get('/test', (req: Request, res: Response) =>
+        res.json({ success: true }),
+      );
 
-      const response = await request(app)
-        .get('/test')
-        .expect(200);
+      const response = await request(app).get('/test').expect(200);
 
       expect(response.headers['x-content-type-options']).toBe('nosniff');
       expect(response.headers['x-download-options']).toBe('noopen');
       expect(response.headers['x-dns-prefetch-control']).toBe('off');
-      expect(response.headers['x-permitted-cross-domain-policies']).toBe('none');
-      expect(response.headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
+      expect(response.headers['x-permitted-cross-domain-policies']).toBe(
+        'none',
+      );
+      expect(response.headers['referrer-policy']).toBe(
+        'strict-origin-when-cross-origin',
+      );
     });
 
     it('should remove X-Powered-By header', async () => {
       app.use(securityHeaders);
-      app.get('/test', (req: Request, res: Response) => res.json({ success: true }));
+      app.get('/test', (req: Request, res: Response) =>
+        res.json({ success: true }),
+      );
 
-      const response = await request(app)
-        .get('/test')
-        .expect(200);
+      const response = await request(app).get('/test').expect(200);
 
       expect(response.headers['x-powered-by']).toBeUndefined();
     });
@@ -50,11 +54,11 @@ describe('Basic Security Middleware Tests', () => {
   describe('Helmet Security Headers', () => {
     it('should set helmet security headers', async () => {
       app.use(helmetConfig);
-      app.get('/test', (req: Request, res: Response) => res.json({ success: true }));
+      app.get('/test', (req: Request, res: Response) =>
+        res.json({ success: true }),
+      );
 
-      const response = await request(app)
-        .get('/test')
-        .expect(200);
+      const response = await request(app).get('/test').expect(200);
 
       expect(response.headers['x-content-type-options']).toBe('nosniff');
       expect(response.headers['content-security-policy']).toBeDefined();
@@ -65,7 +69,9 @@ describe('Basic Security Middleware Tests', () => {
     it('should reject requests exceeding size limit', async () => {
       app.use(requestSizeLimit);
       app.use(express.json());
-      app.post('/test', (req: Request, res: Response) => res.json({ received: req.body }));
+      app.post('/test', (req: Request, res: Response) =>
+        res.json({ received: req.body }),
+      );
 
       const response = await request(app)
         .post('/test')
@@ -79,14 +85,13 @@ describe('Basic Security Middleware Tests', () => {
     it('should allow requests within size limit', async () => {
       app.use(requestSizeLimit);
       app.use(express.json());
-      app.post('/test', (req: Request, res: Response) => res.json({ received: req.body }));
+      app.post('/test', (req: Request, res: Response) =>
+        res.json({ received: req.body }),
+      );
 
       const smallPayload = { data: 'small data' };
 
-      await request(app)
-        .post('/test')
-        .send(smallPayload)
-        .expect(200);
+      await request(app).post('/test').send(smallPayload).expect(200);
     });
   });
 
@@ -102,7 +107,7 @@ describe('Basic Security Middleware Tests', () => {
         name: '<script>alert("xss")</script>John',
         message: 'Hello javascript:alert("xss") world',
         onclick: 'onclick=alert("xss")',
-        normalField: '  normalValue  '
+        normalField: '  normalValue  ',
       };
 
       const response = await request(app)
@@ -164,7 +169,7 @@ describe('Basic Security Middleware Tests', () => {
       app.use(hppConfig);
       app.use(inputSanitizeConfig);
       app.use(express.json());
-      
+
       app.post('/secure-endpoint', (req: Request, res: Response) => {
         res.json({ success: true, secure: true, received: req.body });
       });
@@ -172,7 +177,7 @@ describe('Basic Security Middleware Tests', () => {
       const validPayload = {
         name: 'John Doe',
         email: 'john@example.com',
-        message: 'Hello world'
+        message: 'Hello world',
       };
 
       const response = await request(app)
@@ -183,7 +188,7 @@ describe('Basic Security Middleware Tests', () => {
       // Verify security headers are present
       expect(response.headers['x-content-type-options']).toBe('nosniff');
       expect(response.headers['content-security-policy']).toBeDefined();
-      
+
       // Verify successful processing
       expect(response.body.success).toBe(true);
       expect(response.body.secure).toBe(true);
@@ -195,7 +200,7 @@ describe('Basic Security Middleware Tests', () => {
       app.use(requestSizeLimit);
       app.use(express.json());
       app.use(inputSanitizeConfig);
-      
+
       app.post('/secure-endpoint', (req: Request, res: Response) => {
         res.json({ received: req.body });
       });

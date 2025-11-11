@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-export { SurveyPayloadSchema as SurveySchema, SurveyInput } from '../../../shared/validation';
+export {
+  SurveyPayloadSchema as SurveySchema,
+  SurveyInput,
+} from '../../../shared/validation';
 
 /**
  * Schema for query parameters on GET /results.

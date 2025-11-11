@@ -20,7 +20,10 @@ export abstract class AppError extends Error {
  * Validation error for invalid input data
  */
 export class ValidationError extends AppError {
-  constructor(message: string, public readonly field?: string) {
+  constructor(
+    message: string,
+    public readonly field?: string,
+  ) {
     super(message, 400);
     this.name = 'ValidationError';
   }
@@ -31,7 +34,9 @@ export class ValidationError extends AppError {
  */
 export class NotFoundError extends AppError {
   constructor(resource: string, id?: string | number) {
-    const message = id ? `${resource} with id ${id} not found` : `${resource} not found`;
+    const message = id
+      ? `${resource} with id ${id} not found`
+      : `${resource} not found`;
     super(message, 404);
     this.name = 'NotFoundError';
   }
@@ -42,7 +47,9 @@ export class NotFoundError extends AppError {
  */
 export class DatabaseError extends AppError {
   constructor(message: string, operation?: string) {
-    const fullMessage = operation ? `Database ${operation} failed: ${message}` : message;
+    const fullMessage = operation
+      ? `Database ${operation} failed: ${message}`
+      : message;
     super(fullMessage, 500);
     this.name = 'DatabaseError';
   }

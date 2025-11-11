@@ -50,10 +50,10 @@ export default function Results() {
   if (loading) {
     return <Loading text="Loading survey results..." />;
   }
-  
+
   if (error) {
     return (
-      <ErrorMessage 
+      <ErrorMessage
         message={error}
         title="Failed to Load Results"
         showRetry
@@ -64,7 +64,7 @@ export default function Results() {
 
   if (!results || results.totalCount === 0) {
     return (
-      <ErrorMessage 
+      <ErrorMessage
         message="No survey responses available yet. Be the first to submit a survey!"
         title="No Data"
         severity="info"
@@ -80,8 +80,11 @@ export default function Results() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-  <h2 className={styles.heading}><span aria-hidden="true">📊 </span><span>Survey Results</span></h2>
-        
+        <h2 className={styles.heading}>
+          <span aria-hidden="true">📊 </span>
+          <span>Survey Results</span>
+        </h2>
+
         <ResultRow label="Total number of surveys" value={totalCount} />
         <ResultRow label="Average Age" value={`${fmtDecimal(avg)} years`} />
         <ResultRow
@@ -92,9 +95,9 @@ export default function Results() {
           label="Youngest person who participated"
           value={`${fmtInt(min)} years`}
         />
-        
+
         <div style={{ height: '2rem' }} />
-        
+
         <ResultRow
           label="🍕 Percentage who like Pizza"
           value={`${fmtDecimal(pizza)}%`}
@@ -107,11 +110,17 @@ export default function Results() {
           label="🍖 Percentage who like Pap and Wors"
           value={`${fmtDecimal(papAndWors)}%`}
         />
-        
+
         <div style={{ height: '2rem' }} />
-        
-        <ResultRow label="🎬 I like to watch movies" value={fmtDecimal(movies)} />
-        <ResultRow label="📻 I like to listen to radio" value={fmtDecimal(radio)} />
+
+        <ResultRow
+          label="🎬 I like to watch movies"
+          value={fmtDecimal(movies)}
+        />
+        <ResultRow
+          label="📻 I like to listen to radio"
+          value={fmtDecimal(radio)}
+        />
         <ResultRow label="🍽️ I like to eat out" value={fmtDecimal(eatOut)} />
         <ResultRow label="📺 I like to watch TV" value={fmtDecimal(tv)} />
       </div>

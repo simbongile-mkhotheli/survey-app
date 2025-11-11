@@ -1,6 +1,10 @@
 // backend/src/routes/monitoring.ts
 import express from 'express';
-import { healthCheck, livenessProbe, readinessProbe } from '@/middleware/healthCheck';
+import {
+  healthCheck,
+  livenessProbe,
+  readinessProbe,
+} from '@/middleware/healthCheck';
 import { metricsEndpoint, metricsDashboard } from '@/middleware/metrics';
 import { errorAnalytics, errorSummary } from '@/middleware/errorTracking';
 import { performanceEndpoint } from '@/middleware/performance';
@@ -11,7 +15,7 @@ import { config } from '@/config/env';
 /**
  * Monitoring and Observability Routes
  * ==================================
- * 
+ *
  * Centralized monitoring endpoints for:
  * - Health checks and service status
  * - Application metrics and performance
@@ -29,7 +33,7 @@ const router = express.Router();
 router.get('/status', async (req, res) => {
   try {
     const startTime = Date.now();
-    
+
     // Gather system information in parallel
     const [healthData, cacheHealth, metricsData] = await Promise.all([
       // Get basic health info (simplified version)
@@ -38,30 +42,30 @@ router.get('/status', async (req, res) => {
         uptime: Math.floor(process.uptime()),
         timestamp: new Date().toISOString(),
         environment: config.NODE_ENV,
-        version: process.env.npm_package_version || '1.0.0'
+        version: process.env.npm_package_version || '1.0.0',
       }),
-      
+
       // Get cache health
-      cacheManager.healthCheck().catch(() => ({ 
+      cacheManager.healthCheck().catch(() => ({
         redis: false,
         memory: true,
         overall: false,
-        error: 'Cache health check failed' 
+        error: 'Cache health check failed',
       })),
-      
+
       // Get basic metrics
       Promise.resolve({
         requestsProcessed: 'available',
         errorRate: 'available',
-        responseTime: 'available'
-      }).catch(() => ({ error: 'Metrics unavailable' }))
+        responseTime: 'available',
+      }).catch(() => ({ error: 'Metrics unavailable' })),
     ]);
 
     const responseTime = Date.now() - startTime;
-    
+
     // Determine overall status
     const isHealthy = cacheHealth.overall !== false;
-    
+
     const statusResponse = {
       status: isHealthy ? 'operational' : 'degraded',
       timestamp: new Date().toISOString(),
@@ -70,7 +74,7 @@ router.get('/status', async (req, res) => {
       cache: {
         status: isHealthy ? 'healthy' : 'degraded',
         redis: cacheHealth.redis || false,
-        memory: cacheHealth.memory || true
+        memory: cacheHealth.memory || true,
       },
       metrics: metricsData,
       endpoints: {
@@ -78,10 +82,11 @@ router.get('/status', async (req, res) => {
         healthLive: '/health/live',
         healthReady: '/health/ready',
         metrics: '/metrics',
-        performance: config.NODE_ENV !== 'production' ? '/api/performance' : undefined,
+        performance:
+          config.NODE_ENV !== 'production' ? '/api/performance' : undefined,
         errors: '/api/monitoring/errors',
-        dashboard: '/api/monitoring/dashboard'
-      }
+        dashboard: '/api/monitoring/dashboard',
+      },
     };
 
     // Log status check
@@ -91,23 +96,22 @@ router.get('/status', async (req, res) => {
       duration: responseTime,
       metadata: {
         overallStatus: statusResponse.status,
-        cacheHealth: isHealthy ? 'healthy' : 'degraded'
-      }
+        cacheHealth: isHealthy ? 'healthy' : 'degraded',
+      },
     });
 
     res.json(statusResponse);
-    
   } catch (error) {
     logWithContext.error('Failed to generate system status', error as Error, {
       requestId: req.requestId,
-      operation: 'status_check'
+      operation: 'status_check',
     });
 
     res.status(500).json({
       status: 'error',
       timestamp: new Date().toISOString(),
       message: 'Failed to retrieve system status',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 });
@@ -119,86 +123,86 @@ router.get('/status', async (req, res) => {
 router.get('/dashboard', async (req, res) => {
   try {
     const startTime = Date.now();
-    
+
     // Get all monitoring data
     const dashboard = {
       timestamp: new Date().toISOString(),
       environment: config.NODE_ENV,
       uptime: Math.floor(process.uptime()),
-      
+
       // System Health
       health: {
         overall: 'healthy', // This would be computed from all checks
         components: {
           database: 'healthy',
           cache: 'healthy',
-          application: 'healthy'
-        }
+          application: 'healthy',
+        },
       },
-      
+
       // Performance Metrics
       performance: {
         responseTime: {
           current: '< 100ms',
           average: '< 150ms',
-          p95: '< 500ms'
+          p95: '< 500ms',
         },
         throughput: {
           requestsPerMinute: 'N/A',
-          requestsPerHour: 'N/A'
+          requestsPerHour: 'N/A',
         },
         errors: {
           errorRate: '< 1%',
           totalErrors: 0,
-          criticalErrors: 0
-        }
+          criticalErrors: 0,
+        },
       },
-      
+
       // Resource Utilization
       resources: {
         memory: {
           used: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`,
           total: `${Math.round(process.memoryUsage().heapTotal / 1024 / 1024)}MB`,
-          percentage: `${Math.round((process.memoryUsage().heapUsed / process.memoryUsage().heapTotal) * 100)}%`
+          percentage: `${Math.round((process.memoryUsage().heapUsed / process.memoryUsage().heapTotal) * 100)}%`,
         },
         cpu: {
           usage: 'N/A', // Would require additional monitoring
-          load: 'N/A'
-        }
+          load: 'N/A',
+        },
       },
-      
+
       // Business Metrics
       business: {
         totalSurveys: 'Available via /api/results',
         activeUsers: 'N/A',
-        dataQuality: 'Good'
+        dataQuality: 'Good',
       },
-      
+
       // Cache Statistics
       cache: {
         hitRatio: 'Available',
         size: 'Available',
-        connections: 'Healthy'
+        connections: 'Healthy',
       },
-      
+
       // Recent Activities
       recentActivities: [
         {
           timestamp: new Date().toISOString(),
           type: 'info',
           message: 'Monitoring dashboard accessed',
-          component: 'monitoring'
-        }
+          component: 'monitoring',
+        },
       ],
-      
+
       // System Information
       system: {
         nodeVersion: process.version,
         platform: process.platform,
         architecture: process.arch,
         pid: process.pid,
-        startTime: new Date(Date.now() - (process.uptime() * 1000)).toISOString()
-      }
+        startTime: new Date(Date.now() - process.uptime() * 1000).toISOString(),
+      },
     };
 
     const responseTime = Date.now() - startTime;
@@ -207,21 +211,24 @@ router.get('/dashboard', async (req, res) => {
     logWithContext.info('Monitoring dashboard accessed', {
       requestId: req.requestId,
       operation: 'monitoring_dashboard',
-      duration: responseTime
+      duration: responseTime,
     });
 
     res.json(dashboard);
-    
   } catch (error) {
-    logWithContext.error('Failed to generate monitoring dashboard', error as Error, {
-      requestId: req.requestId,
-      operation: 'monitoring_dashboard'
-    });
+    logWithContext.error(
+      'Failed to generate monitoring dashboard',
+      error as Error,
+      {
+        requestId: req.requestId,
+        operation: 'monitoring_dashboard',
+      },
+    );
 
     res.status(500).json({
       error: 'Failed to generate dashboard',
       timestamp: new Date().toISOString(),
-      message: error instanceof Error ? error.message : 'Unknown error'
+      message: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 });
@@ -232,7 +239,7 @@ router.get('/dashboard', async (req, res) => {
 router.get('/logs', async (req, res) => {
   try {
     const { level = 'info', limit = 100, component } = req.query;
-    
+
     // In a production system, this would read from log files or a log aggregation service
     // For now, return a structured response indicating logs are available
     const logsResponse = {
@@ -240,7 +247,7 @@ router.get('/logs', async (req, res) => {
       filters: {
         level: level as string,
         limit: parseInt(limit as string),
-        component: component as string || 'all'
+        component: (component as string) || 'all',
       },
       logs: [
         {
@@ -248,15 +255,15 @@ router.get('/logs', async (req, res) => {
           level: 'info',
           component: 'monitoring',
           message: 'Logs endpoint accessed',
-          requestId: req.requestId
-        }
+          requestId: req.requestId,
+        },
       ],
       metadata: {
         totalLogs: 'Available in log files',
         logLocation: 'logs/ directory',
         retention: '14 days for application logs, 30 days for error logs',
-        note: 'This endpoint provides recent log samples. Full logs available via log aggregation tools.'
-      }
+        note: 'This endpoint provides recent log samples. Full logs available via log aggregation tools.',
+      },
     };
 
     logWithContext.info('System logs accessed', {
@@ -265,21 +272,20 @@ router.get('/logs', async (req, res) => {
       metadata: {
         level,
         limit,
-        component: component || 'all'
-      }
+        component: component || 'all',
+      },
     });
 
     res.json(logsResponse);
-    
   } catch (error) {
     logWithContext.error('Failed to retrieve system logs', error as Error, {
       requestId: req.requestId,
-      operation: 'logs_access'
+      operation: 'logs_access',
     });
 
     res.status(500).json({
       error: 'Failed to retrieve logs',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });
@@ -295,42 +301,43 @@ router.get('/alerts', async (req, res) => {
       channels: {
         email: {
           enabled: false,
-          description: 'Email notifications for critical alerts'
+          description: 'Email notifications for critical alerts',
         },
         webhook: {
           enabled: false,
-          description: 'Webhook notifications for integration with external tools'
+          description:
+            'Webhook notifications for integration with external tools',
         },
         logs: {
           enabled: true,
-          description: 'All alerts logged to application logs'
-        }
+          description: 'All alerts logged to application logs',
+        },
       },
       rules: [
         {
           name: 'Critical Errors',
           condition: 'Error severity = critical',
           action: 'Log and notify',
-          enabled: true
+          enabled: true,
         },
         {
           name: 'High Error Rate',
           condition: 'Error rate > 5% over 5 minutes',
           action: 'Log and monitor',
-          enabled: true
+          enabled: true,
         },
         {
           name: 'Database Connection Issues',
           condition: 'Database health check fails',
           action: 'Log and alert',
-          enabled: true
+          enabled: true,
         },
         {
           name: 'Memory Usage High',
           condition: 'Memory usage > 90%',
           action: 'Log and monitor',
-          enabled: true
-        }
+          enabled: true,
+        },
       ],
       recentAlerts: [
         {
@@ -338,27 +345,30 @@ router.get('/alerts', async (req, res) => {
           level: 'info',
           rule: 'System Check',
           message: 'Alerts configuration accessed',
-          status: 'informational'
-        }
-      ]
+          status: 'informational',
+        },
+      ],
     };
 
     logWithContext.info('Alerts configuration accessed', {
       requestId: req.requestId,
-      operation: 'alerts_config'
+      operation: 'alerts_config',
     });
 
     res.json(alertsConfig);
-    
   } catch (error) {
-    logWithContext.error('Failed to retrieve alerts configuration', error as Error, {
-      requestId: req.requestId,
-      operation: 'alerts_config'
-    });
+    logWithContext.error(
+      'Failed to retrieve alerts configuration',
+      error as Error,
+      {
+        requestId: req.requestId,
+        operation: 'alerts_config',
+      },
+    );
 
     res.status(500).json({
       error: 'Failed to retrieve alerts configuration',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });
@@ -386,7 +396,7 @@ router.get('/cache', async (req, res) => {
   try {
     const health = await cacheManager.healthCheck();
     const stats = cacheManager.getCacheStats();
-    
+
     res.json({
       health,
       stats,
@@ -395,7 +405,7 @@ router.get('/cache', async (req, res) => {
   } catch {
     res.status(500).json({
       error: 'Failed to retrieve cache information',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });

@@ -8,7 +8,7 @@ import { config } from '@/config/env';
 /**
  * Health Check System
  * ==================
- * 
+ *
  * Comprehensive health monitoring for all application components:
  * - Database connectivity and performance
  * - Cache system health (Redis + Memory)
@@ -50,58 +50,71 @@ const healthMetrics = {
   totalChecks: 0,
   lastCheck: new Date(),
   responseTimes: [] as number[],
-  errors: [] as { timestamp: Date; component: string; error: string }[]
+  errors: [] as { timestamp: Date; component: string; error: string }[],
 };
 
 /**
  * Database health check with connection and query performance test
  */
-async function checkDatabaseHealth(prisma: PrismaClient): Promise<ComponentHealth> {
+async function checkDatabaseHealth(
+  prisma: PrismaClient,
+): Promise<ComponentHealth> {
   const startTime = Date.now();
-  
+
   try {
     // Test basic connectivity with a simple query
     await prisma.$queryRaw`SELECT 1 as health_check`;
-    
+
     // Test write capability (if needed)
     const testQuery = prisma.surveyResponse.findFirst({
       select: { id: true },
-      take: 1
+      take: 1,
     });
-    
+
     await testQuery;
-    
+
     const responseTime = Date.now() - startTime;
-    
+
     return {
-      status: responseTime < 100 ? 'healthy' : responseTime < 500 ? 'degraded' : 'unhealthy',
+      status:
+        responseTime < 100
+          ? 'healthy'
+          : responseTime < 500
+            ? 'degraded'
+            : 'unhealthy',
       responseTime,
       message: `Database responding in ${responseTime}ms`,
       details: {
         connectionState: 'connected',
-        queryPerformance: responseTime < 100 ? 'excellent' : responseTime < 500 ? 'good' : 'poor'
+        queryPerformance:
+          responseTime < 100
+            ? 'excellent'
+            : responseTime < 500
+              ? 'good'
+              : 'poor',
       },
-      lastCheck: new Date().toISOString()
+      lastCheck: new Date().toISOString(),
     };
   } catch (error) {
     const responseTime = Date.now() - startTime;
-    const errorMessage = error instanceof Error ? error.message : 'Unknown database error';
-    
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown database error';
+
     // Log database health check failure
     logWithContext.error('Database health check failed', error as Error, {
       operation: 'health_check_database',
-      duration: responseTime
+      duration: responseTime,
     });
-    
+
     return {
       status: 'unhealthy',
       responseTime,
       message: `Database error: ${errorMessage}`,
       details: {
         connectionState: 'failed',
-        error: errorMessage
+        error: errorMessage,
       },
-      lastCheck: new Date().toISOString()
+      lastCheck: new Date().toISOString(),
     };
   }
 }
@@ -111,49 +124,55 @@ async function checkDatabaseHealth(prisma: PrismaClient): Promise<ComponentHealt
  */
 async function checkCacheHealth(): Promise<ComponentHealth> {
   const startTime = Date.now();
-  
+
   try {
     const testKey = 'health-check-test';
     const testValue = { timestamp: Date.now(), test: true };
-    
+
     // Test cache write and read
     await cacheManager.set(testKey, testValue, 60); // 1 minute TTL
     const retrieved = await cacheManager.get(testKey);
-    
+
     // Clean up test data
     await cacheManager.del(testKey);
-    
+
     const responseTime = Date.now() - startTime;
     const cacheStats = cacheManager.getCacheStats();
-    
+
     return {
-      status: responseTime < 50 ? 'healthy' : responseTime < 200 ? 'degraded' : 'unhealthy',
+      status:
+        responseTime < 50
+          ? 'healthy'
+          : responseTime < 200
+            ? 'degraded'
+            : 'unhealthy',
       responseTime,
       message: `Cache responding in ${responseTime}ms`,
       details: {
         redisConnected: cacheStats.redis?.connected || false,
         memoryCache: cacheStats.memory ? 'available' : 'unavailable',
-        testResult: retrieved ? 'passed' : 'failed'
+        testResult: retrieved ? 'passed' : 'failed',
       },
-      lastCheck: new Date().toISOString()
+      lastCheck: new Date().toISOString(),
     };
   } catch (error) {
     const responseTime = Date.now() - startTime;
-    const errorMessage = error instanceof Error ? error.message : 'Unknown cache error';
-    
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown cache error';
+
     logWithContext.error('Cache health check failed', error as Error, {
       operation: 'health_check_cache',
-      duration: responseTime
+      duration: responseTime,
     });
-    
+
     return {
       status: 'unhealthy',
       responseTime,
       message: `Cache error: ${errorMessage}`,
       details: {
-        error: errorMessage
+        error: errorMessage,
       },
-      lastCheck: new Date().toISOString()
+      lastCheck: new Date().toISOString(),
     };
   }
 }
@@ -166,17 +185,17 @@ function checkMemoryHealth(): ComponentHealth {
   const totalMemMB = Math.round(memUsage.rss / 1024 / 1024);
   const heapUsedMB = Math.round(memUsage.heapUsed / 1024 / 1024);
   const heapTotalMB = Math.round(memUsage.heapTotal / 1024 / 1024);
-  
+
   // Determine health based on heap usage
   const heapUsagePercent = (memUsage.heapUsed / memUsage.heapTotal) * 100;
   let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
-  
+
   if (heapUsagePercent > 90) {
     status = 'unhealthy';
   } else if (heapUsagePercent > 75) {
     status = 'degraded';
   }
-  
+
   return {
     status,
     message: `Memory usage: ${totalMemMB}MB total, ${heapUsedMB}MB heap used (${heapUsagePercent.toFixed(1)}%)`,
@@ -185,9 +204,9 @@ function checkMemoryHealth(): ComponentHealth {
       heapUsed: `${heapUsedMB}MB`,
       heapTotal: `${heapTotalMB}MB`,
       heapUsagePercent: `${heapUsagePercent.toFixed(1)}%`,
-      external: `${Math.round(memUsage.external / 1024 / 1024)}MB`
+      external: `${Math.round(memUsage.external / 1024 / 1024)}MB`,
     },
-    lastCheck: new Date().toISOString()
+    lastCheck: new Date().toISOString(),
   };
 }
 
@@ -196,7 +215,7 @@ function checkMemoryHealth(): ComponentHealth {
  */
 function calculateAverageResponseTime(): number | undefined {
   if (healthMetrics.responseTimes.length === 0) return undefined;
-  
+
   const sum = healthMetrics.responseTimes.reduce((a, b) => a + b, 0);
   return Math.round(sum / healthMetrics.responseTimes.length);
 }
@@ -207,43 +226,47 @@ function calculateAverageResponseTime(): number | undefined {
 export async function healthCheck(req: Request, res: Response): Promise<void> {
   const startTime = Date.now();
   const requestId = req.requestId || 'health-check';
-  
+
   try {
     // Initialize Prisma client for health check
     const prisma = new PrismaClient();
-    
+
     // Perform all health checks in parallel
     const [databaseHealth, cacheHealth, memoryHealth] = await Promise.all([
       checkDatabaseHealth(prisma),
       checkCacheHealth(),
-      Promise.resolve(checkMemoryHealth())
+      Promise.resolve(checkMemoryHealth()),
     ]);
-    
+
     // Clean up Prisma client
     await prisma.$disconnect();
-    
+
     const responseTime = Date.now() - startTime;
-    
+
     // Update metrics
     healthMetrics.totalChecks++;
     healthMetrics.lastCheck = new Date();
     healthMetrics.responseTimes.push(responseTime);
-    
+
     // Keep only last 100 response times
     if (healthMetrics.responseTimes.length > 100) {
       healthMetrics.responseTimes = healthMetrics.responseTimes.slice(-100);
     }
-    
+
     // Determine overall health status
-    const allStatuses = [databaseHealth.status, cacheHealth.status, memoryHealth.status];
+    const allStatuses = [
+      databaseHealth.status,
+      cacheHealth.status,
+      memoryHealth.status,
+    ];
     let overallStatus: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
-    
+
     if (allStatuses.includes('unhealthy')) {
       overallStatus = 'unhealthy';
     } else if (allStatuses.includes('degraded')) {
       overallStatus = 'degraded';
     }
-    
+
     const healthStatus: HealthStatus = {
       status: overallStatus,
       timestamp: new Date().toISOString(),
@@ -253,21 +276,21 @@ export async function healthCheck(req: Request, res: Response): Promise<void> {
       checks: {
         database: databaseHealth,
         cache: cacheHealth,
-        memory: memoryHealth
+        memory: memoryHealth,
       },
       performance: {
         responseTime,
         averageResponseTime: calculateAverageResponseTime(),
-        requestCount: healthMetrics.totalChecks
+        requestCount: healthMetrics.totalChecks,
       },
       metadata: {
         nodeVersion: process.version,
         platform: process.platform,
         arch: process.arch,
-        pid: process.pid
-      }
+        pid: process.pid,
+      },
     };
-    
+
     // Log health check
     logWithContext.info('Health check completed', {
       requestId,
@@ -275,38 +298,42 @@ export async function healthCheck(req: Request, res: Response): Promise<void> {
       duration: responseTime,
       metadata: {
         overallStatus,
-        componentStatuses: allStatuses
-      }
+        componentStatuses: allStatuses,
+      },
     });
-    
+
     // Set appropriate HTTP status
-    const httpStatus = overallStatus === 'healthy' ? 200 : 
-                      overallStatus === 'degraded' ? 200 : 503;
-    
+    const httpStatus =
+      overallStatus === 'healthy'
+        ? 200
+        : overallStatus === 'degraded'
+          ? 200
+          : 503;
+
     res.status(httpStatus).json(healthStatus);
-    
   } catch (error) {
     const responseTime = Date.now() - startTime;
-    const errorMessage = error instanceof Error ? error.message : 'Health check failed';
-    
+    const errorMessage =
+      error instanceof Error ? error.message : 'Health check failed';
+
     // Record error
     healthMetrics.errors.push({
       timestamp: new Date(),
       component: 'health_check',
-      error: errorMessage
+      error: errorMessage,
     });
-    
+
     // Keep only last 50 errors
     if (healthMetrics.errors.length > 50) {
       healthMetrics.errors = healthMetrics.errors.slice(-50);
     }
-    
+
     logWithContext.error('Health check system failure', error as Error, {
       requestId,
       operation: 'health_check',
-      duration: responseTime
+      duration: responseTime,
     });
-    
+
     res.status(503).json({
       status: 'unhealthy',
       timestamp: new Date().toISOString(),
@@ -314,8 +341,8 @@ export async function healthCheck(req: Request, res: Response): Promise<void> {
       environment: config.NODE_ENV,
       error: errorMessage,
       performance: {
-        responseTime
-      }
+        responseTime,
+      },
     });
   }
 }
@@ -327,34 +354,36 @@ export function livenessProbe(req: Request, res: Response): void {
   res.status(200).json({
     status: 'alive',
     timestamp: new Date().toISOString(),
-    uptime: Math.floor(process.uptime())
+    uptime: Math.floor(process.uptime()),
   });
 }
 
 /**
  * Readiness probe (checks if app is ready to serve traffic)
  */
-export async function readinessProbe(req: Request, res: Response): Promise<void> {
+export async function readinessProbe(
+  req: Request,
+  res: Response,
+): Promise<void> {
   try {
     const prisma = new PrismaClient();
-    
+
     // Quick database connectivity check
     await prisma.$queryRaw`SELECT 1`;
     await prisma.$disconnect();
-    
+
     res.status(200).json({
       status: 'ready',
       timestamp: new Date().toISOString(),
       checks: {
-        database: 'connected'
-      }
+        database: 'connected',
+      },
     });
-    
   } catch (error) {
     res.status(503).json({
       status: 'not_ready',
       timestamp: new Date().toISOString(),
-      error: error instanceof Error ? error.message : 'Readiness check failed'
+      error: error instanceof Error ? error.message : 'Readiness check failed',
     });
   }
 }
@@ -362,5 +391,5 @@ export async function readinessProbe(req: Request, res: Response): Promise<void>
 export default {
   healthCheck,
   livenessProbe,
-  readinessProbe
+  readinessProbe,
 };

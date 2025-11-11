@@ -49,7 +49,11 @@ interface RequestWithId extends Request {
 /**
  * Request performance tracking middleware
  */
-export function performanceTracker(req: Request, res: Response, next: NextFunction): void {
+export function performanceTracker(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
   const requestId = generateRequestId();
   const startTime = performance.now();
 
@@ -92,19 +96,27 @@ export function performanceTracker(req: Request, res: Response, next: NextFuncti
     // Log slow requests
     if (duration > config.SLOW_QUERY_THRESHOLD) {
       // eslint-disable-next-line no-console
-      console.warn(`⚠️  Slow request detected: ${req.method} ${req.path} - ${duration.toFixed(2)}ms`);
+      console.warn(
+        `⚠️  Slow request detected: ${req.method} ${req.path} - ${duration.toFixed(2)}ms`,
+      );
     }
 
     // Log performance metrics in development
     if (config.NODE_ENV === 'development' && config.ENABLE_QUERY_LOGGING) {
       // eslint-disable-next-line no-console
-      console.log(`📊 ${requestId}: ${req.method} ${req.path} - ${duration.toFixed(2)}ms (${res.statusCode})`);
+      console.log(
+        `📊 ${requestId}: ${req.method} ${req.path} - ${duration.toFixed(2)}ms (${res.statusCode})`,
+      );
       if (metrics.dbQueries && metrics.dbQueries.length > 0) {
         // eslint-disable-next-line no-console
-        console.log(`   📀 DB Queries: ${metrics.dbQueries.length}, Total: ${metrics.dbQueries.reduce((sum, q) => sum + q.duration, 0).toFixed(2)}ms`);
+        console.log(
+          `   📀 DB Queries: ${metrics.dbQueries.length}, Total: ${metrics.dbQueries.reduce((sum, q) => sum + q.duration, 0).toFixed(2)}ms`,
+        );
       }
       // eslint-disable-next-line no-console
-      console.log(`   💾 Cache: ${metrics.cacheHits} hits, ${metrics.cacheMisses} misses`);
+      console.log(
+        `   💾 Cache: ${metrics.cacheHits} hits, ${metrics.cacheMisses} misses`,
+      );
     }
 
     return originalJson.call(this, body);
@@ -131,7 +143,11 @@ export class QueryPerformanceTracker {
   /**
    * Track database query execution time
    */
-  public trackQuery(requestId: string, query: string, params?: unknown[]): QueryTracker {
+  public trackQuery(
+    requestId: string,
+    query: string,
+    params?: unknown[],
+  ): QueryTracker {
     return new QueryTracker(requestId, query, params);
   }
 
@@ -146,14 +162,16 @@ export class QueryPerformanceTracker {
       // Track slow queries globally
       if (metric.duration > config.SLOW_QUERY_THRESHOLD) {
         slowQueries.push(metric);
-        
+
         // Keep only recent slow queries
         if (slowQueries.length > MAX_SLOW_QUERIES) {
           slowQueries.shift();
         }
 
         // eslint-disable-next-line no-console
-        console.warn(`🐌 Slow database query: ${metric.duration.toFixed(2)}ms - ${metric.query.substring(0, 100)}...`);
+        console.warn(
+          `🐌 Slow database query: ${metric.duration.toFixed(2)}ms - ${metric.query.substring(0, 100)}...`,
+        );
       }
     }
   }
@@ -176,14 +194,18 @@ export class QueryPerformanceTracker {
     recentMetrics: PerformanceMetrics[];
   } {
     const metrics = Array.from(metricsStore.values());
-    const completedMetrics = metrics.filter(m => m.duration !== undefined);
+    const completedMetrics = metrics.filter((m) => m.duration !== undefined);
 
     const totalRequests = completedMetrics.length;
-    const averageResponseTime = totalRequests > 0 
-      ? completedMetrics.reduce((sum, m) => sum + (m.duration || 0), 0) / totalRequests 
-      : 0;
-    
-    const slowRequests = completedMetrics.filter(m => (m.duration || 0) > config.SLOW_QUERY_THRESHOLD).length;
+    const averageResponseTime =
+      totalRequests > 0
+        ? completedMetrics.reduce((sum, m) => sum + (m.duration || 0), 0) /
+          totalRequests
+        : 0;
+
+    const slowRequests = completedMetrics.filter(
+      (m) => (m.duration || 0) > config.SLOW_QUERY_THRESHOLD,
+    ).length;
 
     return {
       totalRequests,
@@ -240,7 +262,10 @@ export class QueryTracker {
       params: this.params,
     };
 
-    QueryPerformanceTracker.getInstance().addQueryMetric(this.requestId, metric);
+    QueryPerformanceTracker.getInstance().addQueryMetric(
+      this.requestId,
+      metric,
+    );
   }
 }
 
@@ -273,7 +298,7 @@ export function performanceEndpoint(req: Request, res: Response): void {
   res.json({
     performance: {
       ...stats,
-      slowQueries: slowQueries.map(q => ({
+      slowQueries: slowQueries.map((q) => ({
         query: q.query.substring(0, 200), // Truncate long queries
         duration: q.duration,
         timestamp: new Date(q.timestamp).toISOString(),

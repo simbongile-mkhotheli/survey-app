@@ -3,7 +3,11 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { Request, Response, NextFunction } from 'express';
 import { handleGetSurveyResults } from '@/controllers/resultsController';
 import { Container } from '@/container';
-import { createMockRequest, createMockResponse, createMockNext } from '@/test/utils/test-helpers';
+import {
+  createMockRequest,
+  createMockResponse,
+  createMockNext,
+} from '@/test/utils/test-helpers';
 
 // Mock the Container
 vi.mock('@/container', () => ({
@@ -27,7 +31,7 @@ describe('ResultsController', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     mockResultsService = {
       getResults: vi.fn(),
     };
@@ -37,7 +41,7 @@ describe('ResultsController', () => {
     };
 
     vi.mocked(Container.getInstance).mockReturnValue(mockContainer as never);
-    
+
     mockRequest = createMockRequest();
     mockRequest.headers = { 'x-request-id': 'test-request-id' }; // Add required header
     mockResponse = createMockResponse();
@@ -70,16 +74,18 @@ describe('ResultsController', () => {
 
       // Assert - Verify service was called with correct parameters
       expect(mockResultsService.getResults).toHaveBeenCalledOnce();
-      expect(mockResultsService.getResults).toHaveBeenCalledWith('test-request-id');
-      
+      expect(mockResultsService.getResults).toHaveBeenCalledWith(
+        'test-request-id',
+      );
+
       // Assert - Verify response structure and status
       expect(mockResponse.status).toHaveBeenCalledOnce();
       expect(mockResponse.status).toHaveBeenCalledWith(200);
-      
+
       // Assert - Verify response data matches exactly what service returned
       expect(mockResponse.json).toHaveBeenCalledOnce();
       expect(mockResponse.json).toHaveBeenCalledWith(mockResults);
-      
+
       // Assert - Verify error handler was NOT invoked
       expect(mockNext).not.toHaveBeenCalled();
     });
@@ -96,7 +102,7 @@ describe('ResultsController', () => {
       // Assert - Verify error was passed to error handling middleware
       expect(mockNext).toHaveBeenCalledOnce();
       expect(mockNext).toHaveBeenCalledWith(serviceError);
-      
+
       // Assert - Verify response methods were NOT called (error handler takes over)
       expect(mockResponse.status).not.toHaveBeenCalled();
       expect(mockResponse.json).not.toHaveBeenCalled();
@@ -118,7 +124,7 @@ describe('ResultsController', () => {
 
       // Assert - Verify 200 status even with empty data
       expect(mockResponse.status).toHaveBeenCalledWith(200);
-      
+
       // Assert - Verify structure of empty results is preserved
       const responseData = vi.mocked(mockResponse.json).mock.calls[0][0];
       expect(responseData).toEqual(emptyResults);
@@ -130,7 +136,12 @@ describe('ResultsController', () => {
     it('should retrieve container instance for dependency injection', async () => {
       // Arrange
       mockRequest.query = {};
-      const mockResults = { totalCount: 0, age: {}, foodPercentages: {}, avgRatings: {} };
+      const mockResults = {
+        totalCount: 0,
+        age: {},
+        foodPercentages: {},
+        avgRatings: {},
+      };
       mockResultsService.getResults.mockResolvedValue(mockResults);
 
       // Act

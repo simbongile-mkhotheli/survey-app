@@ -4,7 +4,7 @@
  * API Client Generator
  * ===================
  * Generates TypeScript/JavaScript API clients from OpenAPI specification
- * 
+ *
  * Usage:
  *   npm run generate-client
  *   node scripts/generate-client.js
@@ -24,21 +24,21 @@ const CONFIG = {
       name: 'typescript-fetch',
       language: 'TypeScript',
       description: 'TypeScript client using fetch API',
-      outputPath: 'typescript-fetch-client'
+      outputPath: 'typescript-fetch-client',
     },
     {
       name: 'javascript',
       language: 'JavaScript',
       description: 'JavaScript client with axios',
-      outputPath: 'javascript-client'
+      outputPath: 'javascript-client',
     },
     {
       name: 'typescript-axios',
       language: 'TypeScript',
       description: 'TypeScript client using axios',
-      outputPath: 'typescript-axios-client'
-    }
-  ]
+      outputPath: 'typescript-axios-client',
+    },
+  ],
 };
 
 class ApiClientGenerator {
@@ -55,11 +55,15 @@ class ApiClientGenerator {
     } catch (error) {
       console.log('📦 Installing OpenAPI Generator CLI...');
       try {
-        execSync('npm install -g @openapitools/openapi-generator-cli', { stdio: 'inherit' });
+        execSync('npm install -g @openapitools/openapi-generator-cli', {
+          stdio: 'inherit',
+        });
         console.log('✅ OpenAPI Generator CLI installed successfully');
       } catch (installError) {
         console.error('❌ Failed to install OpenAPI Generator CLI');
-        console.error('Please install it manually: npm install -g @openapitools/openapi-generator-cli');
+        console.error(
+          'Please install it manually: npm install -g @openapitools/openapi-generator-cli',
+        );
         process.exit(1);
       }
     }
@@ -70,28 +74,31 @@ class ApiClientGenerator {
    */
   async downloadSpec() {
     console.log('📥 Downloading OpenAPI specification...');
-    
+
     try {
       const response = await fetch(CONFIG.openApiUrl);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
-      
+
       const spec = await response.json();
-      
+
       // Ensure output directory exists
       if (!fs.existsSync(CONFIG.outputDir)) {
         fs.mkdirSync(CONFIG.outputDir, { recursive: true });
       }
-      
+
       const specPath = path.join(CONFIG.outputDir, 'openapi-spec.json');
       fs.writeFileSync(specPath, JSON.stringify(spec, null, 2));
-      
+
       console.log(`✅ OpenAPI spec saved to ${specPath}`);
       return specPath;
     } catch (error) {
       console.error('❌ Failed to download OpenAPI specification');
-      console.error('Make sure the API server is running at', CONFIG.openApiUrl);
+      console.error(
+        'Make sure the API server is running at',
+        CONFIG.openApiUrl,
+      );
       console.error('Error:', error.message);
       process.exit(1);
     }
@@ -101,15 +108,17 @@ class ApiClientGenerator {
    * Generate client for a specific generator
    */
   generateClient(specPath, generator) {
-    console.log(`🔨 Generating ${generator.language} client (${generator.name})...`);
-    
+    console.log(
+      `🔨 Generating ${generator.language} client (${generator.name})...`,
+    );
+
     const outputPath = path.join(CONFIG.outputDir, generator.outputPath);
-    
+
     // Remove existing output directory
     if (fs.existsSync(outputPath)) {
       fs.rmSync(outputPath, { recursive: true });
     }
-    
+
     const command = [
       'openapi-generator-cli generate',
       `-i "${specPath}"`,
@@ -119,15 +128,15 @@ class ApiClientGenerator {
       'npmName=survey-api-client,',
       'npmVersion=1.0.0,',
       'supportsES6=true,',
-      'withInterfaces=true'
+      'withInterfaces=true',
     ].join(' ');
-    
+
     try {
       execSync(command, { stdio: 'pipe' });
-      
+
       // Create README for the generated client
       this.createClientReadme(outputPath, generator);
-      
+
       console.log(`✅ ${generator.language} client generated at ${outputPath}`);
       return outputPath;
     } catch (error) {
@@ -321,11 +330,14 @@ api.getResults((error, data, response) => {
    */
   async generateAllClients() {
     console.log('🚀 Starting API client generation...');
-    console.log('📋 Generators:', CONFIG.generators.map(g => g.name).join(', '));
-    
+    console.log(
+      '📋 Generators:',
+      CONFIG.generators.map((g) => g.name).join(', '),
+    );
+
     // Download OpenAPI spec
     const specPath = await this.downloadSpec();
-    
+
     // Generate clients
     const results = [];
     for (const generator of CONFIG.generators) {
@@ -333,23 +345,23 @@ api.getResults((error, data, response) => {
       results.push({
         generator: generator.name,
         success: !!outputPath,
-        path: outputPath
+        path: outputPath,
       });
     }
-    
+
     // Summary
     console.log('\n📊 Generation Summary:');
-    results.forEach(result => {
+    results.forEach((result) => {
       const status = result.success ? '✅' : '❌';
       console.log(`  ${status} ${result.generator}`);
       if (result.success) {
         console.log(`     📁 ${result.path}`);
       }
     });
-    
+
     console.log('\n🎉 API client generation complete!');
     console.log(`📂 All clients saved to: ${CONFIG.outputDir}`);
-    
+
     // Create master README
     this.createMasterReadme(results);
   }
@@ -364,14 +376,19 @@ This directory contains automatically generated API clients for the Survey Appli
 
 ## Available Clients
 
-${results.map(result => {
-  if (!result.success) return `- ❌ **${result.generator}** - Generation failed`;
-  
-  const generator = CONFIG.generators.find(g => g.name === result.generator);
-  return `- ✅ **${generator.language}** (\`${generator.name}\`) - ${generator.description}
+${results
+  .map((result) => {
+    if (!result.success)
+      return `- ❌ **${result.generator}** - Generation failed`;
+
+    const generator = CONFIG.generators.find(
+      (g) => g.name === result.generator,
+    );
+    return `- ✅ **${generator.language}** (\`${generator.name}\`) - ${generator.description}
   - 📁 Path: \`${path.basename(result.path)}/\`
   - 📖 README: \`${path.basename(result.path)}/README.md\``;
-}).join('\n')}
+  })
+  .join('\n')}
 
 ## Usage
 
@@ -400,7 +417,7 @@ Make sure the API server is running at \`http://localhost:5000\` before regenera
 ---
 
 Generated on: ${new Date().toISOString()}
-Total clients: ${results.filter(r => r.success).length}/${results.length}
+Total clients: ${results.filter((r) => r.success).length}/${results.length}
 `;
 
     fs.writeFileSync(path.join(CONFIG.outputDir, 'README.md'), readmeContent);
@@ -410,7 +427,7 @@ Total clients: ${results.filter(r => r.success).length}/${results.length}
 // CLI handling
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.includes('--help') || args.includes('-h')) {
     console.log(`
 API Client Generator
@@ -434,14 +451,14 @@ Output directory: ${CONFIG.outputDir}
 `);
     return;
   }
-  
+
   const generator = new ApiClientGenerator();
   await generator.generateAllClients();
 }
 
 // Run if executed directly
 if (require.main === module) {
-  main().catch(error => {
+  main().catch((error) => {
     console.error('💥 Generation failed:', error.message);
     process.exit(1);
   });

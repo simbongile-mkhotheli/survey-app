@@ -4,8 +4,14 @@ import { SurveyRepository } from '@/repositories/survey.repository';
 import { ResultsRepository } from '@/repositories/results.repository';
 import { SurveyService } from '@/services/surveyService';
 import { ResultsService } from '@/services/resultsService';
-import type { ISurveyRepository, IResultsRepository } from '@/interfaces/repository.interface';
-import type { ISurveyService, IResultsService } from '@/interfaces/service.interface';
+import type {
+  ISurveyRepository,
+  IResultsRepository,
+} from '@/interfaces/repository.interface';
+import type {
+  ISurveyService,
+  IResultsService,
+} from '@/interfaces/service.interface';
 
 /**
  * Dependency Injection Container
@@ -46,7 +52,10 @@ export class Container {
 
   public get surveyService(): ISurveyService {
     if (!this._surveyService) {
-      this._surveyService = new SurveyService(this.surveyRepository, this.resultsRepository);
+      this._surveyService = new SurveyService(
+        this.surveyRepository,
+        this.resultsRepository,
+      );
     }
     return this._surveyService;
   }

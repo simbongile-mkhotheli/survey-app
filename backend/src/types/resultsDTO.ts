@@ -1,4 +1,3 @@
-
 /**
  * DTO for aggregated survey results returned by the API
  */

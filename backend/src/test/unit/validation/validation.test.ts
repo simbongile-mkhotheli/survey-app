@@ -186,7 +186,10 @@ describe('Validation Schemas', () => {
 
         validNumbers.forEach((contactNumber) => {
           // Act
-          const result = SurveySchema.safeParse({ ...validSurveyData, contactNumber });
+          const result = SurveySchema.safeParse({
+            ...validSurveyData,
+            contactNumber,
+          });
 
           // Assert - Verify phone acceptance
           expect(result.success).toBe(true);
@@ -196,15 +199,18 @@ describe('Validation Schemas', () => {
       it('should reject invalid phone number formats', () => {
         // Arrange
         const invalidNumbers = [
-          '123',           // Too short
-          'abcdefghij',    // Contains letters
-          '+1-234-567',    // Contains dashes
+          '123', // Too short
+          'abcdefghij', // Contains letters
+          '+1-234-567', // Contains dashes
           '(123) 456-7890', // Contains special chars
         ];
 
         invalidNumbers.forEach((contactNumber) => {
           // Act
-          const result = SurveySchema.safeParse({ ...validSurveyData, contactNumber });
+          const result = SurveySchema.safeParse({
+            ...validSurveyData,
+            contactNumber,
+          });
 
           // Assert - Verify phone rejection
           expect(result.success).toBe(false);
@@ -219,14 +225,18 @@ describe('Validation Schemas', () => {
         const validAges = [
           new Date(today.getFullYear() - 5, today.getMonth(), today.getDate()),
           new Date(today.getFullYear() - 30, today.getMonth(), today.getDate()),
-          new Date(today.getFullYear() - 120, today.getMonth(), today.getDate()),
+          new Date(
+            today.getFullYear() - 120,
+            today.getMonth(),
+            today.getDate(),
+          ),
         ];
 
         validAges.forEach((dob) => {
           // Act
-          const result = SurveySchema.safeParse({ 
-            ...validSurveyData, 
-            dateOfBirth: dob.toISOString().split('T')[0] 
+          const result = SurveySchema.safeParse({
+            ...validSurveyData,
+            dateOfBirth: dob.toISOString().split('T')[0],
           });
 
           // Assert - Verify age acceptance
@@ -237,10 +247,14 @@ describe('Validation Schemas', () => {
       it('should reject age below 5 years', () => {
         // Arrange - Date for 4 year old
         const today = new Date();
-        const youngDOB = new Date(today.getFullYear() - 4, today.getMonth(), today.getDate());
-        const invalidData = { 
-          ...validSurveyData, 
-          dateOfBirth: youngDOB.toISOString().split('T')[0] 
+        const youngDOB = new Date(
+          today.getFullYear() - 4,
+          today.getMonth(),
+          today.getDate(),
+        );
+        const invalidData = {
+          ...validSurveyData,
+          dateOfBirth: youngDOB.toISOString().split('T')[0],
         };
 
         // Act
@@ -256,10 +270,14 @@ describe('Validation Schemas', () => {
       it('should reject age above 120 years', () => {
         // Arrange - Date for 121 year old
         const today = new Date();
-        const oldDOB = new Date(today.getFullYear() - 121, today.getMonth(), today.getDate());
-        const invalidData = { 
-          ...validSurveyData, 
-          dateOfBirth: oldDOB.toISOString().split('T')[0] 
+        const oldDOB = new Date(
+          today.getFullYear() - 121,
+          today.getMonth(),
+          today.getDate(),
+        );
+        const invalidData = {
+          ...validSurveyData,
+          dateOfBirth: oldDOB.toISOString().split('T')[0],
         };
 
         // Act
@@ -276,7 +294,18 @@ describe('Validation Schemas', () => {
         const validFoodArrays = [
           ['Pizza'],
           ['Pizza', 'Pasta'],
-          ['Pizza', 'Pasta', 'Burger', 'Salad', 'Soup', 'Steak', 'Fish', 'Rice', 'Bread', 'Cheese'],
+          [
+            'Pizza',
+            'Pasta',
+            'Burger',
+            'Salad',
+            'Soup',
+            'Steak',
+            'Fish',
+            'Rice',
+            'Bread',
+            'Cheese',
+          ],
         ];
 
         validFoodArrays.forEach((foods) => {

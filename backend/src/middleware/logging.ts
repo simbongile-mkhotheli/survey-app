@@ -6,7 +6,7 @@ import { logWithContext } from '@/config/logger';
 /**
  * Request Logging Middleware
  * =========================
- * 
+ *
  * Comprehensive HTTP request/response logging with:
  * - Request correlation IDs
  * - Performance timing
@@ -31,21 +31,26 @@ declare global {
  * Request ID and timing middleware
  * Adds unique request ID and tracks timing for each request
  */
-export function requestContext(req: Request, res: Response, next: NextFunction): void {
+export function requestContext(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
   // Generate unique request ID
-  req.requestId = req.headers['x-request-id'] as string || randomUUID();
+  req.requestId = (req.headers['x-request-id'] as string) || randomUUID();
   req.startTime = Date.now();
-  
+
   // Extract real client IP (handles proxies)
-  req.clientIp = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
-                 req.headers['x-real-ip'] as string ||
-                 req.connection.remoteAddress ||
-                 req.socket.remoteAddress ||
-                 'unknown';
+  req.clientIp =
+    (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
+    (req.headers['x-real-ip'] as string) ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    'unknown';
 
   // Add request ID to response headers for client correlation
   res.setHeader('X-Request-ID', req.requestId);
-  
+
   // Log request start
   logWithContext.debug('Request started', {
     requestId: req.requestId,
@@ -56,8 +61,8 @@ export function requestContext(req: Request, res: Response, next: NextFunction):
       userAgent: req.get('User-Agent'),
       query: Object.keys(req.query).length > 0 ? req.query : undefined,
       contentLength: req.get('Content-Length'),
-      contentType: req.get('Content-Type')
-    }
+      contentType: req.get('Content-Type'),
+    },
   });
 
   next();
@@ -67,39 +72,47 @@ export function requestContext(req: Request, res: Response, next: NextFunction):
  * Access logging middleware
  * Logs all HTTP requests with response details
  */
-export function accessLogging(req: Request, res: Response, next: NextFunction): void {
+export function accessLogging(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
   const startTime = Date.now();
-  
+
   // Capture original functions
   const originalEnd = res.end;
   const originalWrite = res.write;
-  
+
   let responseSize = 0;
 
   // Intercept response writes to capture size
-  res.write = function(this: Response, chunk: Buffer | string) {
+  res.write = function (this: Response, chunk: Buffer | string) {
     if (chunk) {
-      responseSize += Buffer.isBuffer(chunk) ? chunk.length : Buffer.byteLength(chunk);
+      responseSize += Buffer.isBuffer(chunk)
+        ? chunk.length
+        : Buffer.byteLength(chunk);
     }
     return originalWrite.apply(this, arguments as never);
   } as typeof res.write;
 
   // Override end function to log when response completes
-  res.end = function(this: Response, ...args: Parameters<typeof originalEnd>) {
+  res.end = function (this: Response, ...args: Parameters<typeof originalEnd>) {
     const [chunk] = args;
     if (chunk && (typeof chunk === 'string' || Buffer.isBuffer(chunk))) {
-      responseSize += Buffer.isBuffer(chunk) ? chunk.length : Buffer.byteLength(chunk);
+      responseSize += Buffer.isBuffer(chunk)
+        ? chunk.length
+        : Buffer.byteLength(chunk);
     }
 
     const duration = Date.now() - startTime;
     const statusCode = res.statusCode;
     const method = req.method;
     const path = req.path || req.url;
-    
+
     // Determine log level based on status code
     const isError = statusCode >= 400;
     const isSlowRequest = duration > 5000; // 5 seconds
-    
+
     const logData = {
       requestId: req.requestId,
       userId: req.userId,
@@ -114,15 +127,21 @@ export function accessLogging(req: Request, res: Response, next: NextFunction): 
         contentType: res.get('Content-Type'),
         cacheControl: res.get('Cache-Control'),
         referer: req.get('Referer'),
-        queryParams: Object.keys(req.query).length > 0 ? req.query : undefined
-      }
+        queryParams: Object.keys(req.query).length > 0 ? req.query : undefined,
+      },
     };
 
     // Log access with appropriate level
     if (isError) {
-      logWithContext.warn(`${method} ${path} - ${statusCode} (${duration}ms)`, logData);
+      logWithContext.warn(
+        `${method} ${path} - ${statusCode} (${duration}ms)`,
+        logData,
+      );
     } else if (isSlowRequest) {
-      logWithContext.warn(`Slow request: ${method} ${path} - ${statusCode} (${duration}ms)`, logData);
+      logWithContext.warn(
+        `Slow request: ${method} ${path} - ${statusCode} (${duration}ms)`,
+        logData,
+      );
     } else {
       logWithContext.access(`${method} ${path} - ${statusCode}`, logData);
     }
@@ -130,15 +149,18 @@ export function accessLogging(req: Request, res: Response, next: NextFunction): 
     // Security logging for suspicious activity
     if (statusCode === 401 || statusCode === 403) {
       logWithContext.security('Authentication/Authorization failure', {
-        event: statusCode === 401 ? 'authentication_failure' : 'authorization_failure',
+        event:
+          statusCode === 401
+            ? 'authentication_failure'
+            : 'authorization_failure',
         severity: 'medium',
         requestId: req.requestId,
         ip: req.clientIp,
         userAgent: req.get('User-Agent'),
         metadata: {
           path,
-          method
-        }
+          method,
+        },
       });
     }
 
@@ -153,8 +175,8 @@ export function accessLogging(req: Request, res: Response, next: NextFunction): 
         metadata: {
           path,
           method,
-          statusCode
-        }
+          statusCode,
+        },
       });
     }
 
@@ -168,7 +190,12 @@ export function accessLogging(req: Request, res: Response, next: NextFunction): 
  * Error logging middleware
  * Captures and logs application errors with full context
  */
-export function errorLogging(error: Error, req: Request, res: Response, next: NextFunction): void {
+export function errorLogging(
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
   const errorContext = {
     requestId: req.requestId,
     userId: req.userId,
@@ -178,8 +205,8 @@ export function errorLogging(error: Error, req: Request, res: Response, next: Ne
       userAgent: req.get('User-Agent'),
       body: req.method !== 'GET' ? req.body : undefined,
       query: Object.keys(req.query).length > 0 ? req.query : undefined,
-      params: Object.keys(req.params).length > 0 ? req.params : undefined
-    }
+      params: Object.keys(req.params).length > 0 ? req.params : undefined,
+    },
   };
 
   // Log error with full context
@@ -196,8 +223,8 @@ export function errorLogging(error: Error, req: Request, res: Response, next: Ne
       metadata: {
         errorMessage: error.message,
         path: req.path,
-        method: req.method
-      }
+        method: req.method,
+      },
     });
   }
 
@@ -208,13 +235,19 @@ export function errorLogging(error: Error, req: Request, res: Response, next: Ne
 /**
  * Performance logging for slow operations
  */
-export function logSlowOperation(operation: string, duration: number, requestId?: string, metadata?: Record<string, unknown>): void {
-  if (duration > 1000) { // Log operations slower than 1 second
+export function logSlowOperation(
+  operation: string,
+  duration: number,
+  requestId?: string,
+  metadata?: Record<string, unknown>,
+): void {
+  if (duration > 1000) {
+    // Log operations slower than 1 second
     logWithContext.performance('Slow operation detected', {
       requestId,
       operation,
       duration,
-      metadata
+      metadata,
     });
   }
 }
@@ -228,7 +261,7 @@ export const businessLogger = {
       requestId,
       userId,
       operation: 'survey_created',
-      metadata: { surveyId }
+      metadata: { surveyId },
     });
   },
 
@@ -237,7 +270,7 @@ export const businessLogger = {
       requestId,
       userId,
       operation: 'results_accessed',
-      metadata: { cached, source: cached ? 'cache' : 'database' }
+      metadata: { cached, source: cached ? 'cache' : 'database' },
     });
   },
 
@@ -245,7 +278,7 @@ export const businessLogger = {
     logWithContext.debug('Cache hit', {
       requestId,
       operation: 'cache_hit',
-      metadata: { cacheKey }
+      metadata: { cacheKey },
     });
   },
 
@@ -253,22 +286,23 @@ export const businessLogger = {
     logWithContext.debug('Cache miss', {
       requestId,
       operation: 'cache_miss',
-      metadata: { cacheKey }
+      metadata: { cacheKey },
     });
   },
 
   databaseQuery: (requestId: string, query: string, duration: number) => {
-    if (duration > 500) { // Log slow queries
+    if (duration > 500) {
+      // Log slow queries
       logWithContext.performance('Database query executed', {
         requestId,
         operation: 'database_query',
         duration,
-        metadata: { 
-          query: query.length > 200 ? `${query.substring(0, 200)}...` : query 
-        }
+        metadata: {
+          query: query.length > 200 ? `${query.substring(0, 200)}...` : query,
+        },
       });
     }
-  }
+  },
 };
 
 export default {
@@ -276,5 +310,5 @@ export default {
   accessLogging,
   errorLogging,
   logSlowOperation,
-  businessLogger
+  businessLogger,
 };

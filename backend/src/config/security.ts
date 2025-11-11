@@ -11,7 +11,7 @@ export const securityConfig = {
   maxRequestSize: config.REQUEST_SIZE_LIMIT,
   maxJsonPayload: '1mb',
   maxUrlEncodedPayload: '1mb',
-  
+
   // Rate limiting configuration
   rateLimit: {
     windowMs: config.RATE_LIMIT_WINDOW_MS,
@@ -19,34 +19,34 @@ export const securityConfig = {
     skipSuccessfulRequests: false,
     skipFailedRequests: false,
   },
-  
+
   // CORS configuration
   cors: {
-    origins: config.CORS_ORIGINS.split(',').map(s => s.trim()),
+    origins: config.CORS_ORIGINS.split(',').map((s) => s.trim()),
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
-      'Content-Type', 
-      'Authorization', 
+      'Content-Type',
+      'Authorization',
       'X-Requested-With',
       'Accept',
       'Origin',
     ],
     exposedHeaders: [
-      'X-RateLimit-Limit', 
-      'X-RateLimit-Remaining', 
-      'X-RateLimit-Reset'
+      'X-RateLimit-Limit',
+      'X-RateLimit-Remaining',
+      'X-RateLimit-Reset',
     ],
     credentials: true,
     maxAge: 600, // 10 minutes
   },
-  
+
   // Content Security Policy directives
   csp: {
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
@@ -56,14 +56,14 @@ export const securityConfig = {
       formAction: ["'self'"],
     },
   },
-  
+
   // HSTS configuration
   hsts: {
     maxAge: 31536000, // 1 year
     includeSubDomains: true,
     preload: true,
   },
-  
+
   // Input validation rules
   validation: {
     name: {
@@ -83,6 +83,7 @@ export const securityConfig = {
       },
     },
     phone: {
+      // eslint-disable-next-line no-useless-escape
       pattern: /^\+?[\d\s\-\(\)]{10,20}$/,
     },
     dateOfBirth: {
@@ -95,35 +96,35 @@ export const securityConfig = {
     },
     foods: {
       allowed: [
-        'Pizza', 
-        'Pasta', 
-        'Pap and Wors', 
-        'Chicken stir fry', 
-        'Beef stir fry', 
-        'Other'
+        'Pizza',
+        'Pasta',
+        'Pap and Wors',
+        'Chicken stir fry',
+        'Beef stir fry',
+        'Other',
       ],
       minSelection: 1,
       maxSelection: 10,
     },
   },
-  
+
   // Security headers configuration
   securityHeaders: {
     // Prevent MIME type sniffing
     nosniff: true,
-    
+
     // Prevent opening downloads in Internet Explorer
     ieNoOpen: true,
-    
+
     // Control DNS prefetching
     dnsPrefetchControl: { allow: false },
-    
+
     // Control permitted cross-domain policies
     permittedCrossDomainPolicies: false,
-    
+
     // Referrer policy
     referrerPolicy: 'strict-origin-when-cross-origin',
-    
+
     // Feature policy / Permissions policy
     permissionsPolicy: {
       camera: ["'none'"],
@@ -133,7 +134,7 @@ export const securityConfig = {
       usb: ["'none'"],
     },
   },
-  
+
   // Environment-specific overrides
   production: {
     httpsRedirect: config.SECURITY_HTTPS_REDIRECT,
@@ -141,7 +142,7 @@ export const securityConfig = {
     secureSessionCookies: true,
     strictTransportSecurity: true,
   },
-  
+
   development: {
     httpsRedirect: false,
     trustProxy: false,
@@ -155,7 +156,7 @@ export const securityConfig = {
       'http://127.0.0.1:5173',
     ],
   },
-  
+
   // Sanitization options
   sanitization: {
     // SQL injection prevention for PostgreSQL
@@ -168,12 +169,12 @@ export const securityConfig = {
       ],
       // Note: Prisma already provides parameterized queries for primary protection
     },
-    
+
     // HTTP Parameter Pollution prevention
     hpp: {
       whitelist: [], // Parameters that should allow arrays
     },
-    
+
     // XSS prevention patterns
     xssPatterns: [
       /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
@@ -189,14 +190,14 @@ export const securityConfig = {
  */
 export function getSecurityConfig() {
   const baseConfig = { ...securityConfig };
-  
+
   if (config.NODE_ENV === 'production') {
     return {
       ...baseConfig,
       ...baseConfig.production,
     };
   }
-  
+
   if (config.NODE_ENV === 'development') {
     return {
       ...baseConfig,
@@ -210,7 +211,7 @@ export function getSecurityConfig() {
       },
     };
   }
-  
+
   return baseConfig;
 }
 
@@ -222,84 +223,93 @@ export const securityUtils = {
    * Check if a string contains potential XSS patterns
    */
   containsXSS(input: string): boolean {
-    return securityConfig.sanitization.xssPatterns.some(pattern => 
-      pattern.test(input)
+    return securityConfig.sanitization.xssPatterns.some((pattern) =>
+      pattern.test(input),
     );
   },
-  
+
   /**
    * Validate age from date of birth
    */
-  validateAge(dateOfBirth: string): { isValid: boolean; age?: number; error?: string } {
+  validateAge(dateOfBirth: string): {
+    isValid: boolean;
+    age?: number;
+    error?: string;
+  } {
     try {
       const dob = new Date(dateOfBirth);
       const now = new Date();
       const age = now.getFullYear() - dob.getFullYear();
       const monthDiff = now.getMonth() - dob.getMonth();
-      
+
       if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < dob.getDate())) {
         // Haven't had birthday this year yet
         const adjustedAge = age - 1;
-        
+
         if (adjustedAge < securityConfig.validation.dateOfBirth.minAge) {
-          return { 
-            isValid: false, 
-            error: `Minimum age is ${securityConfig.validation.dateOfBirth.minAge}` 
+          return {
+            isValid: false,
+            error: `Minimum age is ${securityConfig.validation.dateOfBirth.minAge}`,
           };
         }
-        
+
         if (adjustedAge > securityConfig.validation.dateOfBirth.maxAge) {
-          return { 
-            isValid: false, 
-            error: `Maximum age is ${securityConfig.validation.dateOfBirth.maxAge}` 
+          return {
+            isValid: false,
+            error: `Maximum age is ${securityConfig.validation.dateOfBirth.maxAge}`,
           };
         }
-        
+
         return { isValid: true, age: adjustedAge };
       }
-      
-      if (age < securityConfig.validation.dateOfBirth.minAge || 
-          age > securityConfig.validation.dateOfBirth.maxAge) {
-        return { 
-          isValid: false, 
-          error: `Age must be between ${securityConfig.validation.dateOfBirth.minAge}-${securityConfig.validation.dateOfBirth.maxAge}` 
+
+      if (
+        age < securityConfig.validation.dateOfBirth.minAge ||
+        age > securityConfig.validation.dateOfBirth.maxAge
+      ) {
+        return {
+          isValid: false,
+          error: `Age must be between ${securityConfig.validation.dateOfBirth.minAge}-${securityConfig.validation.dateOfBirth.maxAge}`,
         };
       }
-      
+
       return { isValid: true, age };
     } catch {
       return { isValid: false, error: 'Invalid date format' };
     }
   },
-  
+
   /**
    * Validate food selections
    */
   validateFoods(foods: string[]): { isValid: boolean; error?: string } {
-    const { allowed, minSelection, maxSelection } = securityConfig.validation.foods;
-    
+    const { allowed, minSelection, maxSelection } =
+      securityConfig.validation.foods;
+
     if (!Array.isArray(foods)) {
       return { isValid: false, error: 'Foods must be an array' };
     }
-    
+
     if (foods.length < minSelection || foods.length > maxSelection) {
-      return { 
-        isValid: false, 
-        error: `Select ${minSelection}-${maxSelection} food preferences` 
+      return {
+        isValid: false,
+        error: `Select ${minSelection}-${maxSelection} food preferences`,
       };
     }
-    
-    const invalid = foods.filter(food => !(allowed as readonly string[]).includes(food));
+
+    const invalid = foods.filter(
+      (food) => !(allowed as readonly string[]).includes(food),
+    );
     if (invalid.length > 0) {
-      return { 
-        isValid: false, 
-        error: `Invalid food options: ${invalid.join(', ')}` 
+      return {
+        isValid: false,
+        error: `Invalid food options: ${invalid.join(', ')}`,
       };
     }
-    
+
     return { isValid: true };
   },
-  
+
   /**
    * Generate security headers for responses
    */

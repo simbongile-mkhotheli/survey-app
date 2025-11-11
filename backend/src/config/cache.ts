@@ -107,7 +107,11 @@ class RedisClient {
     }
   }
 
-  public async set<T>(key: string, value: T, ttlSeconds?: number): Promise<boolean> {
+  public async set<T>(
+    key: string,
+    value: T,
+    ttlSeconds?: number,
+  ): Promise<boolean> {
     if (!this.client || !this.isConnected) return false;
 
     try {
@@ -319,7 +323,7 @@ export class CacheManager {
   }> {
     const redisHealthy = this.redis.isHealthy();
     const memoryHealthy = true; // Memory cache is always available
-    
+
     return {
       redis: redisHealthy,
       memory: memoryHealthy,

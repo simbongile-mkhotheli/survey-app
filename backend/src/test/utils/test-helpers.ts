@@ -4,7 +4,9 @@ import type { Request, Response, NextFunction } from 'express';
 import type { SurveyInput } from '@/validation/validation';
 import type { SurveyResponse } from '@/interfaces/service.interface';
 
-export function createMockSurveyInput(overrides: Partial<SurveyInput> = {}): SurveyInput {
+export function createMockSurveyInput(
+  overrides: Partial<SurveyInput> = {},
+): SurveyInput {
   return {
     firstName: 'John',
     lastName: 'Doe',
@@ -20,7 +22,9 @@ export function createMockSurveyInput(overrides: Partial<SurveyInput> = {}): Sur
   };
 }
 
-export function createMockSurveyResponse(overrides: Partial<SurveyResponse> = {}): SurveyResponse {
+export function createMockSurveyResponse(
+  overrides: Partial<SurveyResponse> = {},
+): SurveyResponse {
   return {
     id: 1,
     firstName: 'John',
@@ -38,7 +42,11 @@ export function createMockSurveyResponse(overrides: Partial<SurveyResponse> = {}
   };
 }
 
-export function createMockRequest(body: Record<string, unknown> = {}, params: Record<string, unknown> = {}, query: Record<string, unknown> = {}) {
+export function createMockRequest(
+  body: Record<string, unknown> = {},
+  params: Record<string, unknown> = {},
+  query: Record<string, unknown> = {},
+) {
   return {
     body,
     params,

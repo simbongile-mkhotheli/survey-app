@@ -4,7 +4,11 @@ import type { Request, Response, NextFunction } from 'express';
 import { errorHandler } from '@/middleware/errorHandler';
 import { ValidationError, DatabaseError } from '@/errors/AppError';
 import { ZodError } from 'zod';
-import { createMockRequest, createMockResponse, createMockNext } from '@/test/utils/test-helpers';
+import {
+  createMockRequest,
+  createMockResponse,
+  createMockNext,
+} from '@/test/utils/test-helpers';
 
 describe('errorHandler Middleware', () => {
   let mockRequest: Request;
@@ -40,7 +44,10 @@ describe('errorHandler Middleware', () => {
       expect(mockResponse.json).toHaveBeenCalledOnce();
       const responseData = vi.mocked(mockResponse.json).mock.calls[0][0];
       expect(responseData).toHaveProperty('error');
-      expect(responseData.error).toHaveProperty('message', 'Invalid email format');
+      expect(responseData.error).toHaveProperty(
+        'message',
+        'Invalid email format',
+      );
       expect(responseData.error).toHaveProperty('type', 'ValidationError');
 
       // Assert - Verify next is NOT called (error is handled)
@@ -274,7 +281,9 @@ describe('errorHandler Middleware', () => {
     it('should not leak sensitive information in production', () => {
       // Arrange
       process.env.NODE_ENV = 'production';
-      const sensitiveError = new Error('Database password incorrect: secret123');
+      const sensitiveError = new Error(
+        'Database password incorrect: secret123',
+      );
 
       // Act
       errorHandler(sensitiveError, mockRequest, mockResponse, mockNext);

@@ -24,14 +24,16 @@ export class ResultsRepository implements IResultsRepository {
       eatOut: number;
       tv: number;
     }>(cacheKey);
-    
+
     if (cached) {
       return cached;
     }
 
     // Track query performance
-    const queryTracker = requestId ? this.queryTracker.trackQuery(requestId, 'aggregate_ratings') : null;
-    
+    const queryTracker = requestId
+      ? this.queryTracker.trackQuery(requestId, 'aggregate_ratings')
+      : null;
+
     const result = await this.prisma.surveyResponse.aggregate({
       _avg: {
         ratingMovies: true,
@@ -44,10 +46,18 @@ export class ResultsRepository implements IResultsRepository {
     queryTracker?.end();
 
     const averages = {
-      movies: result._avg.ratingMovies ? parseFloat(result._avg.ratingMovies.toFixed(1)) : 0,
-      radio: result._avg.ratingRadio ? parseFloat(result._avg.ratingRadio.toFixed(1)) : 0,
-      eatOut: result._avg.ratingEatOut ? parseFloat(result._avg.ratingEatOut.toFixed(1)) : 0,
-      tv: result._avg.ratingTV ? parseFloat(result._avg.ratingTV.toFixed(1)) : 0,
+      movies: result._avg.ratingMovies
+        ? parseFloat(result._avg.ratingMovies.toFixed(1))
+        : 0,
+      radio: result._avg.ratingRadio
+        ? parseFloat(result._avg.ratingRadio.toFixed(1))
+        : 0,
+      eatOut: result._avg.ratingEatOut
+        ? parseFloat(result._avg.ratingEatOut.toFixed(1))
+        : 0,
+      tv: result._avg.ratingTV
+        ? parseFloat(result._avg.ratingTV.toFixed(1))
+        : 0,
     };
 
     // Cache the result (5 minutes TTL)
@@ -56,30 +66,38 @@ export class ResultsRepository implements IResultsRepository {
     return averages;
   }
 
-  async getFoodDistribution(requestId?: string): Promise<Array<{ food: string; count: number }>> {
+  async getFoodDistribution(
+    requestId?: string,
+  ): Promise<Array<{ food: string; count: number }>> {
     // Check cache first
     const cacheKey = CACHE_KEYS.foodDistribution;
-    const cached = await cacheManager.get<Array<{ food: string; count: number }>>(cacheKey);
-    
+    const cached =
+      await cacheManager.get<Array<{ food: string; count: number }>>(cacheKey);
+
     if (cached) {
       return cached;
     }
 
     // OPTIMIZED: Use database aggregation instead of fetching all records
     // This query is much more efficient for large datasets
-    const queryTracker = requestId ? this.queryTracker.trackQuery(requestId, 'food_distribution_optimized') : null;
-    
+    const queryTracker = requestId
+      ? this.queryTracker.trackQuery(requestId, 'food_distribution_optimized')
+      : null;
+
     // Get all responses and process food distribution in application layer
     const responses = await this.prisma.surveyResponse.findMany({
-      select: { foods: true }
+      select: { foods: true },
     });
 
     // Process food distribution in application layer
     const foodCounts = new Map<string, number>();
-    
+
     responses.forEach((response: { foods: string }) => {
       if (response.foods && response.foods.trim()) {
-        const foods = response.foods.split(',').map((food: string) => food.trim()).filter((food: string) => food);
+        const foods = response.foods
+          .split(',')
+          .map((food: string) => food.trim())
+          .filter((food: string) => food);
         foods.forEach((food: string) => {
           foodCounts.set(food, (foodCounts.get(food) || 0) + 1);
         });
@@ -103,14 +121,16 @@ export class ResultsRepository implements IResultsRepository {
     // Check cache first
     const cacheKey = 'survey:total-count:v1';
     const cached = await cacheManager.get<number>(cacheKey);
-    
+
     if (cached !== null) {
       return cached;
     }
 
     // Track query performance
-    const queryTracker = requestId ? this.queryTracker.trackQuery(requestId, 'count_responses') : null;
-    
+    const queryTracker = requestId
+      ? this.queryTracker.trackQuery(requestId, 'count_responses')
+      : null;
+
     const count = await this.prisma.surveyResponse.count();
 
     queryTracker?.end();
@@ -136,22 +156,24 @@ export class ResultsRepository implements IResultsRepository {
       min: number | null;
       max: number | null;
     }>(cacheKey);
-    
+
     if (cached) {
       return cached;
     }
 
     // Track query performance
-    const queryTracker = requestId ? this.queryTracker.trackQuery(requestId, 'age_statistics') : null;
-    
+    const queryTracker = requestId
+      ? this.queryTracker.trackQuery(requestId, 'age_statistics')
+      : null;
+
     // Get all birth dates and calculate ages in application layer
     const responses = await this.prisma.surveyResponse.findMany({
       select: { dateOfBirth: true },
       where: {
         dateOfBirth: {
-          not: undefined
-        }
-      }
+          not: undefined,
+        },
+      },
     });
 
     if (responses.length === 0) {
@@ -162,16 +184,19 @@ export class ResultsRepository implements IResultsRepository {
 
     // Calculate ages
     const currentYear = new Date().getFullYear();
-    const ages = responses.map((r: { dateOfBirth: Date }) => currentYear - r.dateOfBirth.getFullYear());
-    
-    const avgAge = ages.reduce((sum: number, age: number) => sum + age, 0) / ages.length;
+    const ages = responses.map(
+      (r: { dateOfBirth: Date }) => currentYear - r.dateOfBirth.getFullYear(),
+    );
+
+    const avgAge =
+      ages.reduce((sum: number, age: number) => sum + age, 0) / ages.length;
     const minAge = Math.min(...ages);
     const maxAge = Math.max(...ages);
 
     const result = {
       avg: Math.round(avgAge * 10) / 10, // Round to 1 decimal place
       min: minAge,
-      max: maxAge
+      max: maxAge,
     };
 
     queryTracker?.end();

@@ -131,19 +131,19 @@
     border-color: #dc2626;
     color: #fca5a5;
   }
-  
+
   .warning {
     background-color: #451a03;
     border-color: #d97706;
     color: #fed7aa;
   }
-  
+
   .info {
     background-color: #1e3a8a;
     border-color: #2563eb;
     color: #93c5fd;
   }
-  
+
   .inlineError {
     color: #fca5a5;
   }
@@ -154,15 +154,15 @@
   .container {
     padding: 0.75rem;
   }
-  
+
   .title {
     font-size: 1rem;
   }
-  
+
   .message {
     font-size: 0.875rem;
   }
-  
+
   .retryButton {
     width: 100%;
     justify-content: center;

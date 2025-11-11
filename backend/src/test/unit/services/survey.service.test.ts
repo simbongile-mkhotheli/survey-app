@@ -1,8 +1,14 @@
 // backend/src/test/unit/services/survey.service.test.ts
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SurveyService } from '@/services/surveyService';
-import type { ISurveyRepository, IResultsRepository } from '@/interfaces/repository.interface';
-import { createMockSurveyInput, createMockSurveyResponse } from '@/test/utils/test-helpers';
+import type {
+  ISurveyRepository,
+  IResultsRepository,
+} from '@/interfaces/repository.interface';
+import {
+  createMockSurveyInput,
+  createMockSurveyResponse,
+} from '@/test/utils/test-helpers';
 
 describe('SurveyService', () => {
   let surveyService: SurveyService;
@@ -24,8 +30,11 @@ describe('SurveyService', () => {
       getAgeStatistics: vi.fn(),
       invalidateCache: vi.fn(),
     };
-    
-    surveyService = new SurveyService(mockSurveyRepository, mockResultsRepository);
+
+    surveyService = new SurveyService(
+      mockSurveyRepository,
+      mockResultsRepository,
+    );
   });
 
   describe('createSurvey', () => {
@@ -64,10 +73,14 @@ describe('SurveyService', () => {
       // Arrange
       const mockInput = createMockSurveyInput();
       const errorMessage = 'Database connection failed';
-      vi.mocked(mockSurveyRepository.create).mockRejectedValue(new Error(errorMessage));
+      vi.mocked(mockSurveyRepository.create).mockRejectedValue(
+        new Error(errorMessage),
+      );
 
       // Act & Assert
-      await expect(surveyService.createSurvey(mockInput)).rejects.toThrow(errorMessage);
+      await expect(surveyService.createSurvey(mockInput)).rejects.toThrow(
+        errorMessage,
+      );
     });
   });
 });

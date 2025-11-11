@@ -43,14 +43,15 @@ The API will be available at `http://localhost:5000` with interactive documentat
 
 ### Endpoints
 
-| Method | Endpoint | Description | Authentication |
-|--------|----------|-------------|----------------|
-| `POST` | `/api/survey` | Submit survey response | None |
-| `GET` | `/api/results` | Get aggregated results | None |
-| `GET` | `/api-docs` | Interactive API docs | None |
-| `GET` | `/api-docs.json` | OpenAPI specification | None |
+| Method | Endpoint         | Description            | Authentication |
+| ------ | ---------------- | ---------------------- | -------------- |
+| `POST` | `/api/survey`    | Submit survey response | None           |
+| `GET`  | `/api/results`   | Get aggregated results | None           |
+| `GET`  | `/api-docs`      | Interactive API docs   | None           |
+| `GET`  | `/api-docs.json` | OpenAPI specification  | None           |
 
 ### Base URL
+
 - **Development**: `http://localhost:5000`
 - **Production**: `https://api.survey-app.com`
 
@@ -95,8 +96,8 @@ const response = await fetch('http://localhost:5000/api/survey', {
     ratingMovies: '4',
     ratingRadio: '3',
     ratingEatOut: '5',
-    ratingTV: '2'
-  })
+    ratingTV: '2',
+  }),
 });
 
 const data = await response.json();
@@ -106,6 +107,7 @@ console.log('Survey ID:', data.id);
 #### Response
 
 **Success (201)**
+
 ```json
 {
   "id": 123
@@ -113,6 +115,7 @@ console.log('Survey ID:', data.id);
 ```
 
 **Validation Error (400)**
+
 ```json
 {
   "error": {
@@ -171,6 +174,7 @@ console.log('Average ratings:', results.avgRatings);
 ### Interactive Documentation
 
 Visit `http://localhost:5000/api-docs` for Swagger UI with:
+
 - Interactive request testing
 - Complete schema documentation
 - Example requests and responses
@@ -184,6 +188,7 @@ Import the provided Postman collection and environment:
 2. **Environment**: `docs/postman-environment.json`
 
 Features:
+
 - Pre-configured requests with examples
 - Dynamic test data generation
 - Comprehensive test assertions
@@ -192,6 +197,7 @@ Features:
 ### OpenAPI Specification
 
 Download the machine-readable API spec:
+
 ```bash
 curl http://localhost:5000/api-docs.json > openapi-spec.json
 ```
@@ -199,11 +205,13 @@ curl http://localhost:5000/api-docs.json > openapi-spec.json
 ## 🔒 Security Features
 
 ### Input Validation
+
 - **Multi-layer validation**: Express-validator + Zod schemas
 - **Sanitization**: XSS prevention and input cleaning
 - **Type safety**: Strong TypeScript typing throughout
 
 ### Security Middleware
+
 - **Helmet.js**: Security headers (CSP, HSTS, etc.)
 - **CORS**: Configurable cross-origin resource sharing
 - **Rate Limiting**: IP-based request throttling
@@ -211,7 +219,9 @@ curl http://localhost:5000/api-docs.json > openapi-spec.json
 - **Request Size Limits**: Prevent oversized payloads
 
 ### Headers
+
 Every response includes security headers:
+
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: DENY`
 - `X-XSS-Protection: 1; mode=block`
@@ -235,12 +245,12 @@ All errors follow a consistent structure:
 
 ### Error Types
 
-| Status | Type | Description |
-|--------|------|-------------|
-| `400` | `ValidationError` | Invalid input data |
-| `404` | `NotFoundError` | Endpoint not found |
-| `429` | `RateLimitError` | Rate limit exceeded |
-| `500` | `InternalError` | Server error |
+| Status | Type              | Description         |
+| ------ | ----------------- | ------------------- |
+| `400`  | `ValidationError` | Invalid input data  |
+| `404`  | `NotFoundError`   | Endpoint not found  |
+| `429`  | `RateLimitError`  | Rate limit exceeded |
+| `500`  | `InternalError`   | Server error        |
 
 ### Rate Limiting
 
@@ -251,6 +261,7 @@ All errors follow a consistent structure:
 ## 🏗️ Architecture
 
 ### Tech Stack
+
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js with TypeScript
 - **Database**: PostgreSQL with Prisma ORM
@@ -259,12 +270,14 @@ All errors follow a consistent structure:
 - **Testing**: Vitest with comprehensive coverage
 
 ### Design Patterns
+
 - **Dependency Injection**: IoC container for service management
 - **Repository Pattern**: Data access abstraction
 - **SOLID Principles**: Maintainable and extensible code
 - **Error Boundaries**: Centralized error handling
 
 ### Project Structure
+
 ```
 src/
 ├── config/          # Configuration and environment
@@ -301,6 +314,7 @@ npm run test:coverage
 ```
 
 ### Test Coverage
+
 - **48 Tests**: Unit, integration, and security tests
 - **Controllers**: Request/response handling
 - **Services**: Business logic validation
@@ -356,6 +370,7 @@ npm start
 ## 📈 Monitoring & Observability
 
 ### Health Check (Coming Soon)
+
 ```javascript
 // GET /health
 {
@@ -371,6 +386,7 @@ npm start
 ```
 
 ### Logging
+
 - **Structured logging**: JSON format for production
 - **Log levels**: error, warn, info, debug
 - **Request tracing**: Correlation IDs for debugging
@@ -397,12 +413,14 @@ npm start
 ## 📚 Additional Resources
 
 ### External Links
+
 - [Express.js Documentation](https://expressjs.com/)
 - [Prisma Documentation](https://prisma.io/docs)
 - [OpenAPI Specification](https://swagger.io/specification/)
 - [TypeScript Handbook](https://typescriptlang.org/docs/)
 
 ### API Tools
+
 - **Postman**: Collection and environment files included
 - **Insomnia**: Compatible with OpenAPI export
 - **curl**: Examples provided throughout documentation
@@ -420,6 +438,7 @@ npm start
 ### Common Issues
 
 **Database Connection Issues**
+
 ```bash
 # Check database is running
 pg_isready -h localhost -p 5432
@@ -429,6 +448,7 @@ npx prisma db push --preview-feature
 ```
 
 **Port Already in Use**
+
 ```bash
 # Find process using port 5000
 lsof -ti:5000
@@ -438,6 +458,7 @@ kill -9 $(lsof -ti:5000)
 ```
 
 **Environment Variables**
+
 ```bash
 # Check environment loading
 node -e "require('dotenv').config(); console.log(process.env.DATABASE_URL)"

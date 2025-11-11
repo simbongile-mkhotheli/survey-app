@@ -8,9 +8,12 @@
 export { Loading } from './Loading/Loading';
 export type { LoadingProps } from './Loading/Loading';
 
-// Error Components  
+// Error Components
 export { ErrorMessage, InlineError } from './ErrorMessage/ErrorMessage';
-export type { ErrorMessageProps, InlineErrorProps } from './ErrorMessage/ErrorMessage';
+export type {
+  ErrorMessageProps,
+  InlineErrorProps,
+} from './ErrorMessage/ErrorMessage';
 
 // Form Components
 export { TextField } from './TextField';

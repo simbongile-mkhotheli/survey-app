@@ -22,7 +22,7 @@ if (config.isDevelopment) {
     (error) => {
       console.error('❌ API Request Error:', error);
       return Promise.reject(error);
-    }
+    },
   );
 
   apiClient.interceptors.response.use(
@@ -31,9 +31,13 @@ if (config.isDevelopment) {
       return response;
     },
     (error) => {
-      console.error('❌ API Response Error:', error.response?.status, error.config?.url);
+      console.error(
+        '❌ API Response Error:',
+        error.response?.status,
+        error.config?.url,
+      );
       return Promise.reject(error);
-    }
+    },
   );
 }
 
@@ -50,10 +54,7 @@ export async function submitSurvey(
 ): Promise<{ id: number }> {
   const payload = formToPayload(data);
 
-  const response = await apiClient.post<{ id: number }>(
-    '/api/survey',
-    payload,
-  );
+  const response = await apiClient.post<{ id: number }>('/api/survey', payload);
   return response.data;
 }
 

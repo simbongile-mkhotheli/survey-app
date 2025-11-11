@@ -10,21 +10,32 @@ import resultsRouter from '@/routes/results';
 import monitoringRouter from '@/routes/monitoring';
 import { errorHandler } from '@/middleware/errorHandler';
 import { swaggerSpec } from '@/config/swagger';
-import { 
-  helmetConfig, 
-  compressionConfig, 
-  hppConfig, 
+import {
+  helmetConfig,
+  compressionConfig,
+  hppConfig,
   inputSanitizeConfig,
   requestSizeLimit,
   rateLimitByIP,
   securityHeaders,
-  httpsRedirect
+  httpsRedirect,
 } from '@/middleware/security';
-import { performanceTracker, performanceEndpoint } from '@/middleware/performance';
-import { requestContext, accessLogging, errorLogging } from '@/middleware/logging';
+import {
+  performanceTracker,
+  performanceEndpoint,
+} from '@/middleware/performance';
+import {
+  requestContext,
+  accessLogging,
+  errorLogging,
+} from '@/middleware/logging';
 import { metricsMiddleware, metricsEndpoint } from '@/middleware/metrics';
 import { errorTrackingMiddleware } from '@/middleware/errorTracking';
-import { healthCheck, livenessProbe, readinessProbe } from '@/middleware/healthCheck';
+import {
+  healthCheck,
+  livenessProbe,
+  readinessProbe,
+} from '@/middleware/healthCheck';
 import { cacheManager } from '@/config/cache';
 import { logger } from '@/config/logger';
 import { config } from '@/config/env';
@@ -77,36 +88,48 @@ app.use(
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'],
+    exposedHeaders: [
+      'X-RateLimit-Limit',
+      'X-RateLimit-Remaining',
+      'X-RateLimit-Reset',
+    ],
     credentials: true,
     maxAge: 600,
-  })
+  }),
 );
 
 // 11. Body parsing with size limits
-app.use(express.json({ 
-  limit: `${config.REQUEST_SIZE_LIMIT}b`,
-  strict: true 
-}));
-app.use(express.urlencoded({ 
-  extended: false, 
-  limit: `${config.REQUEST_SIZE_LIMIT}b` 
-}));
+app.use(
+  express.json({
+    limit: `${config.REQUEST_SIZE_LIMIT}b`,
+    strict: true,
+  }),
+);
+app.use(
+  express.urlencoded({
+    extended: false,
+    limit: `${config.REQUEST_SIZE_LIMIT}b`,
+  }),
+);
 
 // 12. Monitoring and Logging Middleware
-app.use(requestContext);        // Request ID and context
-app.use(accessLogging);         // HTTP access logging
-app.use(metricsMiddleware);     // Prometheus metrics collection
-app.use(performanceTracker);    // Performance monitoring
+app.use(requestContext); // Request ID and context
+app.use(accessLogging); // HTTP access logging
+app.use(metricsMiddleware); // Prometheus metrics collection
+app.use(performanceTracker); // Performance monitoring
 
 // API Documentation - Swagger UI
 if (config.NODE_ENV !== 'production') {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'Survey API Documentation',
-    customfavIcon: '/favicon.ico',
-  }));
-  
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+      customCss: '.swagger-ui .topbar { display: none }',
+      customSiteTitle: 'Survey API Documentation',
+      customfavIcon: '/favicon.ico',
+    }),
+  );
+
   // Serve raw OpenAPI spec for client generation
   app.get('/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -131,12 +154,12 @@ app.get('/metrics', metricsEndpoint);
 if (config.NODE_ENV !== 'production') {
   // Performance monitoring endpoint
   app.get('/api/performance', performanceEndpoint);
-  
+
   // Cache health endpoint (detailed)
   app.get('/api/health/cache', async (req, res) => {
     const health = await cacheManager.healthCheck();
     const stats = cacheManager.getCacheStats();
-    
+
     res.json({
       health,
       stats,
@@ -149,9 +172,9 @@ if (config.NODE_ENV !== 'production') {
 app.use((req, res) => res.status(404).json({ error: 'Not Found' }));
 
 // Error handling middleware (order matters!)
-app.use(errorLogging);          // Error logging middleware
+app.use(errorLogging); // Error logging middleware
 app.use(errorTrackingMiddleware); // Error tracking and analytics
-app.use(errorHandler);          // Global error handler (must be last)
+app.use(errorHandler); // Global error handler (must be last)
 
 // Export app for testing and only listen when run directly
 if (config.NODE_ENV !== 'test') {
@@ -166,9 +189,12 @@ if (config.NODE_ENV !== 'test') {
           api: `http://localhost:${config.PORT}/api`,
           health: `http://localhost:${config.PORT}/health`,
           metrics: `http://localhost:${config.PORT}/metrics`,
-          docs: config.NODE_ENV !== 'production' ? `http://localhost:${config.PORT}/api-docs` : undefined
-        }
-      }
+          docs:
+            config.NODE_ENV !== 'production'
+              ? `http://localhost:${config.PORT}/api-docs`
+              : undefined,
+        },
+      },
     });
   });
 }

@@ -57,9 +57,9 @@ describe('Results', () => {
       error: null,
       fetchResults: vi.fn(),
     });
-    
+
     render(<Results />);
-    
+
     expect(screen.getByText('Loading survey results...')).toBeInTheDocument();
   });
 
@@ -70,14 +70,14 @@ describe('Results', () => {
       error: null,
       fetchResults: vi.fn(),
     });
-    
+
     render(<Results />);
-    
-  expect(screen.getByText('Survey Results')).toBeInTheDocument();
+
+    expect(screen.getByText('Survey Results')).toBeInTheDocument();
     expect(screen.getByText('Total number of surveys')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
     expect(screen.getByText('Average Age')).toBeInTheDocument();
-  expect(screen.getByText(/28\.5/)).toBeInTheDocument();
+    expect(screen.getByText(/28\.5/)).toBeInTheDocument();
   });
 
   it('displays error message when API call fails', async () => {
@@ -87,9 +87,9 @@ describe('Results', () => {
       error: 'Failed to load results',
       fetchResults: vi.fn(),
     });
-    
+
     render(<Results />);
-    
+
     expect(screen.getByText('Failed to Load Results')).toBeInTheDocument();
   });
 
@@ -100,17 +100,21 @@ describe('Results', () => {
       foodPercentages: { pizza: null, pasta: null, papAndWors: null },
       avgRatings: { movies: null, radio: null, eatOut: null, tv: null },
     };
-    
+
     mockUseResults.mockReturnValue({
       data: emptyResults,
       loading: false,
       error: null,
       fetchResults: vi.fn(),
     });
-    
+
     render(<Results />);
-    
+
     expect(screen.getByText('No Data')).toBeInTheDocument();
-    expect(screen.getByText('No survey responses available yet. Be the first to submit a survey!')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'No survey responses available yet. Be the first to submit a survey!',
+      ),
+    ).toBeInTheDocument();
   });
 });

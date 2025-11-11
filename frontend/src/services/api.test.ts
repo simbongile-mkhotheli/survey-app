@@ -20,7 +20,6 @@ vi.mock('./api', async () => {
 import { submitSurvey, fetchResults } from './api';
 
 describe('API Service', () => {
-
   describe('submitSurvey', () => {
     it('can be called with valid survey data', async () => {
       const mockSurveyData: SurveyFormValues = {
@@ -62,7 +61,9 @@ describe('API Service', () => {
       const mockError = new Error('Network Error');
       vi.mocked(submitSurvey).mockRejectedValue(mockError);
 
-      await expect(submitSurvey(mockSurveyData)).rejects.toThrow('Network Error');
+      await expect(submitSurvey(mockSurveyData)).rejects.toThrow(
+        'Network Error',
+      );
     });
   });
 

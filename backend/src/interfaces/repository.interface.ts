@@ -16,7 +16,9 @@ export interface IResultsRepository {
     eatOut: number;
     tv: number;
   }>;
-  getFoodDistribution(requestId?: string): Promise<Array<{ food: string; count: number }>>;
+  getFoodDistribution(
+    requestId?: string,
+  ): Promise<Array<{ food: string; count: number }>>;
   getTotalResponses(requestId?: string): Promise<number>;
   getAgeStatistics(requestId?: string): Promise<{
     avg: number | null;

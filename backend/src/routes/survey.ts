@@ -16,7 +16,7 @@ import type { Request, Response, NextFunction } from 'express';
  *     summary: Submit a new survey response
  *     description: |
  *       Submit a new survey response with personal information and ratings.
- *       
+ *
  *       ## Validation Rules
  *       - All fields are required
  *       - Email must be valid format
@@ -24,7 +24,7 @@ import type { Request, Response, NextFunction } from 'express';
  *       - Date of birth must result in age between 5-120 years
  *       - Foods must be selected from available options
  *       - All ratings must be integers from 1-5
- *       
+ *
  *       ## Security Features
  *       - Input sanitization to prevent XSS attacks
  *       - Rate limiting to prevent spam

@@ -7,7 +7,7 @@ import { config } from '@/config/env';
 /**
  * Error Tracking & Monitoring System
  * =================================
- * 
+ *
  * Comprehensive error handling with:
  * - Structured error logging
  * - Error classification and severity
@@ -45,16 +45,19 @@ class ErrorStore {
   private errors: ErrorReport[] = [];
   private readonly maxErrors = 1000;
   private errorCounts = new Map<string, number>();
-  private rateLimitMap = new Map<string, { count: number; lastReset: number }>();
+  private rateLimitMap = new Map<
+    string,
+    { count: number; lastReset: number }
+  >();
 
   addError(error: ErrorReport): void {
     this.errors.push(error);
-    
+
     // Maintain circular buffer
     if (this.errors.length > this.maxErrors) {
       this.errors = this.errors.slice(-this.maxErrors);
     }
-    
+
     // Update error counts for pattern detection
     const key = `${error.type}:${error.context.category}`;
     this.errorCounts.set(key, (this.errorCounts.get(key) || 0) + 1);
@@ -62,11 +65,11 @@ class ErrorStore {
 
   getRecentErrors(limit = 50, severity?: string): ErrorReport[] {
     let filtered = this.errors;
-    
+
     if (severity) {
-      filtered = filtered.filter(e => e.context.severity === severity);
+      filtered = filtered.filter((e) => e.context.severity === severity);
     }
-    
+
     return filtered.slice(-limit).reverse(); // Most recent first
   }
 
@@ -81,27 +84,30 @@ class ErrorStore {
     timestamp: string;
   } {
     const now = Date.now();
-    const hourAgo = now - (60 * 60 * 1000);
-    const dayAgo = now - (24 * 60 * 60 * 1000);
-    
-    const recentErrors = this.errors.filter(e => 
-      new Date(e.context.timestamp).getTime() > hourAgo
+    const hourAgo = now - 60 * 60 * 1000;
+    const dayAgo = now - 24 * 60 * 60 * 1000;
+
+    const recentErrors = this.errors.filter(
+      (e) => new Date(e.context.timestamp).getTime() > hourAgo,
     );
-    
-    const dailyErrors = this.errors.filter(e => 
-      new Date(e.context.timestamp).getTime() > dayAgo
+
+    const dailyErrors = this.errors.filter(
+      (e) => new Date(e.context.timestamp).getTime() > dayAgo,
     );
 
     const severityBreakdown = {
-      critical: recentErrors.filter(e => e.context.severity === 'critical').length,
-      high: recentErrors.filter(e => e.context.severity === 'high').length,
-      medium: recentErrors.filter(e => e.context.severity === 'medium').length,
-      low: recentErrors.filter(e => e.context.severity === 'low').length
+      critical: recentErrors.filter((e) => e.context.severity === 'critical')
+        .length,
+      high: recentErrors.filter((e) => e.context.severity === 'high').length,
+      medium: recentErrors.filter((e) => e.context.severity === 'medium')
+        .length,
+      low: recentErrors.filter((e) => e.context.severity === 'low').length,
     };
 
     const categoryBreakdown: Record<string, number> = {};
-    recentErrors.forEach(e => {
-      categoryBreakdown[e.context.category] = (categoryBreakdown[e.context.category] || 0) + 1;
+    recentErrors.forEach((e) => {
+      categoryBreakdown[e.context.category] =
+        (categoryBreakdown[e.context.category] || 0) + 1;
     });
 
     return {
@@ -112,13 +118,13 @@ class ErrorStore {
       severityBreakdown,
       categoryBreakdown,
       topErrors: this.getTopErrors(),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }
 
   private getTopErrors(limit = 10): Array<{ pattern: string; count: number }> {
     return Array.from(this.errorCounts.entries())
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, limit)
       .map(([pattern, count]) => ({ pattern, count }));
   }
@@ -126,12 +132,12 @@ class ErrorStore {
   checkErrorRate(fingerprint: string, maxRate = 10, windowMs = 60000): boolean {
     const now = Date.now();
     const entry = this.rateLimitMap.get(fingerprint);
-    
-    if (!entry || (now - entry.lastReset) > windowMs) {
+
+    if (!entry || now - entry.lastReset > windowMs) {
       this.rateLimitMap.set(fingerprint, { count: 1, lastReset: now });
       return false;
     }
-    
+
     entry.count++;
     return entry.count > maxRate;
   }
@@ -142,40 +148,52 @@ const errorStore = new ErrorStore();
 /**
  * Generate error fingerprint for deduplication
  */
-function generateErrorFingerprint(error: Error, context: Partial<ErrorContext>): string {
+function generateErrorFingerprint(
+  error: Error,
+  context: Partial<ErrorContext>,
+): string {
   const message = error.message.replace(/\d+/g, 'N'); // Replace numbers
   const path = context.path?.replace(/\/\d+/g, '/:id'); // Normalize IDs in paths
-  
+
   return `${error.name}:${message}:${path}`;
 }
 
 /**
  * Determine error severity based on error type and context
  */
-function determineErrorSeverity(error: Error, context: Partial<ErrorContext>): 'low' | 'medium' | 'high' | 'critical' {
+function determineErrorSeverity(
+  error: Error,
+  context: Partial<ErrorContext>,
+): 'low' | 'medium' | 'high' | 'critical' {
   // Critical errors that affect system availability
-  if (error.message.includes('ECONNREFUSED') || 
-      error.message.includes('Database') ||
-      error.message.includes('Redis') ||
-      error.name === 'SystemError') {
+  if (
+    error.message.includes('ECONNREFUSED') ||
+    error.message.includes('Database') ||
+    error.message.includes('Redis') ||
+    error.name === 'SystemError'
+  ) {
     return 'critical';
   }
-  
+
   // High severity errors that affect functionality
-  if (error.name === 'ValidationError' ||
-      error.name === 'AuthenticationError' ||
-      error.name === 'AuthorizationError' ||
-      context.path?.includes('/api/')) {
+  if (
+    error.name === 'ValidationError' ||
+    error.name === 'AuthenticationError' ||
+    error.name === 'AuthorizationError' ||
+    context.path?.includes('/api/')
+  ) {
     return 'high';
   }
-  
+
   // Medium severity for business logic errors
-  if (error.name === 'BusinessLogicError' ||
-      error.message.includes('not found') ||
-      error.message.includes('invalid')) {
+  if (
+    error.name === 'BusinessLogicError' ||
+    error.message.includes('not found') ||
+    error.message.includes('invalid')
+  ) {
     return 'medium';
   }
-  
+
   // Default to low severity
   return 'low';
 }
@@ -184,33 +202,45 @@ function determineErrorSeverity(error: Error, context: Partial<ErrorContext>): '
  * Categorize error for better organization
  */
 function categorizeError(error: Error, context: Partial<ErrorContext>): string {
-  if (error.message.includes('Database') || error.message.includes('ECONNREFUSED')) {
+  if (
+    error.message.includes('Database') ||
+    error.message.includes('ECONNREFUSED')
+  ) {
     return 'database';
   }
-  
+
   if (error.message.includes('Redis') || error.message.includes('cache')) {
     return 'cache';
   }
-  
-  if (error.name === 'ValidationError' || error.message.includes('validation')) {
+
+  if (
+    error.name === 'ValidationError' ||
+    error.message.includes('validation')
+  ) {
     return 'validation';
   }
-  
-  if (error.name === 'AuthenticationError' || error.name === 'AuthorizationError') {
+
+  if (
+    error.name === 'AuthenticationError' ||
+    error.name === 'AuthorizationError'
+  ) {
     return 'security';
   }
-  
+
   if (context.path?.includes('/api/')) {
     return 'api';
   }
-  
+
   return 'application';
 }
 
 /**
  * Check if error indicates a security incident
  */
-function isSecurityIncident(error: Error, _context: Partial<ErrorContext>): boolean {
+function isSecurityIncident(
+  error: Error,
+  _context: Partial<ErrorContext>,
+): boolean {
   const securityIndicators = [
     'authentication',
     'authorization',
@@ -219,19 +249,24 @@ function isSecurityIncident(error: Error, _context: Partial<ErrorContext>): bool
     'csrf',
     'invalid token',
     'access denied',
-    'forbidden'
+    'forbidden',
   ];
-  
+
   const errorText = `${error.name} ${error.message}`.toLowerCase();
-  return securityIndicators.some(indicator => errorText.includes(indicator));
+  return securityIndicators.some((indicator) => errorText.includes(indicator));
 }
 
 /**
  * Main error tracking middleware
  */
-export function errorTrackingMiddleware(error: Error, req: Request, res: Response, next: NextFunction): void {
+export function errorTrackingMiddleware(
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
   const timestamp = new Date().toISOString();
-  
+
   const context: ErrorContext = {
     requestId: req.requestId,
     userId: req.userId,
@@ -242,7 +277,7 @@ export function errorTrackingMiddleware(error: Error, req: Request, res: Respons
     timestamp,
     environment: config.NODE_ENV,
     severity: determineErrorSeverity(error, { path: req.path }),
-    category: categorizeError(error, { path: req.path })
+    category: categorizeError(error, { path: req.path }),
   };
 
   const fingerprint = generateErrorFingerprint(error, context);
@@ -261,10 +296,10 @@ export function errorTrackingMiddleware(error: Error, req: Request, res: Respons
       body: req.method !== 'GET' ? req.body : undefined,
       headers: {
         'content-type': req.get('Content-Type'),
-        'referer': req.get('Referer'),
-        'user-agent': req.get('User-Agent')
-      }
-    }
+        referer: req.get('Referer'),
+        'user-agent': req.get('User-Agent'),
+      },
+    },
   };
 
   // Store error for analysis
@@ -286,8 +321,8 @@ export function errorTrackingMiddleware(error: Error, req: Request, res: Respons
         severity: context.severity,
         category: context.category,
         fingerprint,
-        errorId: errorReport.id
-      }
+        errorId: errorReport.id,
+      },
     });
 
     // Security incident logging
@@ -303,8 +338,8 @@ export function errorTrackingMiddleware(error: Error, req: Request, res: Respons
           errorMessage: error.message,
           path: context.path,
           method: context.method,
-          fingerprint
-        }
+          fingerprint,
+        },
       });
     }
   }
@@ -331,8 +366,8 @@ function alertCriticalError(errorReport: ErrorReport): void {
       severity: errorReport.context.severity,
       category: errorReport.context.category,
       environment: errorReport.context.environment,
-      alertLevel: 'CRITICAL'
-    }
+      alertLevel: 'CRITICAL',
+    },
   });
 
   // TODO: Integrate with external alerting services
@@ -345,38 +380,40 @@ function alertCriticalError(errorReport: ErrorReport): void {
 /**
  * Error analytics endpoint
  */
-export async function errorAnalytics(req: Request, res: Response): Promise<void> {
+export async function errorAnalytics(
+  req: Request,
+  res: Response,
+): Promise<void> {
   try {
     const { severity, limit = 50 } = req.query;
-    
+
     const stats = errorStore.getErrorStats();
     const recentErrors = errorStore.getRecentErrors(
-      parseInt(limit as string), 
-      severity as string
+      parseInt(limit as string),
+      severity as string,
     );
 
     res.json({
       statistics: stats,
-      recentErrors: recentErrors.map(error => ({
+      recentErrors: recentErrors.map((error) => ({
         ...error,
         stack: undefined, // Don't expose stack traces in API
         metadata: {
           ...error.metadata,
-          body: undefined // Don't expose request bodies in API
-        }
+          body: undefined, // Don't expose request bodies in API
+        },
       })),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
     logWithContext.error('Failed to generate error analytics', error as Error, {
       requestId: req.requestId,
-      operation: 'error_analytics'
+      operation: 'error_analytics',
     });
 
     res.status(500).json({
       error: 'Failed to generate error analytics',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }
@@ -387,34 +424,33 @@ export async function errorAnalytics(req: Request, res: Response): Promise<void>
 export async function errorSummary(req: Request, res: Response): Promise<void> {
   try {
     const stats = errorStore.getErrorStats();
-    
+
     res.json({
       summary: {
         totalErrors: stats.totalErrors,
         recentErrors: stats.recentErrors,
         errorRatePerHour: stats.errorRatePerHour,
         criticalErrors: stats.severityBreakdown.critical,
-        highSeverityErrors: stats.severityBreakdown.high
+        highSeverityErrors: stats.severityBreakdown.high,
       },
       trends: {
         dailyTotal: stats.dailyErrors,
         hourlyRate: stats.errorRatePerHour,
         topCategories: Object.entries(stats.categoryBreakdown)
-          .sort(([,a], [,b]) => (b as number) - (a as number))
-          .slice(0, 5)
+          .sort(([, a], [, b]) => (b as number) - (a as number))
+          .slice(0, 5),
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
     logWithContext.error('Failed to generate error summary', error as Error, {
       requestId: req.requestId,
-      operation: 'error_summary'
+      operation: 'error_summary',
     });
 
     res.status(500).json({
       error: 'Failed to generate error summary',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }
@@ -423,5 +459,5 @@ export default {
   errorTrackingMiddleware,
   errorAnalytics,
   errorSummary,
-  errorStore
+  errorStore,
 };

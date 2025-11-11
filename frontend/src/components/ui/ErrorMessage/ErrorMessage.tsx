@@ -36,11 +36,9 @@ export function ErrorMessage({
   className = '',
   children,
 }: ErrorMessageProps) {
-  const containerClasses = [
-    styles.container,
-    styles[severity],
-    className,
-  ].filter(Boolean).join(' ');
+  const containerClasses = [styles.container, styles[severity], className]
+    .filter(Boolean)
+    .join(' ');
 
   const getIcon = () => {
     switch (severity) {
@@ -60,13 +58,13 @@ export function ErrorMessage({
           <span className={styles.icon}>{getIcon()}</span>
           <h3 className={styles.title}>{title}</h3>
         </div>
-        
+
         <p className={styles.message}>{message}</p>
-        
+
         {children}
-        
+
         {showRetry && onRetry && (
-          <button 
+          <button
             className={styles.retryButton}
             onClick={onRetry}
             type="button"
@@ -92,10 +90,17 @@ export interface InlineErrorProps {
 
 export function InlineError({ message, className = '', id }: InlineErrorProps) {
   if (!message) return null;
-  
+
   return (
-    <div className={`${styles.inlineError} ${className}`} id={id} role="alert" aria-live="polite">
-      <span className={styles.inlineIcon} aria-hidden="true">⚠️</span>
+    <div
+      className={`${styles.inlineError} ${className}`}
+      id={id}
+      role="alert"
+      aria-live="polite"
+    >
+      <span className={styles.inlineIcon} aria-hidden="true">
+        ⚠️
+      </span>
       <span className={styles.inlineMessage}>{message}</span>
     </div>
   );

@@ -13,7 +13,7 @@ export function errorHandler(
   err: unknown,
   req: Request,
   res: Response,
-  _next: NextFunction  // Prefix with underscore as it's required by Express but not used
+  _next: NextFunction, // Prefix with underscore as it's required by Express but not used
 ) {
   // Handle custom application errors
   if (err instanceof AppError) {
@@ -21,8 +21,8 @@ export function errorHandler(
       error: {
         message: err.message,
         type: err.name,
-        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-      }
+        ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+      },
     });
   }
 
@@ -33,8 +33,8 @@ export function errorHandler(
       error: {
         message: validationError.message,
         type: validationError.name,
-        details: err.flatten().fieldErrors
-      }
+        details: err.flatten().fieldErrors,
+      },
     });
   }
 
@@ -46,8 +46,10 @@ export function errorHandler(
       error: {
         message: dbError.message,
         type: dbError.name,
-        ...(process.env.NODE_ENV === 'development' && { code: prismaError.code })
-      }
+        ...(process.env.NODE_ENV === 'development' && {
+          code: prismaError.code,
+        }),
+      },
     });
   }
 
@@ -58,9 +60,9 @@ export function errorHandler(
     error: {
       message: 'Internal server error',
       type: 'UnknownError',
-      ...(process.env.NODE_ENV === 'development' && { 
-        details: err instanceof Error ? err.message : 'Unknown error occurred' 
-      })
-    }
+      ...(process.env.NODE_ENV === 'development' && {
+        details: err instanceof Error ? err.message : 'Unknown error occurred',
+      }),
+    },
   });
 }

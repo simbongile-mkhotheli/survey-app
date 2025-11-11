@@ -11,7 +11,7 @@ import { ResultsQuerySchema } from '@/validation/validation';
 export async function handleGetSurveyResults(
   req: Request,
   res: Response<SurveyResultsDTO>,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     // Ensures no unexpected query parameters are passed
@@ -19,11 +19,11 @@ export async function handleGetSurveyResults(
 
     const container = Container.getInstance();
     const resultsService = container.resultsService;
-    
+
     // Pass request ID for performance tracking
     const requestId = req.headers['x-request-id'] as string;
     const results = await resultsService.getResults(requestId);
-    
+
     return res.status(200).json(results);
   } catch (err) {
     next(err);

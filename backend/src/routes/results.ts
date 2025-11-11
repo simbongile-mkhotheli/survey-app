@@ -11,19 +11,19 @@ import { handleGetSurveyResults } from '@/controllers/resultsController';
  *     summary: Get aggregated survey results
  *     description: |
  *       Retrieve comprehensive analytics and aggregated data from all survey responses.
- *       
+ *
  *       ## Data Included
  *       - **Total Count**: Number of survey responses collected
  *       - **Age Statistics**: Average, minimum, and maximum age of respondents
  *       - **Food Preferences**: Percentage distribution of food choices
  *       - **Average Ratings**: Mean ratings across all categories (movies, radio, eating out, TV)
- *       
+ *
  *       ## Data Processing
  *       - Age is calculated from date of birth at time of submission
  *       - Food percentages are based on individual selections (respondents can choose multiple)
  *       - Ratings are averaged and rounded to 1 decimal place
  *       - Null values indicate no data available (e.g., no responses yet)
- *       
+ *
  *       ## Caching
  *       Results are computed in real-time. Consider implementing caching for production use.
  *     responses:

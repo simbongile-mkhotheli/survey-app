@@ -58,18 +58,19 @@ export const useAppStore = create<AppStore>()(
         data: null,
         loading: false,
         error: null,
-        
+
         // Actions with proper error handling
         fetchResults: async () => {
           // Async operations with loading/error states
         },
-        
+
         // App Settings with localStorage persistence
         darkMode: false,
         language: 'en',
-        toggleDarkMode: () => set((state) => ({ 
-          darkMode: !state.darkMode 
-        })),
+        toggleDarkMode: () =>
+          set((state) => ({
+            darkMode: !state.darkMode,
+          })),
       }),
       {
         name: 'survey-app-settings',
@@ -77,22 +78,24 @@ export const useAppStore = create<AppStore>()(
           darkMode: state.darkMode,
           language: state.language,
         }),
-      }
+      },
     ),
-    { name: 'survey-app-store' }
-  )
+    { name: 'survey-app-store' },
+  ),
 );
 
 // Performance-optimized selectors
-export const useResults = () => useAppStore((state) => ({
-  data: state.data,
-  loading: state.loading,
-  error: state.error,
-  fetchResults: state.fetchResults,
-}));
+export const useResults = () =>
+  useAppStore((state) => ({
+    data: state.data,
+    loading: state.loading,
+    error: state.error,
+    fetchResults: state.fetchResults,
+  }));
 ```
 
 ### **Key Features:**
+
 - **DevTools Integration** - Redux DevTools support for debugging
 - **Persistence** - Settings automatically saved to localStorage
 - **TypeScript** - Full type safety with proper interfaces
@@ -142,7 +145,7 @@ try {
 
 ```tsx
 // Consistent error messaging
-<ErrorMessage 
+<ErrorMessage
   message="Failed to load data"
   title="Network Error"
   severity="error"
@@ -160,17 +163,17 @@ try {
 
 ```tsx
 // Loading indicators
-<Loading 
-  text="Loading results..." 
-  variant="spinner" 
-  size="md" 
-  overlay 
+<Loading
+  text="Loading results..."
+  variant="spinner"
+  size="md"
+  overlay
 />
 
 // Consistent buttons
-<Button 
-  variant="primary" 
-  size="lg" 
+<Button
+  variant="primary"
+  size="lg"
   loading={isSubmitting}
   fullWidth
 >
@@ -178,7 +181,7 @@ try {
 </Button>
 
 // Card layouts
-<Card 
+<Card
   title="Survey Results"
   description="Statistical analysis of responses"
   variant="elevated"
@@ -190,6 +193,7 @@ try {
 ```
 
 ### **Component Features:**
+
 - **TypeScript** - Full type safety with proper prop interfaces
 - **Consistent Styling** - CSS Modules with design system approach
 - **Accessibility** - ARIA labels and keyboard navigation
@@ -219,9 +223,13 @@ const onSubmit: SubmitHandler<SurveyFormValues> = async (data) => {
     await submitSurvey(data);
     reset();
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'Submission failed';
+    const errorMessage =
+      err instanceof Error ? err.message : 'Submission failed';
     setSubmitError(errorMessage);
-    handleError(err instanceof Error ? err : new Error(errorMessage), 'Survey submission');
+    handleError(
+      err instanceof Error ? err : new Error(errorMessage),
+      'Survey submission',
+    );
   }
 };
 ```
@@ -230,18 +238,20 @@ const onSubmit: SubmitHandler<SurveyFormValues> = async (data) => {
 
 ```tsx
 // Replace basic error text with component
-<InlineError message={errors.firstName?.message || ''} />
+<InlineError message={errors.firstName?.message || ''} />;
 
 // Form-level error handling
-{submitError && (
-  <ErrorMessage 
-    message={submitError}
-    title="Submission Failed"
-    severity="error"
-    showRetry
-    onRetry={() => setSubmitError(null)}
-  />
-)}
+{
+  submitError && (
+    <ErrorMessage
+      message={submitError}
+      title="Submission Failed"
+      severity="error"
+      showRetry
+      onRetry={() => setSubmitError(null)}
+    />
+  );
+}
 ```
 
 ## 🔄 **Loading States**
@@ -255,12 +265,14 @@ if (loading) {
 }
 
 // Overlay loading for forms
-{isSubmitting && <Loading text="Submitting survey..." overlay />}
+{
+  isSubmitting && <Loading text="Submitting survey..." overlay />;
+}
 
 // Error states with retry
 if (error) {
   return (
-    <ErrorMessage 
+    <ErrorMessage
       message={error}
       title="Failed to Load Results"
       showRetry
@@ -273,29 +285,34 @@ if (error) {
 ## 🎯 **Best Practices Implemented**
 
 ### **1. Path Aliases**
+
 - Clean imports: `import { Component } from '@/components/ui'`
 - Consistent patterns: `@/store`, `@/services`, `@/types`
 - Matches backend alias structure
 
 ### **2. TypeScript Excellence**
+
 - Strict mode enabled
 - Proper interface definitions
 - Generic type constraints
 - Discriminated unions for state
 
 ### **3. Performance Optimization**
+
 - Selector-based Zustand subscriptions
 - Memoized computations
 - Lazy loading where appropriate
 - Bundle size optimization
 
 ### **4. Developer Experience**
+
 - Redux DevTools integration
 - Hot reload support
 - Comprehensive error logging
 - Clear component documentation
 
 ### **5. Accessibility**
+
 - ARIA labels and roles
 - Keyboard navigation
 - Screen reader support
@@ -320,7 +337,7 @@ useEffect(() => {
 
 ```tsx
 // Wrap components with appropriate error boundaries
-<ErrorBoundary 
+<ErrorBoundary
   level="component"
   fallback={<div>Widget failed to load</div>}
   onError={(error, errorInfo) => {
@@ -338,17 +355,17 @@ useEffect(() => {
 // Enhanced form with modern patterns
 <form onSubmit={handleSubmit(onSubmit)}>
   {submitError && (
-    <ErrorMessage 
+    <ErrorMessage
       message={submitError}
       severity="error"
       showRetry
       onRetry={() => setSubmitError(null)}
     />
   )}
-  
+
   <input {...register('field')} />
   <InlineError message={errors.field?.message || ''} />
-  
+
   <Button loading={isSubmitting} type="submit">
     Submit
   </Button>

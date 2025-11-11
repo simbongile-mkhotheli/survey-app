@@ -7,12 +7,14 @@
 ## 🌟 Enterprise Features
 
 ### 🏗️ SOLID Architecture
+
 - **Dependency Injection**: Clean, testable architecture
 - **Interface-based Design**: Extensible and maintainable code
 - **Single Responsibility**: Focused services and controllers
 - **Professional Testing**: 57 tests with **SQLite integration** for repository layer
 
-### 📊 Monitoring & Observability  
+### 📊 Monitoring & Observability
+
 - **Structured Logging**: Winston with JSON output and log rotation
 - **Health Checks**: Kubernetes-ready endpoints (`/health`, `/health/live`, `/health/ready`)
 - **Prometheus Metrics**: Performance and business metrics
@@ -20,12 +22,14 @@
 - **Request Tracing**: Full request lifecycle monitoring
 
 ### ⚡ Performance & Scalability
+
 - **Redis Caching**: 85% reduction in database queries
 - **Database Optimization**: Strategic indexing and query optimization
 - **Performance Monitoring**: Real-time response time tracking
 - **Connection Pooling**: Efficient resource utilization
 
 ### 📚 Developer Experience
+
 - **Interactive API Documentation**: Swagger UI with live testing
 - **OpenAPI 3.0 Specification**: Complete API documentation
 - **Postman Collections**: Ready-to-use API testing
@@ -34,6 +38,7 @@
 ## 🚀 Tech Stack
 
 ### Backend (Enterprise-Grade)
+
 - **Node.js 20+** with TypeScript
 - **Express.js** with SOLID architecture
 - **PostgreSQL** with Prisma ORM
@@ -44,6 +49,7 @@
 - **Vitest** for comprehensive testing
 
 ### Frontend (Modern React)
+
 - **React 18** with TypeScript
 - **Vite** for blazing-fast development
 - **Zustand** for state management
@@ -54,6 +60,7 @@
 ## ✨ Production-Ready Features
 
 ### 🔒 Security & Reliability
+
 - **Input Validation**: Comprehensive request validation with Zod
 - **Rate Limiting**: API protection against abuse
 - **Security Headers**: HELMET middleware for security
@@ -62,6 +69,7 @@
 - **Graceful Shutdown**: Clean resource cleanup on application termination
 
 ### 📈 Monitoring & Analytics
+
 - **Health Monitoring**: Multi-component health checks (database, cache, memory)
 - **Performance Metrics**: Response times, throughput, error rates
 - **Business Metrics**: Survey completion rates, user satisfaction scores
@@ -69,6 +77,7 @@
 - **Error Analytics**: Error fingerprinting and trend analysis
 
 ### 🔧 DevOps Integration
+
 - **Environment Configuration**: Separate configs for dev/staging/production
 - **Docker Ready**: Containerization support
 - **CI/CD Ready**: Automated testing and deployment pipelines
@@ -122,43 +131,43 @@ survey-app/
      createdb survey_db
      ```
 
-  - Copy and edit environment variables for both backend and frontend. From the repository root:
+- Copy and edit environment variables for both backend and frontend. From the repository root:
 
-    ```bash
-    # Backend env
-    cp backend/.env.example backend/.env
+  ```bash
+  # Backend env
+  cp backend/.env.example backend/.env
 
-    # Frontend env
-    cp frontend/.env.example frontend/.env
-    ```
+  # Frontend env
+  cp frontend/.env.example frontend/.env
+  ```
 
-  - Edit the copied files and replace placeholder values with your own. Example values shown in the `.env.example` files:
+- Edit the copied files and replace placeholder values with your own. Example values shown in the `.env.example` files:
 
-    backend/.env.example
+  backend/.env.example
 
-    ```env
-    DATABASE_URL="postgresql://your_username:your_password@localhost:5432/survey_db"
-    ```
+  ```env
+  DATABASE_URL="postgresql://your_username:your_password@localhost:5432/survey_db"
+  ```
 
-    frontend/.env.example
+  frontend/.env.example
 
-    ```env
-    VITE_API_URL=http://localhost:4000
-    ```
+  ```env
+  VITE_API_URL=http://localhost:4000
+  ```
 
 3. **Install dependencies**
 
-  ```bash
-  # From repository root
+```bash
+# From repository root
 
-  # Frontend
-  cd frontend
-  npm install
+# Frontend
+cd frontend
+npm install
 
-  # Backend
-  cd ../backend
-  npm install
-  ```
+# Backend
+cd ../backend
+npm install
+```
 
 4. **Run database migrations**
 

@@ -1,12 +1,18 @@
 // backend/src/middleware/metrics.ts
 import type { Request, Response, NextFunction } from 'express';
-import { register, collectDefaultMetrics, Counter, Histogram, Gauge } from 'prom-client';
+import {
+  register,
+  collectDefaultMetrics,
+  Counter,
+  Histogram,
+  Gauge,
+} from 'prom-client';
 import { logWithContext } from '@/config/logger';
 
 /**
  * Application Metrics System
  * =========================
- * 
+ *
  * Prometheus-compatible metrics collection for:
  * - HTTP request/response metrics
  * - Database query performance
@@ -23,108 +29,112 @@ collectDefaultMetrics({ register });
 export const httpRequestsTotal = new Counter({
   name: 'http_requests_total',
   help: 'Total number of HTTP requests',
-  labelNames: ['method', 'route', 'status_code', 'status_class']
+  labelNames: ['method', 'route', 'status_code', 'status_class'],
 });
 
 export const httpRequestDuration = new Histogram({
   name: 'http_request_duration_seconds',
   help: 'HTTP request duration in seconds',
   labelNames: ['method', 'route', 'status_code'],
-  buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10]
+  buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10],
 });
 
 export const httpRequestsInProgress = new Gauge({
   name: 'http_requests_in_progress',
   help: 'Number of HTTP requests currently being processed',
-  labelNames: ['method', 'route']
+  labelNames: ['method', 'route'],
 });
 
 // Database Metrics
 export const databaseQueriesTotal = new Counter({
   name: 'database_queries_total',
   help: 'Total number of database queries',
-  labelNames: ['operation', 'table', 'status']
+  labelNames: ['operation', 'table', 'status'],
 });
 
 export const databaseQueryDuration = new Histogram({
   name: 'database_query_duration_seconds',
   help: 'Database query duration in seconds',
   labelNames: ['operation', 'table'],
-  buckets: [0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5]
+  buckets: [0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5],
 });
 
 export const databaseConnectionsActive = new Gauge({
   name: 'database_connections_active',
-  help: 'Number of active database connections'
+  help: 'Number of active database connections',
 });
 
 // Cache Metrics
 export const cacheOperationsTotal = new Counter({
   name: 'cache_operations_total',
   help: 'Total number of cache operations',
-  labelNames: ['operation', 'result', 'cache_type']
+  labelNames: ['operation', 'result', 'cache_type'],
 });
 
 export const cacheHitRatio = new Gauge({
   name: 'cache_hit_ratio',
   help: 'Cache hit ratio (0-1)',
-  labelNames: ['cache_type']
+  labelNames: ['cache_type'],
 });
 
 export const cacheSizeBytes = new Gauge({
   name: 'cache_size_bytes',
   help: 'Cache size in bytes',
-  labelNames: ['cache_type']
+  labelNames: ['cache_type'],
 });
 
 // Business Logic Metrics
 export const surveysCreatedTotal = new Counter({
   name: 'surveys_created_total',
-  help: 'Total number of surveys created'
+  help: 'Total number of surveys created',
 });
 
 export const surveyResultsQueriedTotal = new Counter({
   name: 'survey_results_queried_total',
   help: 'Total number of times survey results were queried',
-  labelNames: ['cached']
+  labelNames: ['cached'],
 });
 
 export const activeUsersGauge = new Gauge({
   name: 'active_users',
   help: 'Number of active users',
-  labelNames: ['time_window']
+  labelNames: ['time_window'],
 });
 
 // Error Metrics
 export const errorsByType = new Counter({
   name: 'errors_total',
   help: 'Total number of errors by type',
-  labelNames: ['error_type', 'component', 'severity']
+  labelNames: ['error_type', 'component', 'severity'],
 });
 
 export const errorRate = new Gauge({
   name: 'error_rate',
   help: 'Error rate (errors per minute)',
-  labelNames: ['component']
+  labelNames: ['component'],
 });
 
 // Performance Metrics
 export const slowQueriesTotal = new Counter({
   name: 'slow_queries_total',
   help: 'Total number of slow database queries',
-  labelNames: ['operation', 'table']
+  labelNames: ['operation', 'table'],
 });
 
 export const memoryUsageBytes = new Gauge({
   name: 'memory_usage_bytes',
   help: 'Memory usage in bytes',
-  labelNames: ['type']
+  labelNames: ['type'],
 });
 
 /**
  * Request metrics collection middleware
  */
-export function metricsMiddleware(req: Request, res: Response, next: NextFunction): void {
+export function metricsMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
   const startTime = Date.now();
   const route = req.route?.path || req.path || 'unknown';
   const method = req.method;
@@ -134,20 +144,26 @@ export function metricsMiddleware(req: Request, res: Response, next: NextFunctio
 
   // Override res.end to capture metrics when response completes
   const originalEnd = res.end;
-  res.end = function(this: Response, ...args: Parameters<typeof originalEnd>) {
+  res.end = function (this: Response, ...args: Parameters<typeof originalEnd>) {
     const duration = (Date.now() - startTime) / 1000; // Convert to seconds
     const statusCode = res.statusCode;
     const statusClass = `${Math.floor(statusCode / 100)}xx`;
 
     // Record metrics
-    httpRequestsTotal.labels(method, route, statusCode.toString(), statusClass).inc();
-    httpRequestDuration.labels(method, route, statusCode.toString()).observe(duration);
+    httpRequestsTotal
+      .labels(method, route, statusCode.toString(), statusClass)
+      .inc();
+    httpRequestDuration
+      .labels(method, route, statusCode.toString())
+      .observe(duration);
     httpRequestsInProgress.labels(method, route).dec();
 
     // Track errors
     if (statusCode >= 400) {
       const errorType = statusCode >= 500 ? 'server_error' : 'client_error';
-      errorsByType.labels(errorType, 'http', statusCode >= 500 ? 'high' : 'medium').inc();
+      errorsByType
+        .labels(errorType, 'http', statusCode >= 500 ? 'high' : 'medium')
+        .inc();
     }
 
     return originalEnd.apply(this, args);
@@ -160,7 +176,12 @@ export function metricsMiddleware(req: Request, res: Response, next: NextFunctio
  * Database metrics tracking helpers
  */
 export const databaseMetrics = {
-  recordQuery: (operation: string, table: string, duration: number, success: boolean) => {
+  recordQuery: (
+    operation: string,
+    table: string,
+    duration: number,
+    success: boolean,
+  ) => {
     const durationSeconds = duration / 1000;
     const status = success ? 'success' : 'error';
 
@@ -170,25 +191,29 @@ export const databaseMetrics = {
     // Track slow queries (>1 second)
     if (durationSeconds > 1) {
       slowQueriesTotal.labels(operation, table).inc();
-      
+
       logWithContext.performance('Slow database query detected', {
         operation: `${operation}_${table}`,
         duration,
-        metadata: { operation, table, durationSeconds }
+        metadata: { operation, table, durationSeconds },
       });
     }
   },
 
   updateConnectionCount: (count: number) => {
     databaseConnectionsActive.set(count);
-  }
+  },
 };
 
 /**
  * Cache metrics tracking helpers
  */
 export const cacheMetrics = {
-  recordOperation: (operation: 'get' | 'set' | 'del', result: 'hit' | 'miss' | 'success' | 'error', cacheType: 'redis' | 'memory') => {
+  recordOperation: (
+    operation: 'get' | 'set' | 'del',
+    result: 'hit' | 'miss' | 'success' | 'error',
+    cacheType: 'redis' | 'memory',
+  ) => {
     cacheOperationsTotal.labels(operation, result, cacheType).inc();
   },
 
@@ -198,7 +223,7 @@ export const cacheMetrics = {
 
   updateCacheSize: (sizeBytes: number, cacheType: 'redis' | 'memory') => {
     cacheSizeBytes.labels(cacheType).set(sizeBytes);
-  }
+  },
 };
 
 /**
@@ -215,20 +240,24 @@ export const businessMetrics = {
 
   updateActiveUsers: (count: number, timeWindow: string) => {
     activeUsersGauge.labels(timeWindow).set(count);
-  }
+  },
 };
 
 /**
  * Error tracking helpers
  */
 export const errorMetrics = {
-  recordError: (errorType: string, component: string, severity: 'low' | 'medium' | 'high' | 'critical') => {
+  recordError: (
+    errorType: string,
+    component: string,
+    severity: 'low' | 'medium' | 'high' | 'critical',
+  ) => {
     errorsByType.labels(errorType, component, severity).inc();
   },
 
   updateErrorRate: (rate: number, component: string) => {
     errorRate.labels(component).set(rate);
-  }
+  },
 };
 
 /**
@@ -236,7 +265,7 @@ export const errorMetrics = {
  */
 export function updateSystemMetrics(): void {
   const memUsage = process.memoryUsage();
-  
+
   memoryUsageBytes.labels('rss').set(memUsage.rss);
   memoryUsageBytes.labels('heap_used').set(memUsage.heapUsed);
   memoryUsageBytes.labels('heap_total').set(memUsage.heapTotal);
@@ -246,29 +275,31 @@ export function updateSystemMetrics(): void {
 /**
  * Metrics endpoint handler
  */
-export async function metricsEndpoint(req: Request, res: Response): Promise<void> {
+export async function metricsEndpoint(
+  req: Request,
+  res: Response,
+): Promise<void> {
   try {
     // Update system metrics before serving
     updateSystemMetrics();
-    
+
     // Serve Prometheus metrics
     res.set('Content-Type', register.contentType);
     res.end(await register.metrics());
-    
+
     logWithContext.debug('Metrics served', {
       requestId: req.requestId,
-      operation: 'metrics_export'
+      operation: 'metrics_export',
     });
-    
   } catch (error) {
     logWithContext.error('Failed to serve metrics', error as Error, {
       requestId: req.requestId,
-      operation: 'metrics_export'
+      operation: 'metrics_export',
     });
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       error: 'Failed to generate metrics',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }
@@ -276,40 +307,59 @@ export async function metricsEndpoint(req: Request, res: Response): Promise<void
 /**
  * Custom metrics dashboard data
  */
-export async function metricsDashboard(req: Request, res: Response): Promise<void> {
+export async function metricsDashboard(
+  req: Request,
+  res: Response,
+): Promise<void> {
   try {
     const metrics = (await register.getMetricsAsJSON()) as Metric[];
-    
+
     // Create simplified dashboard data
     const dashboard = {
       timestamp: new Date().toISOString(),
       summary: {
         totalRequests: getMetricValue(metrics, 'http_requests_total'),
-        averageResponseTime: getMetricValue(metrics, 'http_request_duration_seconds', 'avg'),
+        averageResponseTime: getMetricValue(
+          metrics,
+          'http_request_duration_seconds',
+          'avg',
+        ),
         errorRate: getMetricValue(metrics, 'errors_total'),
         cacheHitRatio: getMetricValue(metrics, 'cache_hit_ratio'),
-        activeDatabaseConnections: getMetricValue(metrics, 'database_connections_active'),
-        memoryUsageMB: Math.round(getMetricValue(metrics, 'memory_usage_bytes', 'heap_used') / 1024 / 1024)
+        activeDatabaseConnections: getMetricValue(
+          metrics,
+          'database_connections_active',
+        ),
+        memoryUsageMB: Math.round(
+          getMetricValue(metrics, 'memory_usage_bytes', 'heap_used') /
+            1024 /
+            1024,
+        ),
       },
       details: {
-        httpMetrics: metrics.filter(m => m.name.startsWith('http_')),
-        databaseMetrics: metrics.filter(m => m.name.startsWith('database_')),
-        cacheMetrics: metrics.filter(m => m.name.startsWith('cache_')),
-        businessMetrics: metrics.filter(m => m.name.startsWith('surveys_') || m.name.startsWith('survey_'))
-      }
+        httpMetrics: metrics.filter((m) => m.name.startsWith('http_')),
+        databaseMetrics: metrics.filter((m) => m.name.startsWith('database_')),
+        cacheMetrics: metrics.filter((m) => m.name.startsWith('cache_')),
+        businessMetrics: metrics.filter(
+          (m) => m.name.startsWith('surveys_') || m.name.startsWith('survey_'),
+        ),
+      },
     };
-    
+
     res.json(dashboard);
-    
   } catch (error) {
-    logWithContext.error('Failed to generate metrics dashboard', error as Error, {
-      requestId: req.requestId,
-      operation: 'metrics_dashboard'
-    });
-    
-    res.status(500).json({ 
+    logWithContext.error(
+      'Failed to generate metrics dashboard',
+      error as Error,
+      {
+        requestId: req.requestId,
+        operation: 'metrics_dashboard',
+      },
+    );
+
+    res.status(500).json({
       error: 'Failed to generate dashboard',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 }
@@ -329,30 +379,40 @@ interface Metric {
 /**
  * Helper function to extract metric values
  */
-function getMetricValue(metrics: Metric[], metricName: string, labelName?: string): number {
-  const metric = metrics.find(m => m.name === metricName);
+function getMetricValue(
+  metrics: Metric[],
+  metricName: string,
+  labelName?: string,
+): number {
+  const metric = metrics.find((m) => m.name === metricName);
   if (!metric) return 0;
-  
+
   if (metric.type === 'counter' || metric.type === 'gauge') {
     if (labelName && metric.values) {
-      const value = metric.values.find((v: MetricValue) => v.labels && v.labels.type === labelName);
+      const value = metric.values.find(
+        (v: MetricValue) => v.labels && v.labels.type === labelName,
+      );
       return value ? value.value : 0;
     }
     return metric.values && metric.values[0] ? metric.values[0].value : 0;
   }
-  
+
   if (metric.type === 'histogram' && metric.values) {
     // For histograms, return the average if requested
     if (labelName === 'avg') {
-      const sum = metric.values.find((v: MetricValue) => v.labels && v.labels.le === '+Inf');
-      const count = metric.values.find((v: MetricValue) => v.metricName?.includes('_count'));
+      const sum = metric.values.find(
+        (v: MetricValue) => v.labels && v.labels.le === '+Inf',
+      );
+      const count = metric.values.find((v: MetricValue) =>
+        v.metricName?.includes('_count'),
+      );
       if (sum && count && count.value > 0) {
         return sum.value / count.value;
       }
     }
     return metric.values[0] ? metric.values[0].value : 0;
   }
-  
+
   return 0;
 }
 
@@ -367,5 +427,5 @@ export default {
   cacheMetrics,
   businessMetrics,
   errorMetrics,
-  register
+  register,
 };

@@ -4,7 +4,12 @@
  * Shared TypeScript types and interfaces for form components
  */
 
-import type { UseFormRegister, FieldError, FieldErrors, FieldValues } from 'react-hook-form';
+import type {
+  UseFormRegister,
+  FieldError,
+  FieldErrors,
+  FieldValues,
+} from 'react-hook-form';
 
 /**
  * Standard props for controlled form inputs
@@ -22,7 +27,8 @@ export interface BaseInputProps<T extends FieldValues = FieldValues> {
 /**
  * Props for text-based inputs
  */
-export interface TextInputProps<T extends FieldValues = FieldValues> extends BaseInputProps<T> {
+export interface TextInputProps<T extends FieldValues = FieldValues>
+  extends BaseInputProps<T> {
   type?: 'text' | 'email' | 'tel' | 'date' | 'password' | 'url' | 'number';
   placeholder?: string;
   autoComplete?: string;
@@ -34,7 +40,8 @@ export interface TextInputProps<T extends FieldValues = FieldValues> extends Bas
 /**
  * Props for select/dropdown inputs
  */
-export interface SelectInputProps<T extends FieldValues = FieldValues> extends BaseInputProps<T> {
+export interface SelectInputProps<T extends FieldValues = FieldValues>
+  extends BaseInputProps<T> {
   options: Array<{ value: string | number; label: string }>;
   placeholder?: string;
 }
@@ -42,7 +49,8 @@ export interface SelectInputProps<T extends FieldValues = FieldValues> extends B
 /**
  * Props for checkbox/radio group inputs
  */
-export interface CheckboxGroupProps<T extends FieldValues = FieldValues> extends Omit<BaseInputProps<T>, 'register'> {
+export interface CheckboxGroupProps<T extends FieldValues = FieldValues>
+  extends Omit<BaseInputProps<T>, 'register'> {
   options: Array<{ value: string; label: string }>;
   register: UseFormRegister<T>;
 }

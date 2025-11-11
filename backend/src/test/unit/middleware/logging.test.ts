@@ -2,7 +2,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { Request, Response, NextFunction } from 'express';
 import { requestContext, accessLogging } from '@/middleware/logging';
-import { createMockRequest, createMockResponse, createMockNext } from '@/test/utils/test-helpers';
+import {
+  createMockRequest,
+  createMockResponse,
+  createMockNext,
+} from '@/test/utils/test-helpers';
 
 // Extend Request type to include custom properties added by middleware
 interface RequestWithContext extends Request {
@@ -31,11 +35,15 @@ describe('Logging Middleware', () => {
     mockRequest = createMockRequest();
     mockResponse = createMockResponse();
     mockNext = createMockNext();
-    
+
     // Set up default request properties
     (mockRequest as unknown as Record<string, unknown>).headers = {};
-    (mockRequest as unknown as Record<string, unknown>).connection = { remoteAddress: '127.0.0.1' };
-    (mockRequest as unknown as Record<string, unknown>).socket = { remoteAddress: '127.0.0.1' };
+    (mockRequest as unknown as Record<string, unknown>).connection = {
+      remoteAddress: '127.0.0.1',
+    };
+    (mockRequest as unknown as Record<string, unknown>).socket = {
+      remoteAddress: '127.0.0.1',
+    };
   });
 
   describe('requestContext', () => {
@@ -104,7 +112,9 @@ describe('Logging Middleware', () => {
 
     it('should fallback to connection remote address for client IP', () => {
       // Arrange - No proxy headers
-      (mockRequest as unknown as Record<string, unknown>).connection = { remoteAddress: '10.0.0.5' };
+      (mockRequest as unknown as Record<string, unknown>).connection = {
+        remoteAddress: '10.0.0.5',
+      };
 
       // Act
       requestContext(mockRequest, mockResponse, mockNext);
@@ -115,7 +125,10 @@ describe('Logging Middleware', () => {
 
     it('should handle missing IP gracefully', () => {
       // Arrange - Remove all IP sources
-      const req = mockRequest as unknown as Record<string, Record<string, unknown>>;
+      const req = mockRequest as unknown as Record<
+        string,
+        Record<string, unknown>
+      >;
       delete req.headers['x-forwarded-for'];
       delete req.headers['x-real-ip'];
       delete req.connection.remoteAddress;
@@ -138,7 +151,10 @@ describe('Logging Middleware', () => {
 
       // Assert - Verify response header is set
       expect(mockResponse.setHeader).toHaveBeenCalledOnce();
-      expect(mockResponse.setHeader).toHaveBeenCalledWith('X-Request-ID', customId);
+      expect(mockResponse.setHeader).toHaveBeenCalledWith(
+        'X-Request-ID',
+        customId,
+      );
     });
 
     it('should call next to continue middleware chain', () => {
@@ -167,10 +183,12 @@ describe('Logging Middleware', () => {
     it('should extract user agent from headers', () => {
       // Arrange
       mockRequest.headers['user-agent'] = 'Mozilla/5.0 (Test Browser)';
-      (mockRequest as unknown as Record<string, unknown>).get = vi.fn((header: string) => {
-        if (header === 'User-Agent') return 'Mozilla/5.0 (Test Browser)';
-        return undefined;
-      });
+      (mockRequest as unknown as Record<string, unknown>).get = vi.fn(
+        (header: string) => {
+          if (header === 'User-Agent') return 'Mozilla/5.0 (Test Browser)';
+          return undefined;
+        },
+      );
 
       // Act
       requestContext(mockRequest, mockResponse, mockNext);
@@ -216,17 +234,35 @@ describe('Logging Middleware', () => {
 
       mockRequest1.headers = {};
       mockRequest2.headers = {};
-      (mockRequest1 as unknown as Record<string, unknown>).connection = { remoteAddress: '127.0.0.1' };
-      (mockRequest2 as unknown as Record<string, unknown>).connection = { remoteAddress: '127.0.0.1' };
+      (mockRequest1 as unknown as Record<string, unknown>).connection = {
+        remoteAddress: '127.0.0.1',
+      };
+      (mockRequest2 as unknown as Record<string, unknown>).connection = {
+        remoteAddress: '127.0.0.1',
+      };
 
       // Act
-      requestContext(mockRequest1 as unknown as RequestWithContext, mockResponse1, mockNext1);
-      requestContext(mockRequest2 as unknown as RequestWithContext, mockResponse2, mockNext2);
+      requestContext(
+        mockRequest1 as unknown as RequestWithContext,
+        mockResponse1,
+        mockNext1,
+      );
+      requestContext(
+        mockRequest2 as unknown as RequestWithContext,
+        mockResponse2,
+        mockNext2,
+      );
 
       // Assert - Verify IDs are unique
-      expect((mockRequest1 as unknown as RequestWithContext).requestId).toBeDefined();
-      expect((mockRequest2 as unknown as RequestWithContext).requestId).toBeDefined();
-      expect((mockRequest1 as unknown as RequestWithContext).requestId).not.toBe((mockRequest2 as unknown as RequestWithContext).requestId);
+      expect(
+        (mockRequest1 as unknown as RequestWithContext).requestId,
+      ).toBeDefined();
+      expect(
+        (mockRequest2 as unknown as RequestWithContext).requestId,
+      ).toBeDefined();
+      expect(
+        (mockRequest1 as unknown as RequestWithContext).requestId,
+      ).not.toBe((mockRequest2 as unknown as RequestWithContext).requestId);
     });
   });
 
@@ -235,7 +271,9 @@ describe('Logging Middleware', () => {
       // Arrange
       mockRequest.headers['x-forwarded-for'] = '1.2.3.4';
       mockRequest.headers['x-real-ip'] = '5.6.7.8';
-      (mockRequest.connection as unknown as Record<string, unknown>).remoteAddress = '9.10.11.12';
+      (
+        mockRequest.connection as unknown as Record<string, unknown>
+      ).remoteAddress = '9.10.11.12';
 
       // Act
       requestContext(mockRequest, mockResponse, mockNext);
@@ -247,7 +285,9 @@ describe('Logging Middleware', () => {
     it('should prioritize x-real-ip over connection address', () => {
       // Arrange
       mockRequest.headers['x-real-ip'] = '5.6.7.8';
-      (mockRequest.connection as unknown as Record<string, unknown>).remoteAddress = '9.10.11.12';
+      (
+        mockRequest.connection as unknown as Record<string, unknown>
+      ).remoteAddress = '9.10.11.12';
 
       // Act
       requestContext(mockRequest, mockResponse, mockNext);
@@ -258,7 +298,8 @@ describe('Logging Middleware', () => {
 
     it('should handle multiple IPs in x-forwarded-for and extract first', () => {
       // Arrange - Simulate chain of proxies
-      mockRequest.headers['x-forwarded-for'] = '203.0.113.1, 198.51.100.1, 192.168.1.1';
+      mockRequest.headers['x-forwarded-for'] =
+        '203.0.113.1, 198.51.100.1, 192.168.1.1';
 
       // Act
       requestContext(mockRequest, mockResponse, mockNext);
@@ -269,7 +310,8 @@ describe('Logging Middleware', () => {
 
     it('should trim whitespace from x-forwarded-for IPs', () => {
       // Arrange - IPs with extra whitespace
-      mockRequest.headers['x-forwarded-for'] = '  203.0.113.1  ,  198.51.100.1  ';
+      mockRequest.headers['x-forwarded-for'] =
+        '  203.0.113.1  ,  198.51.100.1  ';
 
       // Act
       requestContext(mockRequest, mockResponse, mockNext);
