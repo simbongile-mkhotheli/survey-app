@@ -16,10 +16,10 @@ import {
   hppConfig,
   inputSanitizeConfig,
   requestSizeLimit,
-  rateLimitByIP,
   securityHeaders,
   httpsRedirect,
 } from '@/middleware/security';
+import { rateLimitByIP, closeRedis } from '@/middleware/rateLimiter';
 import {
   performanceTracker,
   performanceEndpoint,
@@ -59,14 +59,14 @@ app.use(helmetConfig);
 // 4. Custom security headers
 app.use(securityHeaders);
 
-// 5. Compression for performance
+// 5. Rate limiting by IP (early to reject abusers before processing)
+app.use(rateLimitByIP);
+
+// 6. Compression for performance
 app.use(compressionConfig);
 
-// 6. Request size limiting
+// 7. Request size limiting
 app.use(requestSizeLimit);
-
-// 7. Rate limiting by IP
-app.use(rateLimitByIP);
 
 // 8. HTTP Parameter Pollution protection
 app.use(hppConfig);
@@ -196,6 +196,19 @@ if (config.NODE_ENV !== 'test') {
         },
       },
     });
+  });
+
+  // Graceful shutdown
+  process.on('SIGTERM', async () => {
+    logger.info('SIGTERM received, closing server gracefully');
+    await closeRedis();
+    process.exit(0);
+  });
+
+  process.on('SIGINT', async () => {
+    logger.info('SIGINT received, closing server gracefully');
+    await closeRedis();
+    process.exit(0);
   });
 }
 

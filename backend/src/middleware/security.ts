@@ -144,59 +144,6 @@ export const requestSizeLimit = (
 };
 
 /**
- * Rate limiting by IP with progressive delays
- * Protects against brute force and DDoS attacks
- */
-const requestCounts = new Map<string, { count: number; resetTime: number }>();
-
-export const rateLimitByIP = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const ip = req.ip || req.connection.remoteAddress || 'unknown';
-  const now = Date.now();
-  const windowMs = config.RATE_LIMIT_WINDOW_MS;
-  const maxRequests = config.RATE_LIMIT_MAX_REQUESTS;
-
-  const record = requestCounts.get(ip);
-
-  if (!record || now > record.resetTime) {
-    requestCounts.set(ip, { count: 1, resetTime: now + windowMs });
-    return next();
-  }
-
-  if (record.count >= maxRequests) {
-    const retryAfter = Math.ceil((record.resetTime - now) / 1000);
-
-    res.set({
-      'Retry-After': retryAfter.toString(),
-      'X-RateLimit-Limit': maxRequests.toString(),
-      'X-RateLimit-Remaining': '0',
-      'X-RateLimit-Reset': new Date(record.resetTime).toISOString(),
-    });
-
-    return res.status(429).json({
-      error: {
-        message: 'Too many requests from this IP',
-        type: 'RateLimitError',
-        retryAfter: `${retryAfter} seconds`,
-      },
-    });
-  }
-
-  record.count++;
-
-  res.set({
-    'X-RateLimit-Limit': maxRequests.toString(),
-    'X-RateLimit-Remaining': (maxRequests - record.count).toString(),
-    'X-RateLimit-Reset': new Date(record.resetTime).toISOString(),
-  });
-
-  next();
-};
-
-/**
  * Input validation middleware factory
  * Creates express-validator middleware with custom error formatting
  */
