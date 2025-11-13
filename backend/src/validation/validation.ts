@@ -3,7 +3,7 @@ import { z } from 'zod';
 export {
   SurveyPayloadSchema as SurveySchema,
   SurveyInput,
-} from '../../../shared/validation';
+} from '@shared/validation';
 
 /**
  * Schema for query parameters on GET /results.
