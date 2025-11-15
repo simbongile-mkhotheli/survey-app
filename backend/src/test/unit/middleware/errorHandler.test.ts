@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { Request, Response, NextFunction } from 'express';
 import { errorHandler } from '@/middleware/errorHandler';
 import { ValidationError, DatabaseError } from '@/errors/AppError';
-import { ZodError } from 'zod';
+import { z } from 'zod';
 import {
   createMockRequest,
   createMockResponse,
@@ -100,24 +100,23 @@ describe('errorHandler Middleware', () => {
 
   describe('Zod Validation Error Handling', () => {
     it('should transform ZodError into ValidationError with field details', () => {
-      // Arrange - Create a Zod validation error
-      const zodError = new ZodError([
-        {
-          code: 'invalid_type',
-          expected: 'string',
-          received: 'number',
-          path: ['email'],
-          message: 'Expected string, received number',
-        },
-        {
-          code: 'too_small',
-          minimum: 1,
-          type: 'string',
-          inclusive: true,
-          path: ['firstName'],
-          message: 'String must contain at least 1 character(s)',
-        },
-      ]);
+      // Arrange - Create a Zod validation error via schema parsing
+      const schema = z.object({
+        email: z.string().email(),
+        firstName: z.string().min(1),
+      });
+
+      const result = schema.safeParse({
+        // Intentional invalid types/values to trigger errors
+        email: 123,
+        firstName: '',
+      });
+
+      if (result.success) {
+        throw new Error('Expected schema validation to fail');
+      }
+
+      const zodError = result.error;
 
       // Act
       errorHandler(zodError, mockRequest, mockResponse, mockNext);
@@ -136,15 +135,15 @@ describe('errorHandler Middleware', () => {
     });
 
     it('should handle ZodError with single field error', () => {
-      // Arrange
-      const zodError = new ZodError([
-        {
-          code: 'invalid_string',
-          validation: 'email',
-          path: ['email'],
-          message: 'Invalid email',
-        },
-      ]);
+      // Arrange - Use schema to generate a single-field Zod error
+      const schema = z.string().email();
+      const result = schema.safeParse('not-an-email');
+
+      if (result.success) {
+        throw new Error('Expected email validation to fail');
+      }
+
+      const zodError = result.error;
 
       // Act
       errorHandler(zodError, mockRequest, mockResponse, mockNext);

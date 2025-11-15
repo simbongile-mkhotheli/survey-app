@@ -10,7 +10,7 @@ const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
-  PORT: z.string().transform(Number).default('5000'),
+  PORT: z.coerce.number().int().positive().default(5000),
 
   // Database
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
@@ -19,8 +19,8 @@ const envSchema = z.object({
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
 
   // Rate Limiting
-  RATE_LIMIT_WINDOW_MS: z.string().transform(Number).default('900000'), // 15 minutes
-  RATE_LIMIT_MAX_REQUESTS: z.string().transform(Number).default('1000'), // 1000 requests per 15 min (balanced for production)
+  RATE_LIMIT_WINDOW_MS: z.coerce.number().int().default(900000), // 15 minutes
+  RATE_LIMIT_MAX_REQUESTS: z.coerce.number().int().default(1000), // 1000 requests per 15 min (balanced for production)
 
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
@@ -28,38 +28,26 @@ const envSchema = z.object({
 
   // Security - Required in production, optional in test environment
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
-  BCRYPT_ROUNDS: z.string().transform(Number).default('12'),
-  SECURITY_TRUST_PROXY: z
-    .string()
-    .transform((val) => val === 'true')
-    .default('false'),
-  SECURITY_HTTPS_REDIRECT: z
-    .string()
-    .transform((val) => val === 'true')
-    .default('false'),
+  BCRYPT_ROUNDS: z.coerce.number().int().default(12),
+  SECURITY_TRUST_PROXY: z.coerce.boolean().default(false),
+  SECURITY_HTTPS_REDIRECT: z.coerce.boolean().default(false),
   SECURITY_SESSION_SECRET: z
     .string()
     .min(32, 'SECURITY_SESSION_SECRET must be at least 32 characters'),
 
   // Request Limits
-  REQUEST_SIZE_LIMIT: z.string().transform(Number).default('1048576'), // 1MB
+  REQUEST_SIZE_LIMIT: z.coerce.number().int().default(1048576), // 1MB
 
   // Caching
-  REDIS_ENABLED: z
-    .string()
-    .transform((val) => val === 'true')
-    .default('false'),
+  REDIS_ENABLED: z.coerce.boolean().default(false),
   REDIS_HOST: z.string().default('localhost'),
-  REDIS_PORT: z.string().transform(Number).default('6379'),
+  REDIS_PORT: z.coerce.number().int().default(6379),
   REDIS_PASSWORD: z.string().optional(),
-  CACHE_TTL: z.string().transform(Number).default('300'), // 5 minutes
+  CACHE_TTL: z.coerce.number().int().default(300), // 5 minutes
 
   // Performance Monitoring
-  ENABLE_QUERY_LOGGING: z
-    .string()
-    .transform((val) => val === 'true')
-    .default('false'),
-  SLOW_QUERY_THRESHOLD: z.string().transform(Number).default('1000'), // 1 second
+  ENABLE_QUERY_LOGGING: z.coerce.boolean().default(false),
+  SLOW_QUERY_THRESHOLD: z.coerce.number().int().default(1000), // 1 second
 });
 
 /**
@@ -102,8 +90,11 @@ export function getConfig() {
     return parsed;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const message = `Environment validation failed: ${error.errors
-        .map((e) => `${e.path.join('.')} - ${e.message}`)
+      const message = `Environment validation failed: ${error.issues
+        .map((issue) => {
+          const path = issue.path.length ? issue.path.join('.') : 'root';
+          return `${path} - ${issue.message}`;
+        })
         .join(', ')}`;
       throw new ValidationError(message);
     }
