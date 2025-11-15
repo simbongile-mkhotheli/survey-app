@@ -16,6 +16,7 @@ export default [
       '**/prisma/migrations/**',
       '**/scripts/**',
       '**/*.config.js',
+      '**/*.config.mjs',
       '**/*.config.ts',
     ],
   },
