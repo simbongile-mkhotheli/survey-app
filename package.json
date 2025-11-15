@@ -14,7 +14,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "typecheck": "npm run typecheck --workspaces",
     "test": "npm run test --workspaces",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "zod": "^4.1.12"
