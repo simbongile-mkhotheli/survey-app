@@ -44,3 +44,15 @@ Thumbs.db
 # Private files (do not push to GitHub)
 .github/workflows/test.yml
 backend/TEST_DATABASE_SETUP.md
+
+# Git commit messages
+.git-commit-message.txt
+
+# Exclude all .md files outside docs folders (except README.md)
+/*.md
+!README.md
+frontend/*.md
+backend/*.md
+scripts/*.md
+monitoring/*.md
+shared/*.md
