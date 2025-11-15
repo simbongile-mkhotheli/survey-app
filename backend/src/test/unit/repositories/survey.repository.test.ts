@@ -11,7 +11,8 @@ import type { PrismaClient } from '@prisma/client';
 
 describe('SurveyRepository', () => {
   let repository: SurveyRepository;
-  let mockPrisma: PrismaClient;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let mockPrisma: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
