@@ -85,19 +85,18 @@
 
 ## 🛠️ Project Structure
 
-```
-
+```text
 survey-app/
 ├── frontend/
-│ ├── src/
-│ │ ├── components/ # UI components (SurveyForm, Results, Nav, etc.)
-│ │ ├── services/ # Axios wrappers (submitSurvey, fetchResults)
-│ │ ├── store/ # Zustand store hooks
-│ │ ├── validation/ # Shared Zod schemas
-│ │ └── App.tsx # Root component + Routes
-│ └── tsconfig.app.json
-└── backend/
-├── src/
+│   ├── src/
+│   │   ├── components/       # UI components (SurveyForm, Results, Nav)
+│   │   ├── services/         # API integration (axios)
+│   │   ├── store/            # Zustand state management
+│   │   ├── validation/       # Zod schemas
+│   │   └── App.tsx           # Root component + Routes
+│   └── package.json
+├── backend/
+│   ├── src/
 │ ├── controllers/ # Express route handlers
 │ ├── validation/ # Zod schemas
 │ ├── prisma/ # schema.prisma & migrations
@@ -131,68 +130,52 @@ survey-app/
      createdb survey_db
      ```
 
-- Copy and edit environment variables for both backend and frontend. From the repository root:
+3. **Copy and edit environment variables**
 
-  ```bash
-  # Backend env
-  cp backend/.env.example backend/.env
-
-  # Frontend env
-  cp frontend/.env.example frontend/.env
-  ```
-
-- Edit the copied files and replace placeholder values with your own. Example values shown in the `.env.example` files:
-
-  backend/.env.example
-
-  ```env
-  DATABASE_URL="postgresql://your_username:your_password@localhost:5432/survey_db"
-  ```
-
-  frontend/.env.example
-
-  ```env
-  VITE_API_URL=http://localhost:4000
-  ```
-
-3. **Install dependencies**
-
-```bash
-# From repository root
-
-# Frontend
-cd frontend
-npm install
-
-# Backend
-cd ../backend
-npm install
-```
-
-4. **Run database migrations**
-
-   - The `backend/prisma/` directory includes **`schema.prisma`** and \*\*migration
-   - To apply migrations to your database, run:
+   - From the repository root:
 
      ```bash
-     cd backend
-     npx prisma migrate dev --name init
+     cp backend/.env.example backend/.env
+     cp frontend/.env.example frontend/.env
      ```
 
-5. **Start development servers**
+   - Edit the `.env` files and replace placeholder values. Example values:
+
+     ```env
+     # backend/.env
+     DATABASE_URL="postgresql://your_username:your_password@localhost:5432/survey_db"
+     ```
+
+     ```env
+     # frontend/.env
+     VITE_API_URL=http://localhost:4000
+     ```
+
+4. **Install dependencies**
+
+   ```bash
+   cd frontend && npm install && cd ../backend && npm install
+   ```
+
+5. **Run database migrations**
+
+   ```bash
+   cd backend
+   npx prisma migrate dev --name init
+   ```
+
+6. **Start development servers**
 
    - Frontend ([http://localhost:3000](http://localhost:3000)):
 
      ```bash
-     cd frontend
-     npm run dev
+     cd frontend && npm run dev
      ```
 
    - Backend ([http://localhost:4000](http://localhost:4000)):
 
      ```bash
-     cd backend
-     npm run dev
+     cd backend && npm run dev
      ```
 
 ## 📝 API Endpoints
