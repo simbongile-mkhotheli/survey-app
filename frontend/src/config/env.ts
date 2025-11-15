@@ -39,6 +39,7 @@ const parseEnv = () => {
       VITE_PORT: import.meta.env.VITE_PORT,
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('❌ Invalid environment configuration:', error);
     throw new Error('Invalid environment configuration. Check your .env file.');
   }
@@ -72,6 +73,7 @@ export const config = {
 
 // Utility to log environment info (development only)
 if (config.isDevelopment) {
+  // eslint-disable-next-line no-console
   console.log('🌐 Environment Configuration:', {
     nodeEnv: env.VITE_NODE_ENV,
     apiUrl: config.apiUrl,

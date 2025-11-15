@@ -16,10 +16,12 @@ const apiClient = axios.create({
 if (config.isDevelopment) {
   apiClient.interceptors.request.use(
     (config) => {
+      // eslint-disable-next-line no-console
       console.log('🔄 API Request:', config.method?.toUpperCase(), config.url);
       return config;
     },
     (error) => {
+      // eslint-disable-next-line no-console
       console.error('❌ API Request Error:', error);
       return Promise.reject(error);
     },
@@ -27,10 +29,12 @@ if (config.isDevelopment) {
 
   apiClient.interceptors.response.use(
     (response) => {
+      // eslint-disable-next-line no-console
       console.log('✅ API Response:', response.status, response.config.url);
       return response;
     },
     (error) => {
+      // eslint-disable-next-line no-console
       console.error(
         '❌ API Response Error:',
         error.response?.status,

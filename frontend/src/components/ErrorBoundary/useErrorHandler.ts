@@ -42,6 +42,7 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
 
       // Log to console in development
       if (logToConsole && isDevelopment()) {
+        // eslint-disable-next-line no-console
         console.error('Error handled:', { error, context, fullMessage });
       }
 
@@ -53,7 +54,7 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
       // Show toast notification (implement based on your toast system)
       if (showToast) {
         // Example: toast.error(fullMessage);
-        console.warn('Toast not implemented yet:', fullMessage);
+        // TODO: Implement toast notification system
       }
 
       // In production, send to error reporting service

@@ -11,7 +11,7 @@ import type { PrismaClient } from '@prisma/client';
 
 describe('SurveyRepository', () => {
   let repository: SurveyRepository;
-  let mockPrisma: any;
+  let mockPrisma: PrismaClient;
 
   beforeEach(() => {
     vi.clearAllMocks();

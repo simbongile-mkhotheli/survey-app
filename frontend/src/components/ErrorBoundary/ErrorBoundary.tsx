@@ -25,8 +25,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log the error
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // Log the error in development only
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
 
     // Store error info in state
     this.setState({
