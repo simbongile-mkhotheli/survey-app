@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import SurveyForm from './SurveyForm';
+import SurveyForm from '../../../components/Survey/SurveyForm';
 
 describe('SurveyForm', () => {
   it('shows required field errors when submitted empty', async () => {
