@@ -1,5 +1,4 @@
 // backend/src/test/unit/services/survey.service.test.ts
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SurveyService } from '@/services/surveyService';
 import type {
   ISurveyRepository,

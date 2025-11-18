@@ -166,6 +166,8 @@ survey-app/
 
 6. **Start development servers**
 
+   **Option A: Traditional Setup**
+
    - Frontend ([http://localhost:3000](http://localhost:3000)):
 
      ```bash
@@ -177,6 +179,31 @@ survey-app/
      ```bash
      cd backend && npm run dev
      ```
+
+   **Option B: Docker (Recommended for Production)**
+
+   See [DOCKER.md](./DOCKER.md) for comprehensive Docker deployment guidance.
+
+   Quick start:
+
+   ```bash
+   # Copy and configure environment
+   cp .env.docker .env
+
+   # Start all services (frontend, backend, PostgreSQL, Redis)
+   docker-compose up -d
+
+   # View logs
+   docker-compose logs -f
+   ```
+
+Access endpoints:
+
+| Service  | URL                                                              |
+| -------- | ---------------------------------------------------------------- |
+| Frontend | [http://localhost:3000](http://localhost:3000)                   |
+| Backend  | [http://localhost:5000](http://localhost:5000)                   |
+| API Docs | [http://localhost:5000/api-docs](http://localhost:5000/api-docs) |
 
 ## 📝 API Endpoints
 

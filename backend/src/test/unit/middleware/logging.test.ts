@@ -1,5 +1,4 @@
 // backend/src/test/unit/middleware/logging.test.ts
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { Request, Response, NextFunction } from 'express';
 import { requestContext, accessLogging } from '@/middleware/logging';
 import {

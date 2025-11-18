@@ -1,5 +1,4 @@
 // backend/src/test/security-basic.test.ts - Basic security middleware tests
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import request from 'supertest';
 import express, { Request, Response } from 'express';
 import {

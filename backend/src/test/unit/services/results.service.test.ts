@@ -1,5 +1,4 @@
 // backend/src/test/unit/services/results.service.test.ts
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ResultsService } from '@/services/resultsService';
 import type { IResultsRepository } from '@/interfaces/repository.interface';
 

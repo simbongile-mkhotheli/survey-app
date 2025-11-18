@@ -1,5 +1,4 @@
 // backend/src/test/unit/middleware/errorHandler.test.ts
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { Request, Response, NextFunction } from 'express';
 import { errorHandler } from '@/middleware/errorHandler';
 import { ValidationError, DatabaseError } from '@/errors/AppError';

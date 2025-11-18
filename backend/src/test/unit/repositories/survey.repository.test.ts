@@ -3,8 +3,6 @@
  * ===========================
  * Tests for the survey data access layer
  */
-
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SurveyRepository } from '@/repositories/survey.repository';
 import type { SurveyInput } from '@/validation/validation';
 import type { PrismaClient } from '@prisma/client';

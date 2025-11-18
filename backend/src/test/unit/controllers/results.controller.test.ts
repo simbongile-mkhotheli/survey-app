@@ -1,5 +1,5 @@
 // backend/src/test/unit/controllers/results.controller.test.ts
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import type { Request, Response, NextFunction } from 'express';
 import { handleGetSurveyResults } from '@/controllers/resultsController';
 import { Container } from '@/container';

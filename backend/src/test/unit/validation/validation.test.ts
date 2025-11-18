@@ -1,5 +1,4 @@
 // backend/src/test/unit/validation/validation.test.ts
-import { describe, it, expect } from 'vitest';
 import { SurveySchema, ResultsQuerySchema } from '@/validation/validation';
 
 describe('Validation Schemas', () => {
