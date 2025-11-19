@@ -1,5 +1,5 @@
 // backend/src/test/unit/services/survey.service.test.ts
-import { SurveyService } from '@/services/surveyService';
+import { SurveyService } from '@/services/survey.service';
 import type {
   ISurveyRepository,
   IResultsRepository,

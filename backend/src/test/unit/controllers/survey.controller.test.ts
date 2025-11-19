@@ -1,6 +1,6 @@
 // backend/src/test/unit/controllers/survey.controller.test.ts
 import type { Request, Response, NextFunction } from 'express';
-import { handleCreateSurvey } from '@/controllers/surveyController';
+import { handleCreateSurvey } from '@/controllers/survey.controller';
 import { Container } from '@/container';
 import {
   createMockRequest,

@@ -2,8 +2,8 @@
 import { PrismaClient } from '@prisma/client';
 import { SurveyRepository } from '@/repositories/survey.repository';
 import { ResultsRepository } from '@/repositories/results.repository';
-import { SurveyService } from '@/services/surveyService';
-import { ResultsService } from '@/services/resultsService';
+import { SurveyService } from '@/services/survey.service';
+import { ResultsService } from '@/services/results.service';
 import type {
   ISurveyRepository,
   IResultsRepository,

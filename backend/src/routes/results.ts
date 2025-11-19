@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ResultsQuerySchema } from '@/validation/validation';
-import { handleGetSurveyResults } from '@/controllers/resultsController';
+import { handleGetSurveyResults } from '@/controllers/results.controller';
 
 /**
  * @swagger

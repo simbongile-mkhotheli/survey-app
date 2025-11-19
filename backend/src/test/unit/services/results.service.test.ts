@@ -1,5 +1,5 @@
 // backend/src/test/unit/services/results.service.test.ts
-import { ResultsService } from '@/services/resultsService';
+import { ResultsService } from '@/services/results.service';
 import type { IResultsRepository } from '@/interfaces/repository.interface';
 
 describe('ResultsService', () => {
