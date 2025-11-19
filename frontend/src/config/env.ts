@@ -23,19 +23,21 @@ const envSchema = z.object({
 // Parse and validate environment variables
 const parseEnv = () => {
   try {
-    const mode =
-      import.meta.env.MODE || import.meta.env.VITE_NODE_ENV || 'development';
+    const isTestMode =
+      import.meta.env.VITEST || import.meta.env.MODE === 'test';
+    const mode = import.meta.env.MODE || 'development';
     // In test mode, allow a safe default API URL so unit tests don't fail on missing env
-    const fallbackApiUrl =
-      mode === 'test' ? 'http://localhost:3000' : undefined;
+    const fallbackApiUrl = isTestMode ? 'http://localhost:3000' : undefined;
 
     return envSchema.parse({
       VITE_API_URL: import.meta.env.VITE_API_URL ?? fallbackApiUrl,
       VITE_APP_NAME: import.meta.env.VITE_APP_NAME,
-      VITE_NODE_ENV: (import.meta.env.VITE_NODE_ENV || mode) as
-        | 'development'
-        | 'production'
-        | 'test',
+      VITE_NODE_ENV: isTestMode
+        ? 'test'
+        : ((import.meta.env.VITE_NODE_ENV || mode) as
+            | 'development'
+            | 'production'
+            | 'test'),
       VITE_PORT: import.meta.env.VITE_PORT,
     });
   } catch (error) {
@@ -71,8 +73,8 @@ export const config = {
   defaultPort: env.VITE_PORT ? parseInt(env.VITE_PORT) : 3000,
 } as const;
 
-// Utility to log environment info (development only)
-if (config.isDevelopment) {
+// Utility to log environment info (development only, never in test mode)
+if (config.isDevelopment && !config.isTest) {
   // eslint-disable-next-line no-console
   console.log('🌐 Environment Configuration:', {
     nodeEnv: env.VITE_NODE_ENV,
