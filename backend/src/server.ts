@@ -42,6 +42,26 @@ import { config } from '@/config/env';
 
 dotenv.config();
 
+// Validate environment on startup
+function validateEnvironment() {
+  try {
+    // The config import already performs validation via Zod
+    // This access ensures the validation has run and config is available
+    logger.info('Environment configuration validated successfully', {
+      environment: config.NODE_ENV,
+      port: config.PORT,
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'Unknown validation error';
+    logger.error('Environment validation failed', {
+      error: message,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    throw error;
+  }
+}
+
 const app = express();
 
 // Security middleware setup - order matters!
@@ -178,38 +198,49 @@ app.use(errorHandler); // Global error handler (must be last)
 
 // Export app for testing and only listen when run directly
 if (config.NODE_ENV !== 'test') {
-  app.listen(config.PORT, () => {
-    logger.info('Server started successfully', {
-      operation: 'server_startup',
-      metadata: {
-        port: config.PORT,
-        environment: config.NODE_ENV,
-        url: `http://localhost:${config.PORT}`,
-        endpoints: {
-          api: `http://localhost:${config.PORT}/api`,
-          health: `http://localhost:${config.PORT}/health`,
-          metrics: `http://localhost:${config.PORT}/metrics`,
-          docs:
-            config.NODE_ENV !== 'production'
-              ? `http://localhost:${config.PORT}/api-docs`
-              : undefined,
+  // Validate environment on startup before starting the server
+  try {
+    validateEnvironment();
+
+    app.listen(config.PORT, () => {
+      logger.info('Server started successfully', {
+        operation: 'server_startup',
+        metadata: {
+          port: config.PORT,
+          environment: config.NODE_ENV,
+          url: `http://localhost:${config.PORT}`,
+          endpoints: {
+            api: `http://localhost:${config.PORT}/api`,
+            health: `http://localhost:${config.PORT}/health`,
+            metrics: `http://localhost:${config.PORT}/metrics`,
+            docs:
+              config.NODE_ENV !== 'production'
+                ? `http://localhost:${config.PORT}/api-docs`
+                : undefined,
+          },
         },
-      },
+      });
     });
-  });
 
-  // Graceful shutdown
-  process.on('SIGTERM', async () => {
-    logger.info('SIGTERM received, closing server gracefully');
-    await closeRedis();
-    process.exit(0);
-  });
+    // Graceful shutdown
+    process.on('SIGTERM', async () => {
+      logger.info('SIGTERM received, closing server gracefully');
+      await closeRedis();
+      process.exit(0);
+    });
 
-  process.on('SIGINT', async () => {
-    logger.info('SIGINT received, closing server gracefully');
-    await closeRedis();
-    process.exit(0);
-  });
+    process.on('SIGINT', async () => {
+      logger.info('SIGINT received, closing server gracefully');
+      await closeRedis();
+      process.exit(0);
+    });
+  } catch (error) {
+    logger.error('Failed to start server', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+    });
+    process.exit(1);
+  }
 }
 
 export default app;
