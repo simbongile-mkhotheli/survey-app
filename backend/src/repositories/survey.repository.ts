@@ -1,11 +1,36 @@
 // backend/src/repositories/survey.repository.ts
-import { PrismaClient } from '@prisma/client';
+import {
+  PrismaClient,
+  type SurveyResponse as PrismaSurveyResponse,
+} from '@prisma/client';
 import type { ISurveyRepository } from '@/interfaces/repository.interface';
 import type { SurveyInput } from '@/validation/validation';
 import type { SurveyResponse } from '@/interfaces/service.interface';
 
 export class SurveyRepository implements ISurveyRepository {
   constructor(private prisma: PrismaClient) {}
+
+  /**
+   * Maps Prisma model to domain type
+   * Ensures type safety and explicit field mapping
+   * Handles any differences between database and domain models
+   */
+  private mapToDomain(raw: PrismaSurveyResponse): SurveyResponse {
+    return {
+      id: raw.id,
+      firstName: raw.firstName,
+      lastName: raw.lastName,
+      email: raw.email,
+      contactNumber: raw.contactNumber,
+      dateOfBirth: raw.dateOfBirth,
+      foods: raw.foods,
+      ratingMovies: raw.ratingMovies,
+      ratingRadio: raw.ratingRadio,
+      ratingEatOut: raw.ratingEatOut,
+      ratingTV: raw.ratingTV,
+      submittedAt: raw.submittedAt,
+    };
+  }
 
   async create(data: SurveyInput): Promise<SurveyResponse> {
     const dob = new Date(data.dateOfBirth);
@@ -26,19 +51,19 @@ export class SurveyRepository implements ISurveyRepository {
       },
     });
 
-    return created as SurveyResponse;
+    return this.mapToDomain(created);
   }
 
   async findById(id: number): Promise<SurveyResponse | null> {
     const survey = await this.prisma.surveyResponse.findUnique({
       where: { id },
     });
-    return survey as SurveyResponse | null;
+    return survey ? this.mapToDomain(survey) : null;
   }
 
   async findAll(): Promise<SurveyResponse[]> {
     const surveys = await this.prisma.surveyResponse.findMany();
-    return surveys as SurveyResponse[];
+    return surveys.map((s) => this.mapToDomain(s));
   }
 
   async count(): Promise<number> {

@@ -56,8 +56,7 @@ describe('SurveyRepository', () => {
         ratingRadio: 3,
         ratingEatOut: 5,
         ratingTV: 4,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        submittedAt: new Date(),
       };
 
       mockPrisma.surveyResponse.create.mockResolvedValue(mockCreatedResponse);
@@ -111,8 +110,7 @@ describe('SurveyRepository', () => {
         ratingRadio: 4,
         ratingEatOut: 4,
         ratingTV: 3,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        submittedAt: new Date(),
       };
 
       mockPrisma.surveyResponse.create.mockResolvedValue(mockCreatedResponse);
@@ -153,8 +151,7 @@ describe('SurveyRepository', () => {
         ratingRadio: 2,
         ratingEatOut: 4,
         ratingTV: 5,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        submittedAt: new Date(),
       };
 
       mockPrisma.surveyResponse.create.mockResolvedValue(mockCreatedResponse);
@@ -207,8 +204,7 @@ describe('SurveyRepository', () => {
         ratingRadio: 3,
         ratingEatOut: 5,
         ratingTV: 4,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        submittedAt: new Date(),
       };
 
       mockPrisma.surveyResponse.findUnique.mockResolvedValue(mockSurvey);
@@ -266,8 +262,7 @@ describe('SurveyRepository', () => {
           ratingRadio: 3,
           ratingEatOut: 5,
           ratingTV: 4,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          submittedAt: new Date(),
         },
         {
           id: 2,
@@ -281,8 +276,7 @@ describe('SurveyRepository', () => {
           ratingRadio: 4,
           ratingEatOut: 4,
           ratingTV: 3,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          submittedAt: new Date(),
         },
       ];
 
