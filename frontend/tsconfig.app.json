@@ -35,7 +35,8 @@
       "@/validation/*": ["src/validation/*"],
       "@/shared/*": ["src/shared/*"],
       "@/assets/*": ["src/assets/*"],
-      "@/config/*": ["src/config/*"]
+      "@/config/*": ["src/config/*"],
+      "@shared-root/*": ["../shared/*"]
     },
     "noUncheckedSideEffectImports": true
   },

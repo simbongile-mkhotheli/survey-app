@@ -16,6 +16,7 @@ export default defineConfig({
       '@/shared': resolve(__dirname, './src/shared'),
       '@/assets': resolve(__dirname, './src/assets'),
       '@/config': resolve(__dirname, './src/config'),
+      '@shared-root': resolve(__dirname, '../shared'),
       'zod/v4/core': resolve(__dirname, '../node_modules/zod/v4/core/index.js'),
     },
   },
