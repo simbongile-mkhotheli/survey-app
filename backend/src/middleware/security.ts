@@ -2,14 +2,8 @@
 import helmet from 'helmet';
 import hpp from 'hpp';
 import compression from 'compression';
-import {
-  body,
-  validationResult,
-  type ValidationChain,
-} from 'express-validator';
 import type { Request, Response, NextFunction } from 'express';
 import { config } from '@/config/env';
-import { ValidationError } from '@/errors/AppError';
 
 /**
  * Security middleware configuration following OWASP guidelines
@@ -142,120 +136,6 @@ export const requestSizeLimit = (
 
   next();
 };
-
-/**
- * Input validation middleware factory
- * Creates express-validator middleware with custom error formatting
- */
-export const validateInput = (validations: ValidationChain[]) => {
-  return [
-    ...validations,
-    (req: Request, res: Response, next: NextFunction) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        const validationError = new ValidationError('Input validation failed');
-        return res.status(validationError.statusCode).json({
-          error: {
-            message: validationError.message,
-            type: validationError.name,
-            details: errors.array().reduce(
-              (acc, error) => {
-                if ('param' in error && typeof error.param === 'string') {
-                  acc[error.param] = error.msg;
-                }
-                return acc;
-              },
-              {} as Record<string, string>,
-            ),
-          },
-        });
-      }
-      next();
-    },
-  ];
-};
-
-/**
- * Survey input validation rules
- * Comprehensive validation for survey submission endpoint
- */
-export const surveyValidation = [
-  body('firstName')
-    .trim()
-    .isLength({ min: 1, max: 50 })
-    .withMessage('First name must be between 1-50 characters')
-    .matches(/^[a-zA-Z\s'-]+$/)
-    .withMessage('First name contains invalid characters'),
-
-  body('lastName')
-    .trim()
-    .isLength({ min: 1, max: 50 })
-    .withMessage('Last name must be between 1-50 characters')
-    .matches(/^[a-zA-Z\s'-]+$/)
-    .withMessage('Last name contains invalid characters'),
-
-  body('email')
-    .trim()
-    .normalizeEmail()
-    .isEmail()
-    .withMessage('Please provide a valid email address')
-    .isLength({ max: 100 })
-    .withMessage('Email must not exceed 100 characters'),
-
-  body('contactNumber')
-    .trim()
-    // eslint-disable-next-line no-useless-escape -- Phone regex requires escaped parens
-    .matches(/^\+?[\d\s\-\(\)]{10,20}$/)
-    .withMessage('Please provide a valid phone number'),
-
-  body('dateOfBirth')
-    .isISO8601({ strict: true })
-    .withMessage('Date of birth must be a valid date (YYYY-MM-DD)')
-    .custom((value) => {
-      const date = new Date(value);
-      const now = new Date();
-      const age = now.getFullYear() - date.getFullYear();
-      if (age < 13 || age > 120) {
-        throw new Error('Age must be between 13-120 years');
-      }
-      return true;
-    }),
-
-  body('foods')
-    .isArray({ min: 1, max: 10 })
-    .withMessage('Please select 1-10 food preferences')
-    .custom((foods: string[]) => {
-      const allowedFoods = [
-        'Pizza',
-        'Pasta',
-        'Pap and Wors',
-        'Chicken stir fry',
-        'Beef stir fry',
-        'Other',
-      ];
-      const invalid = foods.filter((food) => !allowedFoods.includes(food));
-      if (invalid.length > 0) {
-        throw new Error(`Invalid food options: ${invalid.join(', ')}`);
-      }
-      return true;
-    }),
-
-  body('ratingMovies')
-    .isInt({ min: 1, max: 5 })
-    .withMessage('Movie rating must be between 1-5'),
-
-  body('ratingRadio')
-    .isInt({ min: 1, max: 5 })
-    .withMessage('Radio rating must be between 1-5'),
-
-  body('ratingEatOut')
-    .isInt({ min: 1, max: 5 })
-    .withMessage('Eat out rating must be between 1-5'),
-
-  body('ratingTV')
-    .isInt({ min: 1, max: 5 })
-    .withMessage('TV rating must be between 1-5'),
-];
 
 /**
  * Security headers middleware

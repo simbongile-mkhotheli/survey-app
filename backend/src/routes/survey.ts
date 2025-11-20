@@ -2,10 +2,8 @@
 
 import { Router } from 'express';
 import { SurveySchema } from '@/validation/validation';
-// import express from 'express'; // Not used, Router is sufficient
 import { handleCreateSurvey } from '@/controllers/survey.controller';
-import { validateInput, surveyValidation } from '@/middleware/security';
-import type { Request, Response, NextFunction } from 'express';
+import { validateBody } from '@/middleware/zodValidator';
 
 /**
  * @swagger
@@ -84,19 +82,11 @@ import type { Request, Response, NextFunction } from 'express';
 
 const router = Router();
 
-// Multi-layer validation: express-validator + Zod for comprehensive security
-router.post(
-  '/',
-  validateInput(surveyValidation), // First: sanitize and validate with express-validator
-  (req: Request, res: Response, next: NextFunction) => {
-    try {
-      SurveySchema.parse(req.body); // Second: validate with Zod schema
-      next();
-    } catch (err) {
-      next(err);
-    }
-  },
-  handleCreateSurvey,
-);
+/**
+ * POST /api/survey
+ * Submit a new survey response with validation
+ * Uses Zod schema for single source of truth validation
+ */
+router.post('/', validateBody(SurveySchema), handleCreateSurvey);
 
 export default router;
