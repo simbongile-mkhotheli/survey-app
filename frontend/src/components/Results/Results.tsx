@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useResults } from '@/store/useSurveyStore';
 import { Loading, ErrorMessage } from '@/components/ui';
 import styles from './Results.module.css';
@@ -27,16 +27,20 @@ const ResultRow = ({
   </div>
 );
 export default function Results() {
-  const { data: results, loading, error, fetchResults } = useResults();
-  const hasFetched = useRef(false);
+  const {
+    data: results,
+    loading,
+    error,
+    hasFetched,
+    fetchResults,
+  } = useResults();
 
   useEffect(() => {
-    // Fetch results if not already loaded and not already fetching
-    if (!results && !loading && !error && !hasFetched.current) {
-      hasFetched.current = true;
+    // Fetch results if not already fetched and not in loading state
+    if (!hasFetched && !loading) {
       fetchResults();
     }
-  }, [results, loading, error]); // Remove fetchResults from dependencies
+  }, [hasFetched, loading, fetchResults]);
   // Memoize destructured values to prevent unnecessary re-renders
   const resultValues = useMemo(() => {
     if (!results) return null;

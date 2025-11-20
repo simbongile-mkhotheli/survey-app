@@ -21,6 +21,7 @@ export const useAppStore = create<AppStore>()(
         data: null,
         loading: false,
         error: null,
+        hasFetched: false,
 
         // App Settings State
         darkMode: false,
@@ -32,7 +33,7 @@ export const useAppStore = create<AppStore>()(
           // Prevent multiple concurrent requests
           if (state.loading) return;
 
-          set({ loading: true, error: null });
+          set({ loading: true, error: null, hasFetched: true });
 
           try {
             const results = await fetchResultsAPI();
@@ -53,7 +54,8 @@ export const useAppStore = create<AppStore>()(
 
         setError: (error) => set({ error, loading: false }),
 
-        reset: () => set({ data: null, loading: false, error: null }),
+        reset: () =>
+          set({ data: null, loading: false, error: null, hasFetched: false }),
 
         // App Settings Actions
         toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
@@ -84,6 +86,7 @@ export const useResults = () =>
       data: state.data,
       loading: state.loading,
       error: state.error,
+      hasFetched: state.hasFetched,
       fetchResults: state.fetchResults,
       setResults: state.setResults,
       reset: state.reset,

@@ -15,6 +15,7 @@ export interface BaseAsyncState<T> {
 
 // Survey Results Store
 export interface SurveyResultsStore extends BaseAsyncState<ResultsData> {
+  hasFetched: boolean;
   fetchResults: () => Promise<void>;
   setResults: (data: ResultsData | null) => void;
   setLoading: (loading: boolean) => void;
