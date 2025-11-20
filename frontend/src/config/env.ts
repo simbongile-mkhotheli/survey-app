@@ -40,9 +40,7 @@ const parseEnv = () => {
             | 'test'),
       VITE_PORT: import.meta.env.VITE_PORT,
     });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('❌ Invalid environment configuration:', error);
+  } catch {
     throw new Error('Invalid environment configuration. Check your .env file.');
   }
 };
@@ -73,13 +71,5 @@ export const config = {
   defaultPort: env.VITE_PORT ? parseInt(env.VITE_PORT) : 3000,
 } as const;
 
-// Utility to log environment info (development only, never in test mode)
-if (config.isDevelopment && !config.isTest) {
-  // eslint-disable-next-line no-console
-  console.log('🌐 Environment Configuration:', {
-    nodeEnv: env.VITE_NODE_ENV,
-    apiUrl: config.apiUrl,
-    appName: config.appName,
-    features: config.features,
-  });
-}
+// Environment configuration loaded successfully
+// Logging removed from production code

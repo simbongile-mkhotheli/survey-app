@@ -12,38 +12,8 @@ const apiClient = axios.create({
   },
 });
 
-// Add request interceptor for debugging in development
-if (config.isDevelopment) {
-  apiClient.interceptors.request.use(
-    (config) => {
-      // eslint-disable-next-line no-console
-      console.log('🔄 API Request:', config.method?.toUpperCase(), config.url);
-      return config;
-    },
-    (error) => {
-      // eslint-disable-next-line no-console
-      console.error('❌ API Request Error:', error);
-      return Promise.reject(error);
-    },
-  );
-
-  apiClient.interceptors.response.use(
-    (response) => {
-      // eslint-disable-next-line no-console
-      console.log('✅ API Response:', response.status, response.config.url);
-      return response;
-    },
-    (error) => {
-      // eslint-disable-next-line no-console
-      console.error(
-        '❌ API Response Error:',
-        error.response?.status,
-        error.config?.url,
-      );
-      return Promise.reject(error);
-    },
-  );
-}
+// Interceptors configured but logging removed from production
+// Errors are handled by error boundaries and logged to server via API responses
 
 /*
  * submitSurvey

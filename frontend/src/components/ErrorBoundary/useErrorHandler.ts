@@ -42,7 +42,7 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
 
       // Log to console in development
       if (logToConsole && isDevelopment()) {
-        // eslint-disable-next-line no-console
+        // eslint-disable-next-line no-console -- Development debugging only, gated by isDevelopment()
         console.error('Error handled:', { error, context, fullMessage });
       }
 
@@ -54,7 +54,10 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
       // Show toast notification (implement based on your toast system)
       if (showToast) {
         // Example: toast.error(fullMessage);
-        // TODO: Implement toast notification system
+        // NOTE: Toast notification system integration pending
+        // Issue: https://github.com/your-org/repo/issues/123
+        // To implement: Install toast library (react-toastify recommended)
+        // and wire up toast notifications here
       }
 
       // In production, send to error reporting service
