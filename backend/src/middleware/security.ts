@@ -84,7 +84,7 @@ export const inputSanitizeConfig = (
           .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
           .replace(/javascript:/gi, '') // Remove javascript: protocol
           .replace(/on\w+\s*=/gi, '') // Remove event handlers like onclick=
-          // eslint-disable-next-line no-control-regex
+          // eslint-disable-next-line no-control-regex -- XSS prevention: control character detection
           .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
       ); // Remove control characters
     }
@@ -204,7 +204,7 @@ export const surveyValidation = [
 
   body('contactNumber')
     .trim()
-    // eslint-disable-next-line no-useless-escape
+    // eslint-disable-next-line no-useless-escape -- Phone regex requires escaped parens
     .matches(/^\+?[\d\s\-\(\)]{10,20}$/)
     .withMessage('Please provide a valid phone number'),
 
