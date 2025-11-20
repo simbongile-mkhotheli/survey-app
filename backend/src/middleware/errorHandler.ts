@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { AppError, ValidationError, DatabaseError } from '@/errors/AppError';
+import { logger } from '@/config/logger';
 
 /**
  * Enhanced centralized error-handling middleware following OCP
@@ -54,8 +55,10 @@ export function errorHandler(
   }
 
   // Handle unexpected errors
-  // eslint-disable-next-line no-console
-  console.error('Unexpected error:', err);
+  logger.error('Unexpected error occurred', {
+    error: err instanceof Error ? err.message : 'Unknown error',
+    stack: err instanceof Error ? err.stack : undefined,
+  });
   return res.status(500).json({
     error: {
       message: 'Internal server error',
