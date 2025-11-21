@@ -1,43 +1,62 @@
 // backend/src/test/utils/test-helpers.ts
 import { vi } from 'vitest';
+import { faker } from '@faker-js/faker';
 import type { Request, Response, NextFunction } from 'express';
 import type { SurveyInput } from '@/validation/validation';
 import type { SurveyResponse } from '@/interfaces/service.interface';
 
+/**
+ * Generates a random survey input with realistic fake data.
+ * Use overrides to customize specific fields for test scenarios.
+ */
 export function createMockSurveyInput(
   overrides: Partial<SurveyInput> = {},
 ): SurveyInput {
+  // Generate a random birth date for someone aged 5-120 years
+  const birthDate = faker.date.past({ years: 50 });
+
   return {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    contactNumber: '+1234567890',
-    dateOfBirth: '1990-01-01',
-    foods: ['Pizza', 'Pasta'],
-    ratingMovies: 4,
-    ratingRadio: 3,
-    ratingEatOut: 5,
-    ratingTV: 4,
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    email: faker.internet.email(),
+    contactNumber: faker.phone.number('+1##########'),
+    dateOfBirth: birthDate.toISOString().split('T')[0],
+    foods: [faker.food.adjective(), faker.food.dish()].map((f) =>
+      f.substring(0, 50),
+    ),
+    ratingMovies: faker.number.int({ min: 1, max: 5 }),
+    ratingRadio: faker.number.int({ min: 1, max: 5 }),
+    ratingEatOut: faker.number.int({ min: 1, max: 5 }),
+    ratingTV: faker.number.int({ min: 1, max: 5 }),
     ...overrides,
   };
 }
 
+/**
+ * Generates a random survey response with realistic fake data from database.
+ * Use overrides to customize specific fields for test scenarios.
+ */
 export function createMockSurveyResponse(
   overrides: Partial<SurveyResponse> = {},
 ): SurveyResponse {
+  // Generate a random birth date for someone aged 5-120 years
+  const birthDate = faker.date.past({ years: 50 });
+
   return {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    contactNumber: '+1234567890',
-    dateOfBirth: new Date('1990-01-01'),
-    foods: 'Pizza,Pasta',
-    ratingMovies: 4,
-    ratingRadio: 3,
-    ratingEatOut: 5,
-    ratingTV: 4,
-    submittedAt: new Date(),
+    id: faker.number.int({ min: 1, max: 1000000 }),
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    email: faker.internet.email(),
+    contactNumber: faker.phone.number('+1##########'),
+    dateOfBirth: birthDate,
+    foods: [faker.food.adjective(), faker.food.dish()]
+      .map((f) => f.substring(0, 50))
+      .join(','),
+    ratingMovies: faker.number.int({ min: 1, max: 5 }),
+    ratingRadio: faker.number.int({ min: 1, max: 5 }),
+    ratingEatOut: faker.number.int({ min: 1, max: 5 }),
+    ratingTV: faker.number.int({ min: 1, max: 5 }),
+    submittedAt: faker.date.past(),
     ...overrides,
   };
 }
@@ -51,12 +70,25 @@ export function createMockRequest(
     body,
     params,
     query,
-    headers: {} as Record<string, string>,
-    get: vi.fn(),
+    headers: {
+      'user-agent': faker.internet.userAgent(),
+      'x-forwarded-for': faker.internet.ipv4(),
+    } as Record<string, string>,
+    get: vi.fn((key: string) => {
+      const headers: Record<string, string> = {
+        'user-agent': faker.internet.userAgent(),
+        'x-forwarded-for': faker.internet.ipv4(),
+      };
+      return headers[key.toLowerCase()];
+    }),
     method: 'GET',
     path: '/',
-    connection: {} as { remoteAddress?: string },
-    socket: {} as { remoteAddress?: string },
+    connection: { remoteAddress: faker.internet.ipv4() } as {
+      remoteAddress?: string;
+    },
+    socket: { remoteAddress: faker.internet.ipv4() } as {
+      remoteAddress?: string;
+    },
   } as unknown as Request;
 }
 
