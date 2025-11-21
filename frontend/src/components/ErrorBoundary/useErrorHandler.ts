@@ -5,7 +5,7 @@
  */
 
 import { useCallback } from 'react';
-import { useAppStore } from '../../store/useSurveyStore';
+import { useAppStore } from '@/store/useSurveyStore';
 
 // Utility to safely check environment (compatible with all environments)
 const isDevelopment = () => {

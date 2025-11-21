@@ -7,8 +7,8 @@
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import { devtools, persist } from 'zustand/middleware';
-import { fetchResults as fetchResultsAPI } from '../services/api';
-import type { AppStore } from '../types/store';
+import { fetchResults as fetchResultsAPI } from '@/services/api';
+import type { AppStore } from '@/types/store';
 
 // Settings persistence configuration
 const SETTINGS_STORAGE_KEY = 'survey-app-settings';

@@ -4,7 +4,7 @@
  * Central type definitions for Zustand stores with enterprise patterns
  */
 
-import type { ResultsData } from '../services/api';
+import type { ResultsData } from '@/services/api';
 
 // Base interfaces for consistent async state patterns
 export interface BaseAsyncState<T> {

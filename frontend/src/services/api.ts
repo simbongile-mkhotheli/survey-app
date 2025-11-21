@@ -1,6 +1,6 @@
 import axios from 'axios';
-import type { SurveyFormValues } from '../validation';
-import { formToPayload } from '../shared/validation';
+import type { SurveyFormValues } from '@/validation';
+import { formToPayload } from '@shared-root/validation';
 import { config } from '@/config/env';
 
 // Configure axios instance with environment-based settings

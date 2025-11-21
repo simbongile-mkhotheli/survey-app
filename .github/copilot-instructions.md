@@ -354,7 +354,8 @@ import { useSurveyStore } from '../../../store/useSurveyStore';
 - ✅ **ALWAYS**: Use `@/*` for top-level src imports
 - ✅ **ALWAYS**: Use `@shared/*` or `@shared-root/*` for shared package imports
 - ✅ **ALWAYS**: Update imports when moving files to maintain alias paths
-- ❌ **NEVER**: Use relative imports like `../../module` in new code
+- ✅ **ACCEPTABLE EXCEPTION**: Test files under `src/test/` may use relative imports (`../../`) to reference parent directories, since they're testing internal paths
+- ❌ **NEVER**: Use relative imports like `../../module` in actual source code (non-test files)
 - ❌ **NEVER**: Use `require()` instead of ES6 imports
 - ❌ **NEVER**: Mix relative and alias imports in same file
 
