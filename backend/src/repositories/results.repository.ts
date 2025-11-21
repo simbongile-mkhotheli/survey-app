@@ -4,7 +4,6 @@ import type { IResultsRepository } from '@/interfaces/repository.interface';
 import { cacheManager, CACHE_KEYS } from '@/config/cache';
 import { QueryPerformanceTracker } from '@/middleware/performance';
 
-// Note: Using (this.prisma as any) is a temporary workaround for Prisma client type issues
 export class ResultsRepository implements IResultsRepository {
   private queryTracker = QueryPerformanceTracker.getInstance();
 
@@ -119,7 +118,7 @@ export class ResultsRepository implements IResultsRepository {
 
   async getTotalResponses(requestId?: string): Promise<number> {
     // Check cache first
-    const cacheKey = 'survey:total-count:v1';
+    const cacheKey = CACHE_KEYS.totalCount;
     const cached = await cacheManager.get<number>(cacheKey);
 
     if (cached !== null) {

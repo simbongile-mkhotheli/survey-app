@@ -24,6 +24,7 @@ export interface CacheKey {
   foodDistribution: string;
   ageStatistics: string;
   ratingAverages: string;
+  totalCount: string;
 }
 
 // Cache configuration
@@ -42,6 +43,7 @@ export const CACHE_KEYS: CacheKey = {
   foodDistribution: 'survey:food-dist:v1',
   ageStatistics: 'survey:age-stats:v1',
   ratingAverages: 'survey:rating-avg:v1',
+  totalCount: 'survey:total-count:v1',
 };
 
 /**

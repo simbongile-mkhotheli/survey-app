@@ -3,25 +3,7 @@ import type { IResultsRepository } from '@/interfaces/repository.interface';
 import type { SurveyResultsDTO } from '@/types/resultsDTO';
 import { businessMetrics } from '@/middleware/metrics';
 import { logWithContext } from '@/config/logger';
-
-/**
- * Find the count of a specific food in the distribution array.
- * Handles case-insensitive matching and variations like "Pap and Wors"
- */
-function findFoodCount(
-  foodDistribution: Array<{ food: string; count: number }>,
-  searchTerms: string[],
-): number {
-  const found = foodDistribution.find((f) => {
-    const normalized = f.food.toLowerCase().replace(/\s+/g, '');
-    return searchTerms.some(
-      (term) =>
-        f.food.toLowerCase() === term.toLowerCase() ||
-        normalized === term.toLowerCase().replace(/\s+/g, ''),
-    );
-  });
-  return found?.count || 0;
-}
+import { findFoodCount } from '@/utils/foodDistribution';
 
 export class ResultsService implements IResultsService {
   constructor(private resultsRepository: IResultsRepository) {}

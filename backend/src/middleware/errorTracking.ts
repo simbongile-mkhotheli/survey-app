@@ -369,12 +369,6 @@ function alertCriticalError(errorReport: ErrorReport): void {
       alertLevel: 'CRITICAL',
     },
   });
-
-  // TODO: Integrate with external alerting services
-  // - PagerDuty
-  // - Slack notifications
-  // - Email alerts
-  // - SMS alerts for critical errors
 }
 
 /**

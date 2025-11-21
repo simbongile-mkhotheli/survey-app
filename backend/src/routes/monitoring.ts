@@ -46,12 +46,20 @@ router.get('/status', async (req, res) => {
       }),
 
       // Get cache health
-      cacheManager.healthCheck().catch(() => ({
-        redis: false,
-        memory: true,
-        overall: false,
-        error: 'Cache health check failed',
-      })),
+      cacheManager.healthCheck().catch((err) => {
+        logWithContext.warn('Cache health check failed', {
+          operation: 'cache_health_check',
+          metadata: {
+            error: err instanceof Error ? err.message : String(err),
+          },
+        });
+        return {
+          redis: false,
+          memory: true,
+          overall: false,
+          error: 'Cache health check failed',
+        };
+      }),
 
       // Get basic metrics
       Promise.resolve({
