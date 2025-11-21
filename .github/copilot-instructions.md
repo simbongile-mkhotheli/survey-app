@@ -354,10 +354,55 @@ import { useSurveyStore } from '../../../store/useSurveyStore';
 - ✅ **ALWAYS**: Use `@/*` for top-level src imports
 - ✅ **ALWAYS**: Use `@shared/*` or `@shared-root/*` for shared package imports
 - ✅ **ALWAYS**: Update imports when moving files to maintain alias paths
-- ✅ **ACCEPTABLE EXCEPTION**: Test files under `src/test/` may use relative imports (`../../`) to reference parent directories, since they're testing internal paths
+- ✅ **ALWAYS**: Maintain consistency within file type (all tests use relative OR all use aliases)
+- ✅ **ACCEPTABLE EXCEPTION**: Test files under `src/test/` may use **relative imports** (`../../`, `../../../`) for consistency - ALL test files in a directory must use same pattern
+- ✅ **LOCAL SAME-DIRECTORY**: Use `./` for CSS modules and local components in same folder (e.g., `./Button.module.css`, `./RatingRow`)
 - ❌ **NEVER**: Use relative imports like `../../module` in actual source code (non-test files)
 - ❌ **NEVER**: Use `require()` instead of ES6 imports
 - ❌ **NEVER**: Mix relative and alias imports in same file
+- ❌ **NEVER**: Mix patterns across test files (some with aliases, some with relative)
+
+**Consistency Examples - ✅ CORRECT**:
+
+All test files in same directory use relative imports consistently:
+
+```typescript
+// src/test/unit/components/Results.test.tsx
+import Results from '../../../components/Results/Results'; // relative
+
+// src/test/unit/components/SurveyForm.test.tsx
+import SurveyForm from '../../../components/Survey/SurveyForm'; // relative
+```
+
+All test files in same directory use aliases consistently:
+
+```typescript
+// src/test/unit/store.test.ts
+import { useAppStore } from '@/store/useSurveyStore'; // alias
+
+// src/test/unit/validation.test.ts (if needed)
+import { SurveySchema } from '@/validation'; // alias
+```
+
+**Consistency Examples - ❌ WRONG**:
+
+Mixed patterns in same test directory:
+
+```typescript
+// src/test/unit/components/Results.test.tsx
+import Results from '../../../components/Results/Results'; // relative
+
+// src/test/unit/components/SurveyForm.test.tsx
+import SurveyForm from '@/components/Survey/SurveyForm'; // alias - INCONSISTENT!
+```
+
+Mixed patterns in same file:
+
+```typescript
+// ❌ WRONG - Don't do this in one file
+import { useAppStore } from '@/store/useSurveyStore'; // alias
+import Results from '../../../components/Results/Results'; // relative
+```
 
 ## Key Patterns & Conventions
 
