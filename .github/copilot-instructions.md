@@ -67,11 +67,153 @@ This codebase is an enterprise-grade full-stack survey application demonstrating
 
 ### Testing Requirements
 
-- **All services must have unit tests** with mocked repositories
-- **All repositories must have integration tests** against test database (SQLite)
-- **All error paths must be tested** (ValidationError, DatabaseError, etc.)
-- **Coverage threshold**: ≥95% for backend code
-- **Mock pattern**: Use `vi.mock()` to override Container, inject mock services
+**MANDATORY**: All code additions must include tests. No untested code merged.
+
+#### **Test Structure (By Layer)**
+
+**Services** (`src/test/unit/services/*.test.ts`):
+
+- ✅ Mock all repository dependencies via interface
+- ✅ Test business logic in isolation
+- ✅ Cover success and error paths
+- ✅ Verify cache invalidation calls
+- ✅ Test parameter validation
+- Example: `ResultsService.getResults()` → mock repository → assert aggregation logic
+
+**Repositories** (`src/test/unit/repositories/*.test.ts`):
+
+- ✅ Integration tests against SQLite test database
+- ✅ Test `mapToDomain()` conversions
+- ✅ Verify cache key usage
+- ✅ Test query parameters and filtering
+- Example: `SurveyRepository.findById()` → query DB → verify mapping
+
+**Controllers** (`src/test/unit/controllers/*.test.ts`):
+
+- ✅ Mock services via interface
+- ✅ Test HTTP request/response handling
+- ✅ Verify error delegation to middleware (no catch-block responses)
+- ✅ Test all status codes (200, 400, 404, 500)
+- Example: POST /api/survey → validate input → call service → return 201
+
+**Middleware** (`src/test/unit/middleware/*.test.ts`):
+
+- ✅ Test error handling logic
+- ✅ Verify logging behavior
+- ✅ Test request/response transformations
+- ✅ Test security headers and filtering
+- Example: ErrorHandler → AppError → 400/500 response with proper format
+
+**Utilities** (`src/test/unit/utils/*.test.ts`):
+
+- ✅ Pure function testing
+- ✅ Edge cases and boundary conditions
+- ✅ Type safety verification
+- Example: `findFoodCount()` → case variations → whitespace normalization
+
+**Configuration** (`src/test/unit/config/*.test.ts`):
+
+- ✅ Environment variable validation
+- ✅ Default values verification
+- ✅ Configuration object structure
+- Example: `env.test.ts` → required vars → JWT_SECRET length validation
+
+#### **Test Patterns (Required)**
+
+**Mocking Repositories** (Service tests):
+
+```typescript
+const mockRepository = {
+  create: vi.fn(),
+  findById: vi.fn(),
+  // ... other methods
+} as Partial<ISurveyRepository>;
+
+const service = new SurveyService(mockRepository);
+vi.mocked(mockRepository.create).mockResolvedValue(data);
+```
+
+**Arrange-Act-Assert Pattern** (All tests):
+
+```typescript
+it('should create a survey successfully', async () => {
+  // ARRANGE - Setup test data and mocks
+  const input = createMockSurveyInput();
+  vi.mocked(mockRepository.create).mockResolvedValue(mockResponse);
+
+  // ACT - Execute the code under test
+  const result = await service.createSurvey(input);
+
+  // ASSERT - Verify the results
+  expect(mockRepository.create).toHaveBeenCalledWith(input);
+  expect(result).toEqual(mockResponse);
+});
+```
+
+**Testing Error Paths** (All layers):
+
+```typescript
+it('should handle database errors gracefully', async () => {
+  // Error simulation
+  vi.mocked(mockRepository.create).mockRejectedValue(
+    new DatabaseError('Connection failed', 'create'),
+  );
+
+  // Error assertion
+  await expect(service.createSurvey(input)).rejects.toThrow(DatabaseError);
+  expect(logWithContext.error).toHaveBeenCalled();
+});
+```
+
+#### **Coverage Requirements**
+
+- **Backend**: ≥95% required on CI (`npm run test:coverage`)
+- **Statement Coverage**: Every code path executed
+- **Branch Coverage**: All if/else paths tested
+- **Function Coverage**: All functions called at least once
+- **Line Coverage**: No dead code
+- **Failure**: Coverage below 95% = PR rejected
+
+#### **Test Execution**
+
+```bash
+# Run all tests once
+npm run test
+
+# Watch mode (development)
+npm run test:watch
+
+# Coverage report
+npm run test:coverage
+
+# UI dashboard
+npm run test:ui
+```
+
+#### **Test File Naming**
+
+- Unit tests: `src/test/unit/{layer}/{feature}.test.ts`
+- Security tests: `src/test/security-*.test.ts`
+- Integration tests: `src/test/integration/*.test.ts` (future)
+
+#### **Mock Pattern Rules**
+
+- ✅ **Always use interfaces** - `ISurveyRepository`, `IResultsService`
+- ✅ **Never instantiate real dependencies** - Mock them
+- ✅ **Use `vi.fn()` for spy verification** - Assert called with correct params
+- ✅ **Reset mocks between tests** - Prevent test pollution
+- ✅ **Use test helpers** - `createMockSurveyInput()` from `test/utils/test-helpers.ts`
+- ❌ **NEVER**: Spy on real database calls in unit tests
+- ❌ **NEVER**: Test multiple services in one test
+- ❌ **NEVER**: Leave console.log() in test output
+
+#### **When Tests Fail**
+
+1. **Type Error**: Run `npm run typecheck` - fix TypeScript issues
+2. **Assertion Failed**: Read error message - verify expected vs actual
+3. **Coverage Drop**: Add tests for uncovered lines (shown in coverage report)
+4. **CI Failure**: Run locally first: `npm run test && npm run lint && npm run typecheck`
+5. **Flaky Tests**: Increase timeout, avoid time-dependent logic, use `vi.useFakeTimers()`
 
 ### Documentation (Non-Negotiable)
 
