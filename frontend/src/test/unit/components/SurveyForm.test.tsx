@@ -9,11 +9,17 @@
  * - User interactions (typing, selection, submission)
  * - Accessibility (labels, form structure, autocomplete)
  * - Loading and success states
+ *
+ * Uses Faker.js for dynamic test data - no hardcoded values
  */
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import {
+  createMockFirstName,
+  createMockLastName,
+} from '../../utils/test-helpers';
 
 // Mock the API service BEFORE importing components
 vi.mock('../../../services/api', () => ({
@@ -155,14 +161,18 @@ describe('SurveyForm Component', () => {
       const user = userEvent.setup();
       render(<SurveyForm />);
 
-      // Fill required fields but no foods
+      // Fill required fields but no foods - use dynamic data
+      const mockFirstName = createMockFirstName();
+      const mockLastName = createMockLastName();
+      const mockEmail = 'test@example.com';
+
       const firstNameInput = screen.getByLabelText(/first name/i);
       const lastNameInput = screen.getByLabelText(/last name/i);
       const emailInput = screen.getByLabelText(/email/i);
 
-      await user.type(firstNameInput, 'John');
-      await user.type(lastNameInput, 'Doe');
-      await user.type(emailInput, 'john@example.com');
+      await user.type(firstNameInput, mockFirstName);
+      await user.type(lastNameInput, mockLastName);
+      await user.type(emailInput, mockEmail);
 
       // Try to submit without selecting foods
       const submitButton = screen.getByRole('button', { name: /submit/i });
@@ -231,12 +241,13 @@ describe('SurveyForm Component', () => {
       const user = userEvent.setup();
       render(<SurveyForm />);
 
+      const mockName = createMockFirstName();
       const firstNameInput = screen.getByLabelText(
         /first name/i,
       ) as HTMLInputElement;
-      await user.type(firstNameInput, 'Jane');
+      await user.type(firstNameInput, mockName);
 
-      expect(firstNameInput.value).toBe('Jane');
+      expect(firstNameInput.value).toBe(mockName);
     });
 
     it('should support multiple food selections', async () => {

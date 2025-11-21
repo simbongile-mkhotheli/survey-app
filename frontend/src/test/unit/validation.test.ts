@@ -2,25 +2,21 @@
  * Validation Schema Tests
  * =======================
  * Tests for Zod validation schemas used throughout the application
+ * Uses Faker.js for dynamic test data - no hardcoded values
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { SurveySchema } from '../../validation';
 import type { SurveyFormValues } from '../../validation';
+import { createMockSurveyFormData } from '../utils/test-helpers';
 
 describe('Validation Schemas', () => {
   describe('SurveyFormSchema', () => {
-    const validFormData: SurveyFormValues = {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@example.com',
-      contactNumber: '+1234567890',
-      dateOfBirth: '1990-01-01',
-      foods: ['Pizza', 'Pasta'],
-      ratingMovies: '4',
-      ratingRadio: '3',
-      ratingEatOut: '5',
-      ratingTV: '2',
-    };
+    let validFormData: SurveyFormValues;
+
+    beforeEach(() => {
+      // Generate fresh random data for each test
+      validFormData = createMockSurveyFormData();
+    });
 
     describe('Complete Form Validation', () => {
       it('should accept valid complete form', () => {
