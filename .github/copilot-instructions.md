@@ -313,6 +313,51 @@ describe('SurveyForm', () => {
 - **TypeScript**: `npm run typecheck` must pass - no type errors allowed
 - **Naming**: camelCase for variables/functions, PascalCase for classes/interfaces, UPPER_CASE for constants
 
+### Import Path Aliases (Non-Negotiable)
+
+**ALWAYS use path aliases** - Never use relative imports like `../../` (unless absolutely necessary for shared packages)
+
+**Backend Aliases** (`@/*`, `@/controllers/*`, `@/services/*`, etc.):
+
+```typescript
+// ✅ CORRECT - Use path aliases
+import { SurveyService } from '@/services/survey.service';
+import { SurveyRepository } from '@/repositories/survey.repository';
+import { ValidationError } from '@/errors/AppError';
+import { logWithContext } from '@/config/logger';
+import type { ISurveyRepository } from '@/interfaces/repository.interface';
+import { SurveyPayloadSchema } from '@shared/validation';
+
+// ❌ WRONG - Never use relative imports
+import { SurveyService } from '../../../services/survey.service';
+import { ValidationError } from '../../../errors/AppError';
+```
+
+**Frontend Aliases** (`@/*`, `@/components/*`, `@/services/*`, etc.):
+
+```typescript
+// ✅ CORRECT - Use path aliases
+import { SurveyForm } from '@/components/Survey/SurveyForm';
+import { useSurveyStore } from '@/store/useSurveyStore';
+import { createSurvey } from '@/services/api';
+import type { SurveyFormValues } from '@/validation';
+import { SurveySchema } from '@shared-root/validation';
+
+// ❌ WRONG - Never use relative imports
+import { SurveyForm } from '../../../components/Survey/SurveyForm';
+import { useSurveyStore } from '../../../store/useSurveyStore';
+```
+
+**Enforcement**:
+
+- ✅ **ALWAYS**: Use configured path aliases from `tsconfig.json`
+- ✅ **ALWAYS**: Use `@/*` for top-level src imports
+- ✅ **ALWAYS**: Use `@shared/*` or `@shared-root/*` for shared package imports
+- ✅ **ALWAYS**: Update imports when moving files to maintain alias paths
+- ❌ **NEVER**: Use relative imports like `../../module` in new code
+- ❌ **NEVER**: Use `require()` instead of ES6 imports
+- ❌ **NEVER**: Mix relative and alias imports in same file
+
 ## Key Patterns & Conventions
 
 ### Validation Layer
