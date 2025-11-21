@@ -207,6 +207,90 @@ npm run test:ui
 - ❌ **NEVER**: Test multiple services in one test
 - ❌ **NEVER**: Leave console.log() in test output
 
+#### **Dynamic Test Data Rules (Non-Negotiable)**
+
+**ALL test data must be dynamically generated using Faker.js - NO hardcoded values allowed**
+
+**Backend Test Data** (`backend/src/test/utils/test-helpers.ts`):
+
+- Use `@faker-js/faker` for all test data generation
+- `createMockSurveyInput()` - generates complete survey payloads with valid field values
+- `createMockEmail()`, `createMockPhone()`, `createMockDateOfBirth()`, `createMockRating()`, etc. - field-specific generators
+- All generated data must pass validation schemas (SurveyPayloadSchema for backend)
+- Override mechanism: `createMockSurveyInput({ email: 'custom@test.com' })` for specific test scenarios
+- Never use hardcoded test data like `{ firstName: 'John', email: 'john@example.com' }`
+
+**Frontend Test Data** (`frontend/src/test/utils/test-helpers.ts`):
+
+- Use `@faker-js/faker` for all form and validation test data
+- `createMockSurveyFormData()` - generates complete form values with valid strings for ratings
+- Individual generators: `createMockFirstName()`, `createMockEmail()`, `createMockPhone()`, `createMockDateOfBirth()`, `createMockFoodSelection()`, `createMockRating()`
+- All generated data must pass SurveyFormSchema validation (Zod schema with string ratings)
+- Use `beforeEach()` hooks to generate fresh data for each test: `validFormData = createMockSurveyFormData()`
+- Override support for specific test assertions: `createMockSurveyFormData({ foods: [] })` to test empty food selection
+
+**Data Constraints**:
+
+- **Phone numbers**: Must match regex `/^\+?\d{10,15}$/` (11+ digits with optional + prefix)
+- **Dates**: Generate within valid age range (5-120 years); use 25-40 year age range for safety
+- **Emails**: Use `faker.internet.email()`, trim to ≤255 chars, lowercase
+- **Ratings**: String values '1'-'5' for frontend, number values 1-5 for backend
+- **Names**: Substring to ≤100 chars
+- **Foods**: Array of 1-10 strings, ≤50 chars each
+
+**Enforcement**:
+
+- ❌ **NEVER**: Use hardcoded test values like `'John'`, `'john@example.com'`, `'+1234567890'`
+- ❌ **NEVER**: Use static constants for test data across multiple tests
+- ❌ **NEVER**: Skip calling test helpers and manually create mock objects
+- ✅ **ALWAYS**: Use test helpers from `test/utils/test-helpers.ts`
+- ✅ **ALWAYS**: Let Faker.js generate unique data for each test run
+- ✅ **ALWAYS**: Ensure generated data passes the validation schema being tested
+
+**Example - Backend (Correct)**:
+
+```typescript
+import { createMockSurveyInput } from '../../test/utils/test-helpers';
+
+it('should create a survey successfully', async () => {
+  const input = createMockSurveyInput(); // Dynamic data
+  vi.mocked(mockRepository.create).mockResolvedValue(mockSurvey);
+  const result = await service.createSurvey(input);
+  expect(result).toBeDefined();
+});
+
+it('should handle invalid phone numbers', async () => {
+  // Override only the field being tested
+  const input = createMockSurveyInput({ contactNumber: 'invalid' });
+  await expect(service.createSurvey(input)).rejects.toThrow(ValidationError);
+});
+```
+
+**Example - Frontend (Correct)**:
+
+```typescript
+import { createMockSurveyFormData, createMockFirstName } from '../../test/utils/test-helpers';
+
+describe('SurveyForm', () => {
+  let validFormData: SurveyFormValues;
+
+  beforeEach(() => {
+    validFormData = createMockSurveyFormData();  // Fresh data each test
+  });
+
+  it('should render form with valid data', () => {
+    render(<SurveyForm initialData={validFormData} />);
+    expect(screen.getByDisplayValue(validFormData.firstName)).toBeInTheDocument();
+  });
+
+  it('should require at least one food selection', async () => {
+    const emptyFoods = createMockSurveyFormData({ foods: [] });
+    render(<SurveyForm initialData={emptyFoods} />);
+    // ... assertions
+  });
+});
+```
+
 #### **When Tests Fail**
 
 1. **Type Error**: Run `npm run typecheck` - fix TypeScript issues
