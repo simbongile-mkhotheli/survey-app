@@ -4,10 +4,10 @@
  * Tests for Zustand store state management
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { useAppStore } from '../../store/useSurveyStore';
+import { useAppStore } from '@/store/useSurveyStore';
 
 // Mock the API module
-vi.mock('../../services/api', () => ({
+vi.mock('@/services/api', () => ({
   fetchResults: vi.fn(),
 }));
 

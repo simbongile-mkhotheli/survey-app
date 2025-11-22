@@ -11,6 +11,7 @@ export default defineConfig({
       '@/store': resolve(__dirname, './src/store'),
       '@/types': resolve(__dirname, './src/types'),
       '@/validation': resolve(__dirname, './src/validation'),
+      '@/test': resolve(__dirname, './src/test'),
       '@/shared': resolve(__dirname, './src/shared'),
       '@/assets': resolve(__dirname, './src/assets'),
       '@/config': resolve(__dirname, './src/config'),

@@ -369,10 +369,18 @@ All test files in same directory use relative imports consistently:
 ```typescript
 // src/test/unit/components/Results.test.tsx
 import Results from '../../../components/Results/Results'; // relative
+vi.mock('@/store/useSurveyStore', () => ({...})); // vi.mock uses @/ aliases
 
 // src/test/unit/components/SurveyForm.test.tsx
 import SurveyForm from '../../../components/Survey/SurveyForm'; // relative
+vi.mock('@/services/api', () => ({...})); // vi.mock uses @/ aliases
 ```
+
+**Important Note on vi.mock()**:
+
+- ✅ Regular imports in tests: Use relative (`../../`)
+- ✅ `vi.mock()` module paths: Use `@/` path aliases (required for vitest hoisting)
+- This is the one exception where path aliases appear in test files
 
 All test files in same directory use aliases consistently:
 

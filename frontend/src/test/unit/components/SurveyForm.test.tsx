@@ -19,22 +19,22 @@ import '@testing-library/jest-dom/vitest';
 import {
   createMockFirstName,
   createMockLastName,
-} from '../../utils/test-helpers';
+} from '@/test/utils/test-helpers';
 
 // Mock the API service BEFORE importing components
-vi.mock('../../../services/api', () => ({
+vi.mock('@/services/api', () => ({
   submitSurvey: vi.fn(),
 }));
 
 // Mock the error handler hook
-vi.mock('../../../components/ErrorBoundary', () => ({
+vi.mock('@/components/ErrorBoundary', () => ({
   useErrorHandler: () => ({
     handleError: vi.fn(),
   }),
 }));
 
-import SurveyForm from '../../../components/Survey/SurveyForm';
-import { submitSurvey } from '../../../services/api';
+import SurveyForm from '@/components/Survey/SurveyForm';
+import { submitSurvey } from '@/services/api';
 
 vi.mocked(submitSurvey);
 

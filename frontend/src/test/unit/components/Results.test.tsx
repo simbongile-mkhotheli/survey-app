@@ -6,7 +6,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Results from '../../../components/Results/Results';
+import Results from '@/components/Results/Results';
 
 // Mock the store
 const mockUseResults = vi.fn();

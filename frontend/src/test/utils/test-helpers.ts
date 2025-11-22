@@ -5,7 +5,7 @@
  * Ensures tests are not hardcoded and remain maintainable
  */
 import { faker } from '@faker-js/faker';
-import type { SurveyFormValues } from '../../validation';
+import type { SurveyFormValues } from '@/validation';
 
 /**
  * Generate random valid survey form data

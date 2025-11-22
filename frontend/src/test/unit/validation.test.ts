@@ -5,9 +5,9 @@
  * Uses Faker.js for dynamic test data - no hardcoded values
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SurveySchema } from '../../validation';
-import type { SurveyFormValues } from '../../validation';
-import { createMockSurveyFormData } from '../utils/test-helpers';
+import { SurveySchema } from '@/validation';
+import type { SurveyFormValues } from '@/validation';
+import { createMockSurveyFormData } from '@/test/utils/test-helpers';
 
 describe('Validation Schemas', () => {
   describe('SurveyFormSchema', () => {

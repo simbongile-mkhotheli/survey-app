@@ -5,11 +5,11 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import type { SurveyFormValues } from '../../../validation';
+import type { SurveyFormValues } from '@/validation';
 
 // Mock the entire api module to test integration points
-vi.mock('../../../services/api', async () => {
-  const actual = await vi.importActual('../../../services/api');
+vi.mock('@/services/api', async () => {
+  const actual = await vi.importActual('@/services/api');
   return {
     ...actual,
     submitSurvey: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock('../../../services/api', async () => {
   };
 });
 
-import { submitSurvey, fetchResults } from '../../../services/api';
+import { submitSurvey, fetchResults } from '@/services/api';
 
 describe('API Service', () => {
   describe('submitSurvey', () => {

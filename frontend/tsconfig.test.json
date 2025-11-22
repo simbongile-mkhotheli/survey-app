@@ -3,7 +3,30 @@
   "compilerOptions": {
     "types": ["vitest/globals"],
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/test/*": ["src/test/*"],
+      "@/components": ["src/components"],
+      "@/components/*": ["src/components/*"],
+      "@/services": ["src/services"],
+      "@/services/*": ["src/services/*"],
+      "@/store": ["src/store"],
+      "@/store/*": ["src/store/*"],
+      "@/types": ["src/types"],
+      "@/types/*": ["src/types/*"],
+      "@/validation": ["src/validation.ts"],
+      "@/validation/*": ["src/validation/*"],
+      "@/shared": ["src/shared"],
+      "@/shared/*": ["src/shared/*"],
+      "@/assets": ["src/assets"],
+      "@/assets/*": ["src/assets/*"],
+      "@/config": ["src/config"],
+      "@/config/*": ["src/config/*"],
+      "@shared-root": ["../shared"],
+      "@shared-root/*": ["../shared/*"]
+    }
   },
   "include": ["src/**/*.{test,spec}.{ts,tsx}", "src/test/**/*"],
   "exclude": ["node_modules", "dist"]
