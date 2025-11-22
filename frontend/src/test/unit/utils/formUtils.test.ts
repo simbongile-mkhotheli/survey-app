@@ -48,9 +48,14 @@ describe('formUtils', () => {
     });
 
     it('preserves non-strings', () => {
-      const obj = { name: '  John  ', age: 25, active: true };
+      const age = faker.number.int({ min: 18, max: 70 });
+      const obj = {
+        name: `  ${faker.person.firstName()}  `,
+        age,
+        active: true,
+      };
       const result = trimObjectValues(obj);
-      expect(result.age).toBe(25);
+      expect(result.age).toBe(age);
       expect(result.active).toBe(true);
     });
   });

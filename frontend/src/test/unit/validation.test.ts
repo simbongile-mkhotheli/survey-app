@@ -7,7 +7,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SurveySchema } from '@/validation';
 import type { SurveyFormValues } from '@/validation';
-import { createMockSurveyFormData } from '@/test/utils/test-helpers';
+import {
+  createMockSurveyFormData,
+  createValidEmails,
+  createInvalidEmails,
+  createValidPhoneNumbers,
+  createInvalidPhoneNumbers,
+} from '@/test/utils/test-helpers';
 
 describe('Validation Schemas', () => {
   describe('SurveyFormSchema', () => {
@@ -49,41 +55,44 @@ describe('Validation Schemas', () => {
 
     describe('Field Specific Validation', () => {
       it('should accept valid email addresses', () => {
-        const testEmails = [
-          'user@example.com',
-          'test.user@example.co.uk',
-          'user+tag@example.com',
-        ];
+        const testEmails = createValidEmails();
 
-        testEmails.forEach((email) => {
+        testEmails.forEach((email: string) => {
           const result = SurveySchema.safeParse({ ...validFormData, email });
           expect(result.success).toBe(true);
         });
       });
 
       it('should reject invalid email addresses', () => {
-        const invalidEmails = [
-          'invalid',
-          'user@',
-          '@example.com',
-          'user name@example.com',
-        ];
+        const invalidEmails = createInvalidEmails();
 
-        invalidEmails.forEach((email) => {
+        invalidEmails.forEach((email: string) => {
           const result = SurveySchema.safeParse({ ...validFormData, email });
           expect(result.success).toBe(false);
         });
       });
 
       it('should accept valid phone numbers', () => {
-        const validPhones = ['+1234567890', '+27101234567', '0101234567'];
+        const validPhones = createValidPhoneNumbers();
 
-        validPhones.forEach((phone) => {
+        validPhones.forEach((phone: string) => {
           const result = SurveySchema.safeParse({
             ...validFormData,
             contactNumber: phone,
           });
           expect(result.success).toBe(true);
+        });
+      });
+
+      it('should reject invalid phone numbers', () => {
+        const invalidPhones = createInvalidPhoneNumbers();
+
+        invalidPhones.forEach((phone: string) => {
+          const result = SurveySchema.safeParse({
+            ...validFormData,
+            contactNumber: phone,
+          });
+          expect(result.success).toBe(false);
         });
       });
 

@@ -244,3 +244,41 @@ export function createRandomEmptyObject(): Record<string, unknown> {
     age: undefined,
   };
 }
+
+// ==================== VALIDATION TEST DATA GENERATORS ====================
+
+/**
+ * Generate valid email addresses for validation testing
+ */
+export function createValidEmails(): string[] {
+  return [
+    faker.internet.email(),
+    faker.internet.email().replace('@', '.') + '@example.com',
+    faker.internet.email().replace(/(.+)@/, '$1+tag@'),
+  ];
+}
+
+/**
+ * Generate invalid email addresses for validation testing
+ */
+export function createInvalidEmails(): string[] {
+  return ['invalid', 'user@', '@example.com', 'user name@example.com'];
+}
+
+/**
+ * Generate valid phone numbers for validation testing
+ */
+export function createValidPhoneNumbers(): string[] {
+  return [
+    `+${faker.string.numeric({ length: 11 })}`,
+    `+${faker.string.numeric({ length: 12 })}`,
+    faker.string.numeric({ length: 10 }),
+  ];
+}
+
+/**
+ * Generate invalid phone numbers for validation testing
+ */
+export function createInvalidPhoneNumbers(): string[] {
+  return ['123', '12345', 'abc12345', ''];
+}
