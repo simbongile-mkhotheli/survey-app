@@ -51,13 +51,11 @@ backend/TEST_DATABASE_SETUP.md
 # Git commit messages
 .git-commit-message.txt
 
-# Exclude all .md files outside docs folders (except README.md and DOCKER.md)
+# Exclude all .md files outside docs folders (except README, CONTRIBUTING, COMMIT_STANDARDS)
 
 /*.md
 !README.md
 !CONTRIBUTING.md
-!DOCKER.md
-!CI-CD.md
 !COMMIT_STANDARDS.md
 frontend/*.md
 backend/*.md
