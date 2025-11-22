@@ -19,7 +19,7 @@ export function createMockSurveyInput(
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
     email: faker.internet.email(),
-    contactNumber: faker.phone.number('+1##########'),
+    contactNumber: `+${faker.string.numeric({ length: 11 })}`,
     dateOfBirth: birthDate.toISOString().split('T')[0],
     foods: [faker.food.adjective(), faker.food.dish()].map((f) =>
       f.substring(0, 50),
@@ -47,7 +47,7 @@ export function createMockSurveyResponse(
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
     email: faker.internet.email(),
-    contactNumber: faker.phone.number('+1##########'),
+    contactNumber: `+${faker.string.numeric({ length: 11 })}`,
     dateOfBirth: birthDate,
     foods: [faker.food.adjective(), faker.food.dish()]
       .map((f) => f.substring(0, 50))
