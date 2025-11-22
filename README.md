@@ -486,7 +486,7 @@ PORT=5001 npm run dev
 
 ## 👥 Team
 
-- **Maintainer**: [Your Name]
+- **Maintainer**: Simbongile Mkhotheli
 - **Contributors**: See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## 🙏 Acknowledgments
