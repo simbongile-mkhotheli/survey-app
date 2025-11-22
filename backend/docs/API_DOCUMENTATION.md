@@ -19,7 +19,7 @@ A comprehensive survey application API built with modern technologies and best p
 
 ```bash
 # Clone and navigate to backend
-git clone <repository-url>
+git clone https://github.com/simbongile-mkhotheli/survey-app.git
 cd survey-app/backend
 
 # Install dependencies
@@ -53,7 +53,7 @@ The API will be available at `http://localhost:5000` with interactive documentat
 ### Base URL
 
 - **Development**: `http://localhost:5000`
-- **Production**: `https://api.survey-app.com`
+- **Production**: `https://survey-app-beta-ivory.vercel.app/`
 
 ## 🔍 Detailed API Reference
 
@@ -78,43 +78,32 @@ Submit a new survey response with personal information and ratings.
 }
 ```
 
-#### Example Request
+#### Testing the POST Endpoint
 
-```javascript
-const response = await fetch('http://localhost:5000/api/survey', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    contactNumber: '+1234567890',
-    dateOfBirth: '1990-05-15',
-    foods: ['pizza', 'pasta'],
-    ratingMovies: '4',
-    ratingRadio: '3',
-    ratingEatOut: '5',
-    ratingTV: '2',
-  }),
-});
+**Live Interactive Testing**: Visit `http://localhost:5000/api-docs` (Swagger UI) to test this endpoint with auto-generated sample data.
 
-const data = await response.json();
-console.log('Survey ID:', data.id);
-```
+**Postman Collection**: Use `docs/postman-collection.json` for pre-configured requests with dynamic test data.
+
+#### Field Constraints
+
+- `firstName`, `lastName`: 2-100 alphanumeric characters
+- `email`: Valid RFC 5322 format, ≤255 characters, trimmed & lowercased
+- `contactNumber`: Format `+?[0-9]{10,15}` (optional country code prefix)
+- `dateOfBirth`: ISO 8601 format `YYYY-MM-DD`, resulting age must be 5-120 years
+- `foods`: Array of 1-10 items (valid: pizza, pasta, papAndWors), max 50 chars per item
+- `ratingMovies`, `ratingRadio`, `ratingEatOut`, `ratingTV`: String values only: "1", "2", "3", "4", or "5"
 
 #### Response
 
-**Success (201)**
+##### Success (201)
 
 ```json
 {
-  "id": 123
+  "id": "<survey_id>"
 }
 ```
 
-**Validation Error (400)**
+##### Validation Error (400)
 
 ```json
 {
@@ -122,8 +111,7 @@ console.log('Survey ID:', data.id);
     "message": "Validation failed",
     "type": "ValidationError",
     "details": {
-      "email": ["Invalid email address"],
-      "ratingMovies": ["Please select a rating from 1–5"]
+      "<field_name>": ["<validation_error_message>"]
     }
   }
 }
@@ -131,43 +119,43 @@ console.log('Survey ID:', data.id);
 
 ### GET /api/results
 
-Retrieve aggregated survey analytics and statistics.
+Retrieve aggregated survey analytics and statistics from all submissions.
 
-#### Example Request
+#### How to Test
 
-```javascript
-const response = await fetch('http://localhost:5000/api/results');
-const results = await response.json();
+**Live Interactive Testing**: Visit `http://localhost:5000/api-docs` (Swagger UI) to call this endpoint and see live aggregated results.
 
-console.log('Total surveys:', results.totalCount);
-console.log('Average age:', results.age.avg);
-console.log('Food preferences:', results.foodPercentages);
-console.log('Average ratings:', results.avgRatings);
+**Using cURL**:
+
+```bash
+curl -X GET http://localhost:5000/api/results
 ```
 
 #### Response (200)
 
 ```json
 {
-  "totalCount": 150,
+  "totalCount": "<number_of_surveys>",
   "age": {
-    "avg": 28.5,
-    "min": 18,
-    "max": 65
+    "avg": "<average_age>",
+    "min": "<minimum_age>",
+    "max": "<maximum_age>"
   },
   "foodPercentages": {
-    "pizza": 45.5,
-    "pasta": 30.2,
-    "papAndWors": 24.3
+    "pizza": "<percentage>",
+    "pasta": "<percentage>",
+    "papAndWors": "<percentage>"
   },
   "avgRatings": {
-    "movies": 4.2,
-    "radio": 3.1,
-    "eatOut": 4.8,
-    "tv": 3.5
+    "movies": "<1-5_average>",
+    "radio": "<1-5_average>",
+    "eatOut": "<1-5_average>",
+    "tv": "<1-5_average>"
   }
 }
 ```
+
+See `http://localhost:5000/api-docs` for a live response with actual aggregated data.
 
 ## 🛠️ Development Tools
 
@@ -433,11 +421,11 @@ npm start
 1. **Documentation**: Check this guide and API docs
 2. **Issues**: Create GitHub issues for bugs
 3. **Discussions**: Use GitHub discussions for questions
-4. **Email**: mkotelisimbo@gmail.com
+4. **Email**: Contact via GitHub issues
 
 ### Common Issues
 
-**Database Connection Issues**
+#### Database Connection
 
 ```bash
 # Check database is running
@@ -447,7 +435,7 @@ pg_isready -h localhost -p 5432
 npx prisma db push --preview-feature
 ```
 
-**Port Already in Use**
+#### Port Already in Use
 
 ```bash
 # Find process using port 5000
@@ -457,7 +445,7 @@ lsof -ti:5000
 kill -9 $(lsof -ti:5000)
 ```
 
-**Environment Variables**
+#### Configuration
 
 ```bash
 # Check environment loading
@@ -466,6 +454,6 @@ node -e "require('dotenv').config(); console.log(process.env.DATABASE_URL)"
 
 ---
 
-**Happy coding! 🎉**
+## Next Steps
 
 For the latest updates and detailed API changes, visit the [interactive documentation](http://localhost:5000/api-docs) or check the [OpenAPI specification](http://localhost:5000/api-docs.json).
