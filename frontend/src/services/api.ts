@@ -2,6 +2,8 @@ import axios from 'axios';
 import type { SurveyFormValues } from '@/validation';
 import { formToPayload } from '@shared-root/validation';
 import { config } from '@/config/env';
+import { unwrapResponse } from '@/utils/response';
+import type { ApiResponse } from '@/utils/response';
 
 // Configure axios instance with environment-based settings
 const apiClient = axios.create({
@@ -20,16 +22,20 @@ const apiClient = axios.create({
  * ----------------
  * Sends a POST to ${API_URL}/api/survey with all fields from SurveyFormValues.
  * Converts rating fields from string to number.
+ * Unwraps backend's ApiSuccessResponse wrapper to return just the ID.
  *
- * Returns the new record’s ID.
+ * Returns the new record's ID.
  */
 export async function submitSurvey(
   data: SurveyFormValues,
 ): Promise<{ id: number }> {
   const payload = formToPayload(data);
 
-  const response = await apiClient.post<{ id: number }>('/api/survey', payload);
-  return response.data;
+  const response = await apiClient.post<ApiResponse<{ id: number }>>(
+    '/api/survey',
+    payload,
+  );
+  return unwrapResponse(response.data);
 }
 
 /**
@@ -61,9 +67,11 @@ export type ResultsData = {
 /**
  * fetchResults
  * ----------------
- * Sends a GET to ${API_URL}/api/results and returns the parsed JSON.
+ * Sends a GET to ${API_URL}/api/results.
+ * Unwraps backend's ApiSuccessResponse wrapper to return just the results data.
  */
 export async function fetchResults(): Promise<ResultsData> {
-  const response = await apiClient.get<ResultsData>('/api/results');
-  return response.data;
+  const response =
+    await apiClient.get<ApiResponse<ResultsData>>('/api/results');
+  return unwrapResponse(response.data);
 }
