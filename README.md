@@ -7,7 +7,7 @@ A professional survey platform demonstrating industry best practices in enterpri
 This is a **full-stack monorepo** with React frontend, Node.js/Express backend, and PostgreSQL database. The application implements:
 
 - **Clean Architecture**: Layered SOLID-compliant design with dependency injection
-- **Comprehensive Testing**: 217 unit tests with 95%+ code coverage
+- **Comprehensive Testing**: 336 unit tests (89 frontend + 247 backend) with 95%+ code coverage
 - **Security-First**: OWASP compliance, input sanitization, SQL injection prevention
 - **Production-Ready**: Docker containerization, health checks, monitoring, CI/CD
 - **Professional Code Quality**: ESLint zero-warnings, TypeScript strict mode, Prettier formatting
@@ -107,8 +107,8 @@ npm run test:coverage
 
 ### Test Statistics
 
-- **Frontend**: 41 tests covering UI components, validation, state management
-- **Backend**: 176 tests covering services, repositories, middleware, controllers
+- **Frontend**: 89 tests covering UI components, form validation, state management, store persistence
+- **Backend**: 247 tests covering services, repositories, controllers, middleware, validation schemas
 - **Coverage**: ≥95% on all metrics (statements, branches, functions, lines)
 - **Test Data**: 100% dynamic via Faker.js (no hardcoded values)
 
@@ -261,44 +261,26 @@ Tracks:
 
 ## 📚 API Documentation
 
-### Survey Submission
+The API provides two main endpoints for survey management:
 
-```http
-POST /api/survey
-Content-Type: application/json
+- **POST /api/survey**: Submit survey responses with personal information and ratings
+- **GET /api/results**: Retrieve aggregated analytics and statistics
 
-{
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john@example.com",
-  "contactNumber": "+1234567890",
-  "dateOfBirth": "1999-01-15",
-  "foods": ["pizza", "pasta"],
-  "ratingMovies": 5,
-  "ratingRadio": 3,
-  "ratingEatOut": 4,
-  "ratingTV": 2
-}
+**Field Requirements**:
 
-Response: 201 Created
-{ "id": 123 }
-```
+- `firstName`, `lastName`: 2-100 characters
+- `email`: Valid RFC 5322 format, ≤255 characters
+- `contactNumber`: Format `+?[0-9]{10,15}` (optional country code)
+- `dateOfBirth`: ISO 8601 format (YYYY-MM-DD), age 5-120 years
+- `foods`: Array of 1-10 items (pizza, pasta, papAndWors)
+- `ratingMovies`, `ratingRadio`, `ratingEatOut`, `ratingTV`: String values "1"-"5"
 
-### Results Retrieval
+**See [backend/docs/API_DOCUMENTATION.md](backend/docs/API_DOCUMENTATION.md) for:**
 
-```http
-GET /api/results
-
-Response: 200 OK
-{
-  "totalCount": 100,
-  "age": { "avg": 28.5, "min": 18, "max": 65 },
-  "foodPercentages": { "pizza": 45, "pasta": 35, "papAndWors": 20 },
-  "avgRatings": { "movies": 4.2, "radio": 3.1, "eatOut": 4.8, "tv": 3.5 }
-}
-```
-
-**See [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) for complete API reference with Swagger/OpenAPI spec.**
+- Complete API reference with field constraints
+- Live interactive testing via Swagger UI at `/api-docs`
+- Postman collection for pre-configured requests
+- Error response formats and status codes
 
 ## 🔄 Development Workflow
 
@@ -327,6 +309,7 @@ Response: 200 OK
    See [COMMIT_STANDARDS.md](COMMIT_STANDARDS.md) for guidelines.
 
 5. **Push and create Pull Request**
+
    ```bash
    git push origin feat/your-feature-name
    ```
@@ -390,22 +373,25 @@ See [`.github/workflows`](.github/workflows) for pipeline configuration.
 
 ## 📊 Test Coverage
 
-### Frontend Tests (41 tests)
+### Frontend Tests (89 tests)
 
-- ✅ Component rendering and interaction
-- ✅ Form validation and submission
-- ✅ State management (Zustand store)
-- ✅ API integration
-- ✅ Error handling
+- ✅ Component rendering and interaction (SurveyForm, Results, responses)
+- ✅ Form validation with Zod schemas
+- ✅ State management (Zustand store with devtools)
+- ✅ API service integration
+- ✅ Utility functions (date formatting, form utilities, response handling)
+- ✅ Error handling and edge cases
 
-### Backend Tests (176 tests)
+### Backend Tests (247 tests)
 
-- ✅ Service business logic (mocked repositories)
-- ✅ Repository data access (SQLite integration)
-- ✅ Controller HTTP handling
-- ✅ Middleware functionality
+- ✅ Service business logic (with mocked repository dependencies)
+- ✅ Repository data access (SQLite integration tests)
+- ✅ Controller HTTP request/response handling
+- ✅ Middleware (validation, error handling, logging, metrics, rate limiting)
 - ✅ Error scenarios and edge cases
-- ✅ Validation schemas
+- ✅ Validation schemas (Zod with sanitization transformations)
+- ✅ Configuration validation
+- ✅ Security features (CORS, HPP, sanitization, rate limiting)
 
 **All test data generated dynamically via Faker.js - zero hardcoded values.**
 
