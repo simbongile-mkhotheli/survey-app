@@ -2,6 +2,178 @@
 
 This codebase is an enterprise-grade full-stack survey application demonstrating SOLID principles, professional testing, monitoring, and DevOps practices. AI agents should understand the architecture, key patterns, and development workflows below.
 
+## 📋 Industry Standards Applied
+
+### Documentation Structure (No Duplication)
+
+**Industry Standard**: Each document serves ONE purpose. Cross-reference instead of repeating.
+
+- **README.md** → Project overview, quick start, setup, architecture
+- **CONTRIBUTING.md** → How to contribute (references README for setup, COMMIT_STANDARDS for format)
+- **COMMIT_STANDARDS.md** → Git workflow, commit format specifications
+- **CHANGELOG.md** → Version history, release notes, breaking changes
+- **CODE_OF_CONDUCT.md** (optional) → Community guidelines
+
+**NOT Used**:
+
+- ❌ CONTRIBUTING_PROFESSIONAL.md (duplication of README + COMMIT_STANDARDS)
+- ❌ PROFESSIONAL\_\*.md files (local team reference only, not pushed to GitHub)
+
+**Cross-Reference Strategy**:
+
+1. Each doc is self-contained (can be read independently)
+2. Reference other docs when content overlaps
+3. Example: "For setup instructions, see README.md"
+
+**Why This Matters**:
+
+- ✅ Reduces maintenance burden (update once, not multiple places)
+- ✅ Prevents conflicting information
+- ✅ Makes codebase more professional
+- ✅ Follows [Google's Best Practices](https://google.github.io/styleguide/) and [Open Source Guides](https://opensource.guide/)
+
+**Real-World Examples**:
+
+- [Node.js](https://nodejs.org) - CONTRIBUTING points to DEVELOPER_GUIDE
+- [React](https://react.dev) - Contributing references main docs
+- [Vue.js](https://vuejs.org) - No duplication across guides
+- [Python](https://www.python.org) - Clear separation of concerns
+
+### Commit Message Standards
+
+**Standard**: [Conventional Commits](https://www.conventionalcommits.org/) specification
+
+Format:
+
+```
+<type>(<scope>): <description>
+
+<body>
+
+<footer>
+```
+
+**Length Guidelines** (Industry Standard):
+
+- **Subject line**: Max 50 characters (fits in one line)
+- **Body**: Max 72 characters per line (readable without horizontal scroll)
+- **Rule**: One logical unit of work = One commit (keep concise)
+- ❌ WRONG: Long, rambling commits with multiple unrelated changes
+- ✅ RIGHT: Short, focused commits with clear purpose
+
+**Why Short Commits Matter**:
+
+- Easier to review
+- Clearer git history
+- Better for bisecting bugs
+- Easier to revert if needed
+- Professional appearance
+
+Types:
+
+- `feat:` New feature (MINOR version bump)
+- `fix:` Bug fix (PATCH version bump)
+- `docs:` Documentation only
+- `refactor:` Code restructuring
+- `test:` Test additions
+- `chore:` Build/tooling/dependencies
+- `perf:` Performance improvements
+
+**Examples**:
+
+✅ Good (short, focused):
+
+```
+feat(form): add email validation
+fix(cache): prevent stale data after mutation
+docs: update README installation steps
+test: add validation tests
+```
+
+❌ Bad (too long):
+
+```
+feat: added email validation to the form component and also updated the error messages and made some improvements to the styling and also fixed a bug where the form was submitting twice
+```
+
+**Why**: Enables automated changelog generation and semantic versioning (used by Angular, React, Vue, Kubernetes).
+
+### API Response Documentation
+
+**Standard**: OpenAPI 3.0 / Swagger specification
+
+What's documented:
+
+- Request/response schemas
+- Status codes (200, 400, 401, 404, 500)
+- Example payloads
+- Error responses with codes
+
+**Why**: Industry standard for API documentation (used by AWS, Azure, Google Cloud).
+
+### Testing Standards
+
+**Standard**: Arrange-Act-Assert (AAA) pattern + ≥95% coverage
+
+Test structure:
+
+```typescript
+// ARRANGE - Set up test data and mocks
+const input = createMockData();
+vi.mocked(mockDep).mockResolvedValue(expected);
+
+// ACT - Execute code under test
+const result = await service.doSomething(input);
+
+// ASSERT - Verify results
+expect(result).toEqual(expected);
+```
+
+Test data:
+
+- ✅ Use Faker.js for dynamic data (never hardcoded)
+- ✅ Mock external dependencies via interfaces
+- ✅ Test both success and error paths
+
+**Why**: Industry standard (used by Google, Microsoft, Netflix for test clarity).
+
+### Code Quality Standards
+
+**Standard**: Zero-Warning Policy + Type Safety
+
+Requirements:
+
+- TypeScript: Strict mode enabled (no `any` types)
+- ESLint: Zero warnings (enforced in CI)
+- Prettier: Auto-formatting consistent
+- Path Aliases: 100% adoption (`@/` imports)
+- Coverage: ≥95% maintained
+
+**Why**: Prevents technical debt (Microsoft, Google, Meta enforce these).
+
+### SOLID Principles (Enforced)
+
+1. **Single Responsibility**: One class = one reason to change
+2. **Open/Closed**: Extend, don't modify
+3. **Liskov Substitution**: Interfaces enable polymorphism
+4. **Interface Segregation**: Focused, minimal interfaces
+5. **Dependency Inversion**: Depend on abstractions, not implementations
+
+**Why**: Makes code maintainable, testable, and scalable (industry best practice).
+
+### Version Management
+
+**Standard**: Semantic Versioning (SemVer)
+
+Format: `MAJOR.MINOR.PATCH`
+
+- `1.0.0` → Initial release
+- `1.1.0` → New features (backward compatible)
+- `1.0.1` → Bug fixes (backward compatible)
+- `2.0.0` → Breaking changes (not backward compatible)
+
+**Why**: Enables dependency management and breaking change communication (npm, Maven, pip all use SemVer).
+
 ## Architecture Overview
 
 **Monorepo Structure**: `backend/` (Node.js/Express/TypeScript), `frontend/` (React/Vite), `shared/` (validation schemas)
