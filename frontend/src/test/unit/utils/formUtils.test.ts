@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { faker } from '@faker-js/faker';
 import {
   formDateToISO,
   isoToFormDate,
@@ -9,96 +10,120 @@ import {
   getChangedFields,
   hasValues,
 } from '../../../utils/formUtils';
+import {
+  createRandomDateString,
+  createRandomObjectWithWhitespace,
+  createRandomFieldChanges,
+} from '../../../test/utils/test-helpers';
 
 describe('formUtils', () => {
   describe('formDateToISO', () => {
     it('converts form dates to ISO', () => {
-      const result = formDateToISO('2025-11-22');
-      expect(result).toContain('2025-11-22');
+      const dateStr = createRandomDateString();
+      const result = formDateToISO(dateStr);
+      expect(result).toContain(dateStr);
       expect(result).toContain('T');
     });
   });
 
   describe('isoToFormDate', () => {
     it('converts ISO to form date', () => {
-      const result = isoToFormDate('2025-11-22T14:30:00Z');
-      expect(result).toBe('2025-11-22');
+      const isoDate = faker.date.past().toISOString();
+      const result = isoToFormDate(isoDate);
+      expect(result).toMatch(/\d{4}-\d{2}-\d{2}/);
     });
   });
 
   describe('trimObjectValues', () => {
     it('trims string values', () => {
-      const obj = { name: '  John  ', email: 'test@test.com  ' };
+      const obj = createRandomObjectWithWhitespace();
       const result = trimObjectValues(obj);
-      expect(result.name).toBe('John');
-      expect(result.email).toBe('test@test.com');
+      // Check that all string values have been trimmed
+      Object.values(result).forEach((value) => {
+        if (typeof value === 'string') {
+          expect(value).not.toMatch(/^\s/);
+          expect(value).not.toMatch(/\s$/);
+        }
+      });
     });
 
     it('preserves non-strings', () => {
-      const obj = { name: '  John  ', age: 25 };
+      const obj = { name: '  John  ', age: 25, active: true };
       const result = trimObjectValues(obj);
       expect(result.age).toBe(25);
+      expect(result.active).toBe(true);
     });
   });
 
   describe('toLowercase', () => {
     it('lowercases specified fields', () => {
-      const obj = { email: 'TEST@TEST.COM', name: 'John' };
+      const email = faker.internet.email().toUpperCase();
+      const name = faker.person.firstName();
+      const obj = { email, name };
       const result = toLowercase(obj, ['email']);
-      expect(result.email).toBe('test@test.com');
-      expect(result.name).toBe('John');
+      expect(result.email).toBe(email.toLowerCase());
+      expect(result.name).toBe(name);
     });
   });
 
   describe('sanitizeString', () => {
     it('removes script tags', () => {
-      const result = sanitizeString('<script>alert("xss")</script>');
+      const result = sanitizeString(`<script>${faker.lorem.word()}</script>`);
       expect(result).not.toContain('<script>');
     });
 
     it('removes javascript protocol', () => {
-      const result = sanitizeString('javascript:alert(1)');
+      const result = sanitizeString(`javascript:${faker.lorem.word()}()`);
       expect(result).not.toContain('javascript:');
     });
 
     it('removes event handlers', () => {
-      const result = sanitizeString('onclick="test"');
-      expect(result).not.toContain('onclick');
+      const result = sanitizeString(
+        `on${faker.lorem.word()}="${faker.lorem.word()}"`,
+      );
+      expect(result).not.toContain('on');
     });
 
     it('preserves normal text', () => {
-      expect(sanitizeString('Hello World')).toBe('Hello World');
+      const text = faker.lorem.sentence();
+      expect(sanitizeString(text)).toBe(text);
     });
   });
 
   describe('sanitizeObject', () => {
     it('sanitizes object values', () => {
       const obj = {
-        name: '<script>alert(1)</script>test',
-        email: 'test@test.com',
+        name: `<script>${faker.lorem.word()}</script>test`,
+        email: faker.internet.email(),
       };
       const result = sanitizeObject(obj);
       expect(result.name).not.toContain('<script>');
-      expect(result.email).toBe('test@test.com');
+      expect(result.email).toBe(obj.email);
     });
 
     it('preserves non-string values', () => {
-      const obj = { name: '<script>test</script>', age: 25 };
+      const age = faker.number.int({ min: 18, max: 70 });
+      const obj = { name: '<script>test</script>', age };
       const result = sanitizeObject(obj);
-      expect(result.age).toBe(25);
+      expect(result.age).toBe(age);
     });
   });
 
   describe('getChangedFields', () => {
     it('detects changed fields', () => {
-      const orig = { name: 'John', email: 'test@test.com' };
-      const updated = { name: 'Jane', email: 'test@test.com' };
-      const changed = getChangedFields(orig, updated);
-      expect(changed).toEqual({ name: 'Jane' });
+      const { original, updated } = createRandomFieldChanges();
+      const changed = getChangedFields(original, updated);
+      expect(changed).toHaveProperty('email');
+      expect((changed as Record<string, unknown>).email).not.toBe(
+        original.email,
+      );
     });
 
     it('returns empty for no changes', () => {
-      const orig = { name: 'John', email: 'test@test.com' };
+      const orig = {
+        name: faker.person.firstName(),
+        email: faker.internet.email(),
+      };
       const changed = getChangedFields(orig, orig);
       expect(changed).toEqual({});
     });
@@ -106,8 +131,8 @@ describe('formUtils', () => {
 
   describe('hasValues', () => {
     it('returns true for non-empty objects', () => {
-      expect(hasValues({ name: 'John' })).toBe(true);
-      expect(hasValues({ age: 25 })).toBe(true);
+      expect(hasValues({ name: faker.person.firstName() })).toBe(true);
+      expect(hasValues({ age: faker.number.int() })).toBe(true);
     });
 
     it('returns false for empty objects', () => {

@@ -102,3 +102,145 @@ export function createMockFoodSelection(): string[] {
   const count = faker.number.int({ min: 1, max: foods.length });
   return faker.helpers.shuffle(foods).slice(0, count);
 }
+
+// ==================== UTILITY TEST DATA GENERATORS ====================
+
+/**
+ * Generate random success response data for API testing
+ */
+export function createRandomSuccessData(): Record<string, unknown> {
+  return {
+    id: faker.number.int({ min: 1, max: 9999 }),
+    name: faker.person.firstName(),
+    email: faker.internet.email(),
+    createdAt: faker.date.past().toISOString(),
+  };
+}
+
+/**
+ * Generate random error message
+ */
+export function createRandomErrorMessage(): string {
+  return faker.lorem.sentence();
+}
+
+/**
+ * Generate random error code
+ */
+export function createRandomErrorCode(): string {
+  return faker.string.alpha({ length: 10 }).toUpperCase();
+}
+
+/**
+ * Generate random text string for sanitization testing
+ */
+export function createRandomSafeString(): string {
+  return faker.lorem.words({ count: faker.number.int({ min: 1, max: 5 }) });
+}
+
+/**
+ * Generate XSS attack vector for sanitization testing
+ */
+export function createRandomXSSAttempt(): string {
+  const vectors = [
+    `<script>${faker.lorem.word()}</script>`,
+    `<img onerror="alert('${faker.lorem.word()}')">`,
+    `javascript:${faker.lorem.word()}()`,
+    `<div onclick="${faker.lorem.word()}"></div>`,
+  ];
+  return faker.helpers.arrayElement(vectors);
+}
+
+/**
+ * Generate date string in YYYY-MM-DD format
+ */
+export function createRandomDateString(): string {
+  const date = faker.date.past({ years: 10 });
+  return date.toISOString().split('T')[0];
+}
+
+/**
+ * Generate ISO datetime string
+ */
+export function createRandomISODateString(): string {
+  return faker.date.past({ years: 10 }).toISOString();
+}
+
+/**
+ * Generate relative time test data (dates for relative time formatting)
+ */
+export function createRandomRecentDate(): Date {
+  // Generate a date within the last day for relative time testing
+  return faker.date.recent({ days: 1 });
+}
+
+/**
+ * Generate form object with string values
+ */
+export function createRandomFormObject(): Record<string, string> {
+  return {
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    email: faker.internet.email(),
+    phone: faker.phone.number('+1##########'),
+  };
+}
+
+/**
+ * Generate object with values that have extra whitespace
+ */
+export function createRandomObjectWithWhitespace(): Record<string, string> {
+  return {
+    name: `  ${faker.person.firstName()}  `,
+    email: `${faker.internet.email()}  `,
+    text: `  ${faker.lorem.word()}  `,
+  };
+}
+
+/**
+ * Generate object with mixed case values
+ */
+export function createRandomObjectWithMixedCase(): Record<string, string> {
+  return {
+    email: faker.internet.email().toUpperCase(),
+    name: faker.person.firstName().toUpperCase(),
+    text: faker.lorem.word().toLowerCase(),
+  };
+}
+
+/**
+ * Generate before/after objects for field change detection
+ */
+export function createRandomFieldChanges(): {
+  original: Record<string, unknown>;
+  updated: Record<string, unknown>;
+} {
+  const firstName = faker.person.firstName();
+  const email = faker.internet.email();
+  const newEmail = faker.internet.email();
+
+  return {
+    original: {
+      firstName,
+      email,
+      age: faker.number.int({ min: 18, max: 70 }),
+    },
+    updated: {
+      firstName,
+      email: newEmail, // Changed
+      age: faker.number.int({ min: 18, max: 70 }),
+    },
+  };
+}
+
+/**
+ * Generate object with empty/null/undefined values
+ */
+export function createRandomEmptyObject(): Record<string, unknown> {
+  return {
+    name: '',
+    email: '',
+    phone: null,
+    age: undefined,
+  };
+}

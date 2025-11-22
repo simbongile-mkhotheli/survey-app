@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { faker } from '@faker-js/faker';
 import {
   isSuccessResponse,
   isErrorResponse,
@@ -12,6 +13,10 @@ import type {
   ApiErrorResponse,
   ApiResponse,
 } from '@/utils/response';
+import {
+  createRandomErrorMessage,
+  createRandomErrorCode,
+} from '@/test/utils/test-helpers';
 
 describe('response utilities', () => {
   // ==================== Type Guards ====================
@@ -20,8 +25,8 @@ describe('response utilities', () => {
     it('should return true for success responses', () => {
       const response: ApiSuccessResponse<{ id: number }> = {
         success: true,
-        data: { id: 1 },
-        timestamp: new Date().toISOString(),
+        data: { id: faker.number.int({ min: 1, max: 1000 }) },
+        timestamp: faker.date.past().toISOString(),
       };
       expect(isSuccessResponse(response)).toBe(true);
     });
@@ -30,22 +35,23 @@ describe('response utilities', () => {
       const response: ApiErrorResponse = {
         success: false,
         error: {
-          message: 'Not found',
-          code: 'NOT_FOUND',
+          message: createRandomErrorMessage(),
+          code: createRandomErrorCode(),
         },
       };
       expect(isSuccessResponse(response)).toBe(false);
     });
 
     it('should be a type guard that narrows type correctly', () => {
+      const testData = faker.lorem.word();
       const response: ApiResponse<string> = {
         success: true,
-        data: 'test',
-        timestamp: new Date().toISOString(),
+        data: testData,
+        timestamp: faker.date.past().toISOString(),
       };
 
       if (isSuccessResponse(response)) {
-        expect(response.data).toBe('test');
+        expect(response.data).toBe(testData);
       }
     });
   });
@@ -55,8 +61,8 @@ describe('response utilities', () => {
       const response: ApiErrorResponse = {
         success: false,
         error: {
-          message: 'Validation failed',
-          code: 'VALIDATION_ERROR',
+          message: createRandomErrorMessage(),
+          code: createRandomErrorCode(),
         },
       };
       expect(isErrorResponse(response)).toBe(true);
@@ -65,24 +71,25 @@ describe('response utilities', () => {
     it('should return false for success responses', () => {
       const response: ApiSuccessResponse<number> = {
         success: true,
-        data: 42,
-        timestamp: new Date().toISOString(),
+        data: faker.number.int({ min: 1, max: 100 }),
+        timestamp: faker.date.past().toISOString(),
       };
       expect(isErrorResponse(response)).toBe(false);
     });
 
     it('should be a type guard that narrows type correctly', () => {
+      const errorMessage = createRandomErrorMessage();
       const response: ApiResponse<never> = {
         success: false,
         error: {
-          message: 'Server error',
-          code: 'INTERNAL_SERVER_ERROR',
-          details: { reason: 'Database timeout' },
+          message: errorMessage,
+          code: createRandomErrorCode(),
+          details: { reason: faker.lorem.sentence() },
         },
       };
 
       if (isErrorResponse(response)) {
-        expect(response.error.message).toBe('Server error');
+        expect(response.error.message).toBe(errorMessage);
       }
     });
   });
@@ -91,59 +98,68 @@ describe('response utilities', () => {
 
   describe('unwrapResponse', () => {
     it('should return data for success responses', () => {
+      const id = faker.number.int({ min: 1, max: 9999 });
       const response: ApiSuccessResponse<{ id: number }> = {
         success: true,
-        data: { id: 123 },
-        timestamp: new Date().toISOString(),
+        data: { id },
+        timestamp: faker.date.past().toISOString(),
       };
-      expect(unwrapResponse(response)).toEqual({ id: 123 });
+      expect(unwrapResponse(response)).toEqual({ id });
     });
 
     it('should throw error for error responses', () => {
+      const errorMessage = createRandomErrorMessage();
       const response: ApiErrorResponse = {
         success: false,
         error: {
-          message: 'User not found',
-          code: 'NOT_FOUND',
+          message: errorMessage,
+          code: createRandomErrorCode(),
         },
       };
-      expect(() => unwrapResponse(response)).toThrow('User not found');
+      expect(() => unwrapResponse(response)).toThrow(errorMessage);
     });
 
     it('should throw error with details if available', () => {
+      const errorMessage = createRandomErrorMessage();
       const response: ApiErrorResponse = {
         success: false,
         error: {
-          message: 'Validation failed',
-          code: 'VALIDATION_ERROR',
+          message: errorMessage,
+          code: createRandomErrorCode(),
           details: {
-            email: 'Invalid email format',
-            phone: 'Phone must be 10+ digits',
+            email: faker.lorem.sentence(),
+            phone: faker.lorem.sentence(),
           },
         },
       };
-      expect(() => unwrapResponse(response)).toThrow('Validation failed');
+      expect(() => unwrapResponse(response)).toThrow(errorMessage);
     });
 
     it('should work with various data types', () => {
+      const testString = faker.lorem.word();
       const stringResponse: ApiSuccessResponse<string> = {
         success: true,
-        data: 'success',
-        timestamp: new Date().toISOString(),
+        data: testString,
+        timestamp: faker.date.past().toISOString(),
       };
-      expect(unwrapResponse(stringResponse)).toBe('success');
+      expect(unwrapResponse(stringResponse)).toBe(testString);
 
+      const testArray = [
+        faker.number.int(),
+        faker.number.int(),
+        faker.number.int(),
+      ];
       const arrayResponse: ApiSuccessResponse<number[]> = {
         success: true,
-        data: [1, 2, 3],
-        timestamp: new Date().toISOString(),
+        data: testArray,
+        timestamp: faker.date.past().toISOString(),
       };
-      expect(unwrapResponse(arrayResponse)).toEqual([1, 2, 3]);
+      expect(unwrapResponse(arrayResponse)).toEqual(testArray);
 
       const nullResponse: ApiSuccessResponse<null> = {
         success: true,
         data: null,
-        timestamp: new Date().toISOString(),
+        timestamp: faker.date.past().toISOString(),
       };
       expect(unwrapResponse(nullResponse)).toBeNull();
     });
@@ -151,14 +167,15 @@ describe('response utilities', () => {
 
   describe('unwrapResponseOrDefault', () => {
     it('should return data for success responses', () => {
+      const count = faker.number.int({ min: 1, max: 100 });
       const response: ApiSuccessResponse<{ count: number }> = {
         success: true,
-        data: { count: 42 },
-        timestamp: new Date().toISOString(),
+        data: { count },
+        timestamp: faker.date.past().toISOString(),
       };
       const defaultValue = { count: 0 };
       expect(unwrapResponseOrDefault(response, defaultValue)).toEqual({
-        count: 42,
+        count,
       });
     });
 
@@ -166,8 +183,8 @@ describe('response utilities', () => {
       const response: ApiErrorResponse = {
         success: false,
         error: {
-          message: 'Failed to fetch',
-          code: 'FETCH_ERROR',
+          message: createRandomErrorMessage(),
+          code: createRandomErrorCode(),
         },
       };
       const defaultValue = { count: 0 };
@@ -180,23 +197,25 @@ describe('response utilities', () => {
       const response: ApiErrorResponse = {
         success: false,
         error: {
-          message: 'Server error',
-          code: 'INTERNAL_SERVER_ERROR',
+          message: createRandomErrorMessage(),
+          code: createRandomErrorCode(),
         },
       };
-      const defaultValue = 'fallback';
+      const defaultValue = faker.lorem.word();
       expect(() =>
         unwrapResponseOrDefault(response, defaultValue),
       ).not.toThrow();
-      expect(unwrapResponseOrDefault(response, defaultValue)).toBe('fallback');
+      expect(unwrapResponseOrDefault(response, defaultValue)).toBe(
+        defaultValue,
+      );
     });
 
     it('should work with null/undefined defaults', () => {
       const response: ApiErrorResponse = {
         success: false,
         error: {
-          message: 'Not found',
-          code: 'NOT_FOUND',
+          message: createRandomErrorMessage(),
+          code: createRandomErrorCode(),
         },
       };
       expect(unwrapResponseOrDefault(response, null)).toBeNull();
@@ -208,39 +227,45 @@ describe('response utilities', () => {
 
   describe('mapResponse', () => {
     it('should transform data for success responses', () => {
+      const id = faker.number.int({ min: 1, max: 1000 });
+      const name = faker.person.firstName();
       const response: ApiSuccessResponse<{ id: number; name: string }> = {
         success: true,
-        data: { id: 1, name: 'Test' },
-        timestamp: new Date().toISOString(),
+        data: { id, name },
+        timestamp: faker.date.past().toISOString(),
       };
 
-      const mapped = mapResponse(response, (data) => ({
-        userId: data.id,
-        userName: data.name.toUpperCase(),
-      }));
+      const mapped = mapResponse(
+        response,
+        (data: { id: number; name: string }) => ({
+          userId: data.id,
+          userName: data.name.toUpperCase(),
+        }),
+      );
 
       if (isSuccessResponse(mapped)) {
         expect(mapped.data).toEqual({
-          userId: 1,
-          userName: 'TEST',
+          userId: id,
+          userName: name.toUpperCase(),
         });
       }
     });
 
     it('should preserve success response structure', () => {
-      const timestamp = new Date().toISOString();
+      const originalData = faker.number.int({ min: 1, max: 1000 });
+      const timestamp = faker.date.past().toISOString();
       const response: ApiSuccessResponse<number> = {
         success: true,
-        data: 42,
+        data: originalData,
         timestamp,
       };
 
-      const mapped = mapResponse(response, (n) => n * 2);
+      const mapped = mapResponse(response, (n: number) => n * 2);
 
       expect(mapped.success).toBe(true);
       expect(mapped.timestamp).toBe(timestamp);
       if (isSuccessResponse(mapped)) {
-        expect(mapped.data).toBe(84);
+        expect(mapped.data).toBe(originalData * 2);
       }
     });
 
@@ -248,8 +273,8 @@ describe('response utilities', () => {
       const response: ApiErrorResponse = {
         success: false,
         error: {
-          message: 'Error occurred',
-          code: 'ERROR',
+          message: createRandomErrorMessage(),
+          code: createRandomErrorCode(),
         },
       };
 
@@ -262,16 +287,17 @@ describe('response utilities', () => {
     });
 
     it('should handle transformations with different return types', () => {
+      const testNumber = faker.number.int({ min: 1, max: 999 });
       const response: ApiSuccessResponse<string> = {
         success: true,
-        data: '123',
-        timestamp: new Date().toISOString(),
+        data: testNumber.toString(),
+        timestamp: faker.date.past().toISOString(),
       };
 
-      const mapped = mapResponse(response, (str) => parseInt(str, 10));
+      const mapped = mapResponse(response, (str: string) => parseInt(str, 10));
 
       if (isSuccessResponse(mapped)) {
-        expect(mapped.data).toBe(123);
+        expect(mapped.data).toBe(testNumber);
         expect(typeof mapped.data).toBe('number');
       }
     });
@@ -289,14 +315,15 @@ describe('response utilities', () => {
     });
 
     it('should work correctly through the object accessor', () => {
+      const testValue = faker.lorem.word();
       const response: ApiSuccessResponse<{ value: string }> = {
         success: true,
-        data: { value: 'test' },
-        timestamp: new Date().toISOString(),
+        data: { value: testValue },
+        timestamp: faker.date.past().toISOString(),
       };
 
       expect(responseUtils.isSuccess(response)).toBe(true);
-      expect(responseUtils.unwrap(response)).toEqual({ value: 'test' });
+      expect(responseUtils.unwrap(response)).toEqual({ value: testValue });
     });
   });
 
@@ -304,17 +331,19 @@ describe('response utilities', () => {
 
   describe('edge cases', () => {
     it('should handle responses with complex nested data', () => {
+      const userId1 = faker.number.int({ min: 1, max: 9999 });
+      const userId2 = faker.number.int({ min: 1, max: 9999 });
       const response: ApiSuccessResponse<{
         users: Array<{ id: number; settings: { theme: string } }>;
       }> = {
         success: true,
         data: {
           users: [
-            { id: 1, settings: { theme: 'dark' } },
-            { id: 2, settings: { theme: 'light' } },
+            { id: userId1, settings: { theme: 'dark' } },
+            { id: userId2, settings: { theme: 'light' } },
           ],
         },
-        timestamp: new Date().toISOString(),
+        timestamp: faker.date.past().toISOString(),
       };
 
       const unwrapped = unwrapResponse(response);
@@ -326,33 +355,35 @@ describe('response utilities', () => {
       const response: ApiSuccessResponse<Record<string, never>> = {
         success: true,
         data: {},
-        timestamp: new Date().toISOString(),
+        timestamp: faker.date.past().toISOString(),
       };
 
       expect(unwrapResponse(response)).toEqual({});
     });
 
     it('should handle error responses with no details', () => {
+      const errorMessage = createRandomErrorMessage();
       const response: ApiErrorResponse = {
         success: false,
         error: {
-          message: 'Unknown error',
-          code: 'UNKNOWN',
+          message: errorMessage,
+          code: createRandomErrorCode(),
         },
       };
 
-      expect(() => unwrapResponse(response)).toThrow('Unknown error');
+      expect(() => unwrapResponse(response)).toThrow(errorMessage);
     });
 
     it('should handle mapResponse with identity function', () => {
+      const testValue = faker.number.int({ min: 1, max: 1000 });
       const response: ApiSuccessResponse<number> = {
         success: true,
-        data: 42,
-        timestamp: new Date().toISOString(),
+        data: testValue,
+        timestamp: faker.date.past().toISOString(),
       };
 
-      const mapped = mapResponse(response, (x) => x);
-      expect(isSuccessResponse(mapped) && mapped.data).toBe(42);
+      const mapped = mapResponse(response, (x: number) => x);
+      expect(isSuccessResponse(mapped) && mapped.data).toBe(testValue);
     });
   });
 });

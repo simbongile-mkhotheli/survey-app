@@ -161,6 +161,44 @@ Requirements:
 
 **Why**: Makes code maintainable, testable, and scalable (industry best practice).
 
+### DRY Principle (Don't Repeat Yourself)
+
+**Rule**: If code appears more than twice, extract it to a utility.
+
+**Current Implementation** (Already following DRY):
+
+- ✅ Logging: `logWithContext` centralized (not repeated)
+- ✅ Validation: `shared/validation.ts` single source of truth
+- ✅ Security: `securityUtils` for sanitization, validation
+- ✅ Test Data: Helpers in `test/utils/test-helpers.ts` (not hardcoded)
+- ✅ Error Handling: Centralized middleware (not in each handler)
+- ✅ Components: Reusable UI components (not duplicated)
+
+**Best Practices**:
+
+- Extract utility functions after 2+ uses
+- Create helpers for repeated patterns
+- Use constants for magic numbers/strings
+- Share validation schemas between frontend/backend
+- Centralize formatting logic (dates, numbers, etc.)
+
+**Example**:
+
+```typescript
+// ❌ WRONG - Repeated in 3 places
+const formatted1 = new Date(date1).toISOString().split('T')[0];
+const formatted2 = new Date(date2).toISOString().split('T')[0];
+const formatted3 = new Date(date3).toISOString().split('T')[0];
+
+// ✅ CORRECT - Create once, use everywhere
+const formatDate = (date: Date | string) =>
+  new Date(date).toISOString().split('T')[0];
+
+const formatted1 = formatDate(date1);
+const formatted2 = formatDate(date2);
+const formatted3 = formatDate(date3);
+```
+
 ### Version Management
 
 **Standard**: Semantic Versioning (SemVer)
