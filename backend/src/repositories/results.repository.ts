@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import type { IResultsRepository } from '@/interfaces/repository.interface';
 import { cacheManager, CACHE_KEYS } from '@/config/cache';
 import { QueryPerformanceTracker } from '@/middleware/performance';
+import { foodUtils } from '@/utils/foodUtils';
 
 export class ResultsRepository implements IResultsRepository {
   private queryTracker = QueryPerformanceTracker.getInstance();
@@ -92,15 +93,10 @@ export class ResultsRepository implements IResultsRepository {
     const foodCounts = new Map<string, number>();
 
     responses.forEach((response: { foods: string }) => {
-      if (response.foods && response.foods.trim()) {
-        const foods = response.foods
-          .split(',')
-          .map((food: string) => food.trim())
-          .filter((food: string) => food);
-        foods.forEach((food: string) => {
-          foodCounts.set(food, (foodCounts.get(food) || 0) + 1);
-        });
-      }
+      const foods = foodUtils.fromCSV(response.foods);
+      foods.forEach((food: string) => {
+        foodCounts.set(food, (foodCounts.get(food) || 0) + 1);
+      });
     });
 
     // Convert to array and sort by count

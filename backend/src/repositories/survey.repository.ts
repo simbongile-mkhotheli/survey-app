@@ -6,6 +6,8 @@ import {
 import type { ISurveyRepository } from '@/interfaces/repository.interface';
 import type { SurveyInput } from '@/validation/validation';
 import type { SurveyResponse } from '@/interfaces/service.interface';
+import { foodUtils } from '@/utils/foodUtils';
+import { dateUtils } from '@/utils/dateUtils';
 
 export class SurveyRepository implements ISurveyRepository {
   constructor(private prisma: PrismaClient) {}
@@ -33,8 +35,8 @@ export class SurveyRepository implements ISurveyRepository {
   }
 
   async create(data: SurveyInput): Promise<SurveyResponse> {
-    const dob = new Date(data.dateOfBirth);
-    const foodsCsv = data.foods.join(',');
+    const dob = dateUtils.parse(data.dateOfBirth);
+    const foodsCsv = foodUtils.toCSV(data.foods);
 
     const created = await this.prisma.surveyResponse.create({
       data: {

@@ -67,12 +67,14 @@ describe('SurveyController', () => {
       expect(mockResponse.status).toHaveBeenCalledOnce();
       expect(mockResponse.status).toHaveBeenCalledWith(201);
 
-      // Assert - Verify only id is returned (not full survey data)
+      // Assert - Verify wrapped response with success format
       expect(mockResponse.json).toHaveBeenCalledOnce();
       const responseData = vi.mocked(mockResponse.json).mock.calls[0][0];
-      expect(responseData).toEqual({ id: 123 });
-      expect(responseData).toHaveProperty('id');
-      expect(typeof responseData.id).toBe('number');
+      expect(responseData).toHaveProperty('success', true);
+      expect(responseData).toHaveProperty('data');
+      expect(responseData.data).toEqual({ id: 123 });
+      expect(responseData).toHaveProperty('timestamp');
+      expect(typeof responseData.timestamp).toBe('string');
 
       // Assert - Verify error handler was NOT invoked
       expect(mockNext).not.toHaveBeenCalled();

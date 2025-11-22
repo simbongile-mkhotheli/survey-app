@@ -1,16 +1,17 @@
 import type { Request, Response, NextFunction } from 'express';
-import type { SurveyResultsDTO } from '@/types/resultsDTO';
 import { Container } from '@/container';
+import { responseFormatter } from '@/utils/response';
 import { ResultsQuerySchema } from '@/validation/validation';
 
 /**
  * Controller to handle GET /api/results
  * - Validates query parameters (none currently)
  * - Fetches aggregated survey results following SRP and DIP
+ * - Returns standardized success response via responseFormatter
  */
 export async function handleGetSurveyResults(
   req: Request,
-  res: Response<SurveyResultsDTO>,
+  res: Response,
   next: NextFunction,
 ) {
   try {
@@ -24,7 +25,7 @@ export async function handleGetSurveyResults(
     const requestId = req.headers['x-request-id'] as string;
     const results = await resultsService.getResults(requestId);
 
-    return res.status(200).json(results);
+    return res.status(200).json(responseFormatter.success(results));
   } catch (err) {
     next(err);
   }

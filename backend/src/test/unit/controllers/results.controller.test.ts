@@ -82,9 +82,14 @@ describe('ResultsController', () => {
       expect(mockResponse.status).toHaveBeenCalledOnce();
       expect(mockResponse.status).toHaveBeenCalledWith(200);
 
-      // Assert - Verify response data matches exactly what service returned
+      // Assert - Verify wrapped response with success format
       expect(mockResponse.json).toHaveBeenCalledOnce();
-      expect(mockResponse.json).toHaveBeenCalledWith(mockResults);
+      const responseData = vi.mocked(mockResponse.json).mock.calls[0][0];
+      expect(responseData).toHaveProperty('success', true);
+      expect(responseData).toHaveProperty('data');
+      expect(responseData.data).toEqual(mockResults);
+      expect(responseData).toHaveProperty('timestamp');
+      expect(typeof responseData.timestamp).toBe('string');
 
       // Assert - Verify error handler was NOT invoked
       expect(mockNext).not.toHaveBeenCalled();
@@ -125,12 +130,14 @@ describe('ResultsController', () => {
       // Assert - Verify 200 status even with empty data
       expect(mockResponse.status).toHaveBeenCalledWith(200);
 
-      // Assert - Verify structure of empty results is preserved
+      // Assert - Verify wrapped response with empty data
       const responseData = vi.mocked(mockResponse.json).mock.calls[0][0];
-      expect(responseData).toEqual(emptyResults);
-      expect(responseData.totalCount).toBe(0);
-      expect(responseData.age.avg).toBeNull();
-      expect(responseData.foodPercentages.pizza).toBeNull();
+      expect(responseData).toHaveProperty('success', true);
+      expect(responseData).toHaveProperty('data');
+      expect(responseData.data).toEqual(emptyResults);
+      expect(responseData.data.totalCount).toBe(0);
+      expect(responseData.data.age.avg).toBeNull();
+      expect(responseData.data.foodPercentages.pizza).toBeNull();
     });
 
     it('should retrieve container instance for dependency injection', async () => {
