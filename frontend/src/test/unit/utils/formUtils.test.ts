@@ -9,12 +9,12 @@ import {
   sanitizeObject,
   getChangedFields,
   hasValues,
-} from '../../../utils/formUtils';
+} from '@/utils/formUtils';
 import {
   createRandomDateString,
   createRandomObjectWithWhitespace,
   createRandomFieldChanges,
-} from '../../../test/utils/test-helpers';
+} from '@/test/utils/test-helpers';
 
 describe('formUtils', () => {
   describe('formDateToISO', () => {

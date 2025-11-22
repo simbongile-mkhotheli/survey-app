@@ -7,12 +7,12 @@ import {
   calculateAge,
   formatRelativeTime,
   dateUtils,
-} from '../../../utils/dateUtils';
+} from '@/utils/dateUtils';
 import {
   createRandomDateString,
   createRandomISODateString,
   createRandomRecentDate,
-} from '../../../test/utils/test-helpers';
+} from '@/test/utils/test-helpers';
 
 describe('dateUtils', () => {
   describe('formatDate', () => {

@@ -16,7 +16,7 @@ import type {
 import {
   createRandomErrorMessage,
   createRandomErrorCode,
-} from '../../../test/utils/test-helpers';
+} from '@/test/utils/test-helpers';
 
 describe('response utilities', () => {
   // ==================== Type Guards ====================

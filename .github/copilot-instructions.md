@@ -564,8 +564,7 @@ import { useSurveyStore } from '../../../store/useSurveyStore';
 - ✅ **ALWAYS**: Use `@/*` for top-level src imports
 - ✅ **ALWAYS**: Use `@shared/*` or `@shared-root/*` for shared package imports
 - ✅ **ALWAYS**: Update imports when moving files to maintain alias paths
-- ✅ **ALWAYS**: Maintain consistency within file type (all tests use relative OR all use aliases)
-- ✅ **ACCEPTABLE EXCEPTION**: Test files under `src/test/` may use **relative imports** (`../../`, `../../../`) for consistency - ALL test files in a directory must use same pattern
+- ✅ **ALWAYS**: Maintain consistency within file type (all tests use aliases)
 - ✅ **LOCAL SAME-DIRECTORY**: Use `./` for CSS modules and local components in same folder (e.g., `./Button.module.css`, `./RatingRow`)
 - ❌ **NEVER**: Use relative imports like `../../module` in actual source code (non-test files)
 - ❌ **NEVER**: Use `require()` instead of ES6 imports
