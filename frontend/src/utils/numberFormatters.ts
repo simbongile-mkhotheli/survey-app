@@ -28,7 +28,7 @@ export const formatDecimal = (
   if (value == null) return 'N/A';
 
   const num = Number(value);
-  return isNaN(num) ? 'N/A' : num.toFixed(1);
+  return isNaN(num) || !isFinite(num) ? 'N/A' : num.toFixed(1);
 };
 
 /**
@@ -54,7 +54,7 @@ export const formatInteger = (
   if (value == null) return 'N/A';
 
   const num = Number(value);
-  return isNaN(num) ? 'N/A' : Math.round(num).toString();
+  return isNaN(num) || !isFinite(num) ? 'N/A' : Math.round(num).toString();
 };
 
 /**

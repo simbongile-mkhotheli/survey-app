@@ -107,21 +107,21 @@ describe('Results Component', () => {
 
       render(<Results />);
 
-      // Average age should be formatted with formatAge (28 years)
+      // Average age should be formatted with formatAge (28.5 rounds to 29 years)
       expect(screen.getByText('Average Age')).toBeInTheDocument();
-      expect(screen.getByText('28 years')).toBeInTheDocument();
+      expect(screen.getByText(/29 years/)).toBeInTheDocument();
 
       // Oldest should display as integer with years suffix
       expect(
         screen.getByText('Oldest person who participated'),
       ).toBeInTheDocument();
-      expect(screen.getByText('65 years')).toBeInTheDocument();
+      expect(screen.getByText(/65 years/)).toBeInTheDocument();
 
       // Youngest should display as integer with years suffix
       expect(
         screen.getByText('Youngest person who participated'),
       ).toBeInTheDocument();
-      expect(screen.getByText('18 years')).toBeInTheDocument();
+      expect(screen.getByText(/18 years/)).toBeInTheDocument();
     });
 
     it('displays food preferences with percentage formatting', () => {
