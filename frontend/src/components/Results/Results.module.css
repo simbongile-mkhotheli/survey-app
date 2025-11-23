@@ -60,3 +60,8 @@
   background: rgba(102, 126, 234, 0.1);
   border-radius: var(--radius-lg);
 }
+
+/* Vertical spacer between result sections */
+.spacer {
+  height: 2rem;
+}
