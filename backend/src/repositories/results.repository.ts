@@ -177,11 +177,15 @@ export class ResultsRepository implements IResultsRepository {
       return result;
     }
 
-    // Calculate ages
+    // Calculate ages - handle both Date objects and string dates
     const currentYear = new Date().getFullYear();
-    const ages = responses.map(
-      (r: { dateOfBirth: Date }) => currentYear - r.dateOfBirth.getFullYear(),
-    );
+    const ages = responses.map((r: { dateOfBirth: Date | string }) => {
+      const birthDate =
+        typeof r.dateOfBirth === 'string'
+          ? new Date(r.dateOfBirth)
+          : r.dateOfBirth;
+      return currentYear - birthDate.getFullYear();
+    });
 
     const avgAge =
       ages.reduce((sum: number, age: number) => sum + age, 0) / ages.length;
