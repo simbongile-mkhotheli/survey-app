@@ -11,6 +11,9 @@ export type { RecoveryStrategy, RecoveryState } from './useErrorRecovery';
 export { useFiltersAndSorting } from './useFiltersAndSorting';
 export type { UseFiltersAndSorting } from './useFiltersAndSorting';
 
+export { useWebSocket } from './useWebSocket';
+export type { UseWebSocket } from './useWebSocket';
+
 export {
   surveyQueryKeys,
   useResults,
