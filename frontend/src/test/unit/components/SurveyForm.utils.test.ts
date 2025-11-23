@@ -20,13 +20,13 @@ import {
   validateAllRatings,
   foodsToString,
   formatErrorMessage,
-} from '@/components/Survey/SurveyForm.utils';
+} from '../../../components/Survey/SurveyForm.utils';
 import {
   FOOD_OPTIONS,
   RATING_FIELDS,
   RATING_SCALE_LABELS,
   ERROR_MESSAGES,
-} from '@/components/Survey/SurveyForm.constants';
+} from '../../../components/Survey/SurveyForm.constants';
 
 describe('SurveyForm Constants and Utilities', () => {
   describe('Constants Structure', () => {
