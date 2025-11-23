@@ -6,6 +6,8 @@ build/
 # Env files
 .env
 .env.local
+*.local.md
+RENDER_DEPLOYMENT.local.md
 
 # IDE settings
 .vscode/
