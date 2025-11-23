@@ -271,3 +271,41 @@ export type OptionalProps<
   T extends Record<string, unknown>,
   K extends keyof T,
 > = Omit<T, K> & Partial<Pick<T, K>>;
+
+// ============================================================================
+// Error Metadata & Context Types
+// ============================================================================
+
+/**
+ * Metadata attached to errors for analytics and debugging
+ */
+export interface ErrorMetadata {
+  /** React component stack trace */
+  component?: string;
+
+  /** ISO timestamp of error occurrence */
+  timestamp: number;
+
+  /** Error severity level */
+  severity: 'low' | 'medium' | 'high' | 'critical';
+
+  /** Route or context where error occurred */
+  route?: string;
+
+  /** User agent string */
+  userAgent: string;
+
+  /** Additional context data */
+  context?: Record<string, unknown>;
+}
+
+/**
+ * Error event for tracking and analytics
+ */
+export interface ErrorEvent {
+  error: Error;
+  metadata: ErrorMetadata;
+  handled: boolean;
+  recoverable: boolean;
+  timestamp: number;
+}
