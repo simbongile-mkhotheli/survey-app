@@ -3,13 +3,14 @@
     "target": "ES2020",
     "module": "CommonJS",
     "lib": ["ES2020"],
-    "outDir": "dist",
+    "outDir": "./dist",
     "rootDir": "..",
     "strict": true,
     "moduleResolution": "node",
     "types": ["vitest/globals"],
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "noEmitOnError": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
@@ -26,6 +27,6 @@
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/server.ts", "../shared/**/*.ts"],
+  "include": ["src/**/*.ts", "../shared/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
