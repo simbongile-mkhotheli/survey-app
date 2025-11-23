@@ -2,11 +2,11 @@
   "name": "survey-backend",
   "version": "1.0.0",
   "description": "Express + Prisma backend for Survey App",
-  "main": "dist/server.js",
+  "main": "dist/backend/src/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
-    "build": "tsc && node scripts/postbuild.js",
-    "start": "npm run build && node dist/server.js",
+    "build": "tsc && tsc-alias --project tsconfig.json",
+    "start": "npm run build && node dist/backend/src/server.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -76,6 +76,7 @@
     "supertest": "^6.3.3",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
+    "tsc-alias": "^1.8.8",
     "typescript": "^5.8.3",
     "vitest": "^1.4.7"
   }
