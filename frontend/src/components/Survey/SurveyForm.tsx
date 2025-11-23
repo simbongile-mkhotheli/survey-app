@@ -1,3 +1,44 @@
+/**
+ * SurveyForm Component
+ *
+ * Main survey form component for collecting user feedback. Handles:
+ * - Personal details (name, email, contact, date of birth)
+ * - Food preferences (multi-select checkboxes)
+ * - Rating scale feedback (5-point scale: Strongly Agree → Strongly Disagree)
+ *
+ * Form validation is handled via React Hook Form with Zod schema validation.
+ * All user inputs are sanitized and validated against the shared SurveySchema.
+ *
+ * @component
+ * @returns {JSX.Element} Rendered survey form with all input fields and state management
+ *
+ * @example
+ * import SurveyForm from '@/components/Survey/SurveyForm';
+ *
+ * export function App() {
+ *   return <SurveyForm />;
+ * }
+ *
+ * @dependencies
+ * - React Hook Form: Form state management and validation
+ * - Zod: Schema validation via zodResolver
+ * - @/validation: SurveySchema for data validation
+ * - @/services/api: submitSurvey for API communication
+ * - @/components/ui: Reusable UI components (TextField, Loading, etc.)
+ * - RatingRow: Rating input row component
+ * - SurveyForm.constants: Centralized form labels and configuration
+ * - SurveyForm.utils: Helper functions for form logic
+ *
+ * @throws {Error} If form submission fails (caught and displayed to user)
+ *
+ * @state {string|null} submitError - Error message from form submission
+ * @state {FormState} formState - React Hook Form internal state (errors, isSubmitting, isSubmitSuccessful)
+ *
+ * @events
+ * - onSubmit: Triggered when form is submitted with valid data
+ * - handleClearError: Clears submission error state
+ */
+
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,7 +52,17 @@ import { Loading, ErrorMessage, InlineError, TextField } from '@/components/ui';
 
 import RatingRow from './RatingRow';
 import styles from './SurveyForm.module.css';
+import { FOOD_OPTIONS, RATING_SCALE_LABELS } from './SurveyForm.constants';
+import { formatErrorMessage } from './SurveyForm.utils';
 
+/**
+ * SurveyForm component
+ *
+ * Renders the complete survey form with personal details, food preferences, and ratings.
+ * Manages form state via React Hook Form and handles submission to the API.
+ *
+ * @returns {JSX.Element} The rendered form component
+ */
 function SurveyForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { handleError } = useErrorHandler({ logToStore: false });
@@ -27,6 +78,16 @@ function SurveyForm() {
     reValidateMode: 'onBlur',
   });
 
+  /**
+   * Handles form submission
+   *
+   * Validates form data and submits to API. On success, resets form state.
+   * On error, displays error message and logs to error handler.
+   *
+   * @param {SurveyFormValues} data - Validated form data from React Hook Form
+   * @returns {Promise<void>}
+   * @throws {Error} API submission errors are caught and displayed to user
+   */
   const onSubmit: SubmitHandler<SurveyFormValues> = useCallback(
     async (data) => {
       try {
@@ -34,8 +95,9 @@ function SurveyForm() {
         await submitSurvey(data);
         reset();
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : 'Failed to submit survey';
+        const errorMessage = formatErrorMessage(
+          err instanceof Error ? err : new Error('Failed to submit survey'),
+        );
         setSubmitError(errorMessage);
         handleError(
           err instanceof Error ? err : new Error(errorMessage),
@@ -46,7 +108,13 @@ function SurveyForm() {
     [reset, handleError],
   );
 
-  // Callback for clearing error state
+  /**
+   * Clears submission error state
+   *
+   * Called when user dismisses error message or retries submission.
+   *
+   * @returns {void}
+   */
   const handleClearError = useCallback(() => {
     setSubmitError(null);
   }, []);
@@ -147,7 +215,7 @@ function SurveyForm() {
                 What is your favorite food?
               </span>
               <div className={styles.checkboxGroup}>
-                {['Pizza', 'Pasta', 'Pap and Wors', 'Other'].map((food) => (
+                {FOOD_OPTIONS.map((food) => (
                   <label key={food} className={styles.checkboxLabel}>
                     <input
                       type="checkbox"
@@ -177,11 +245,11 @@ function SurveyForm() {
                   <thead>
                     <tr>
                       <th className={styles.thLabel}></th>
-                      <th className={styles.th}>Strongly Agree</th>
-                      <th className={styles.th}>Agree</th>
-                      <th className={styles.th}>Neutral</th>
-                      <th className={styles.th}>Disagree</th>
-                      <th className={styles.th}>Strongly Disagree</th>
+                      {RATING_SCALE_LABELS.map((label) => (
+                        <th key={label} className={styles.th}>
+                          {label}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
