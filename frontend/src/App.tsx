@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import SurveyForm from '@/components/Survey/SurveyForm';
-import Results from '@/components/Results/Results';
+import SuspenseFallback from '@/components/SuspenseFallback';
 import Nav from '@/components/Nav';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 import appStyles from './App.module.css';
 import surveyStyles from '@/components/Survey/SurveyForm.module.css';
+
+// Lazy-load Results component for better code splitting
+const Results = lazy(() => import('@/components/Results/Results'));
 
 const App: React.FC = () => (
   <ErrorBoundary level="critical">
@@ -31,7 +34,9 @@ const App: React.FC = () => (
             path="/results"
             element={
               <ErrorBoundary level="page">
-                <Results />
+                <Suspense fallback={<SuspenseFallback />}>
+                  <Results />
+                </Suspense>
               </ErrorBoundary>
             }
           />

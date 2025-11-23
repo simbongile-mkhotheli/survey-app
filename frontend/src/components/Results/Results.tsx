@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react';
-import { useResults } from '@/store/useSurveyStore';
+import { useMemo, memo } from 'react';
+import { useResults } from '@/hooks/useQuery';
 import { Loading, ErrorMessage } from '@/components/ui';
 import styles from './Results.module.css';
 // Utility functions moved outside component
@@ -13,34 +13,22 @@ const fmtInt = (n: number | string | null) => {
   const num = Number(n);
   return isNaN(num) ? 'N/A' : Math.round(num).toString();
 };
-// Separate components for better organization
-const ResultRow = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number;
-}) => (
-  <div className={styles.resultRow}>
-    <span className={styles.label}>{label}</span>
-    <span className={styles.value}>{value}</span>
-  </div>
-);
-export default function Results() {
-  const {
-    data: results,
-    loading,
-    error,
-    hasFetched,
-    fetchResults,
-  } = useResults();
 
-  useEffect(() => {
-    // Fetch results if not already fetched and not in loading state
-    if (!hasFetched && !loading) {
-      fetchResults();
-    }
-  }, [hasFetched, loading, fetchResults]);
+// Separate component for better organization and memoization
+const ResultRow = memo(
+  ({ label, value }: { label: string; value: string | number }) => (
+    <div className={styles.resultRow}>
+      <span className={styles.label}>{label}</span>
+      <span className={styles.value}>{value}</span>
+    </div>
+  ),
+);
+
+ResultRow.displayName = 'ResultRow';
+
+function Results() {
+  const { data: results, isLoading, error, refetch } = useResults();
+
   // Memoize destructured values to prevent unnecessary re-renders
   const resultValues = useMemo(() => {
     if (!results) return null;
@@ -51,17 +39,20 @@ export default function Results() {
       avgRatings: results.avgRatings,
     };
   }, [results]);
-  if (loading) {
+
+  if (isLoading) {
     return <Loading text="Loading survey results..." />;
   }
 
   if (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Failed to load results';
     return (
       <ErrorMessage
-        message={error}
+        message={errorMessage}
         title="Failed to Load Results"
         showRetry
-        onRetry={fetchResults}
+        onRetry={() => refetch()}
       />
     );
   }
@@ -131,3 +122,7 @@ export default function Results() {
     </div>
   );
 }
+
+export default memo(Results);
+
+Results.displayName = 'Results';

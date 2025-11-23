@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 import type { InputHTMLAttributes } from 'react';
 import styles from './RatingRow.module.css';
@@ -11,7 +12,7 @@ interface RatingRowProps {
   isEvenRow?: boolean;
 }
 
-export default function RatingRow({
+function RatingRow({
   label,
   fieldName,
   register,
@@ -50,3 +51,5 @@ export default function RatingRow({
     </>
   );
 }
+
+export default memo(RatingRow);

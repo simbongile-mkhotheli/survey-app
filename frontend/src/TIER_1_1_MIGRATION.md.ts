@@ -1,0 +1,276 @@
+/**
+ * TIER 1.1: React Query & Hybrid State Management
+ * ================================================
+ *
+ * Migration Strategy: Zustand → React Query + Zustand
+ *
+ * This document outlines how to integrate React Query while maintaining
+ * Zustand for local-only state management.
+ *
+ * ============================================================================
+ * ARCHITECTURE OVERVIEW
+ * ============================================================================
+ *
+ * BEFORE (Current):
+ * ├─ Zustand Store (Global State)
+ * │  ├─ Survey data (local form state) ✅ KEEP
+ * │  ├─ Results data (fetched from API) ⚠️  MOVE TO REACT QUERY
+ * │  ├─ Loading state (manual) ⚠️  MOVE TO REACT QUERY
+ * │  ├─ Error state (manual) ⚠️  MOVE TO REACT QUERY
+ * │  ├─ Dark mode, language (local) ✅ KEEP
+ * │  └─ Manual fetch/refetch logic ⚠️  REPLACE WITH REACT QUERY
+ *
+ * AFTER (Hybrid - GOAL):
+ * ├─ React Query (Server State)
+ * │  ├─ Results fetching (auto-cached, auto-refetch)
+ * │  ├─ Survey submission (with cache invalidation)
+ * │  ├─ Error handling (structured, typed)
+ * │  └─ Loading states (automatic)
+ * │
+ * └─ Zustand Store (Local/UI State)
+ *    ├─ Survey form data ✅
+ *    ├─ UI settings (dark mode, language) ✅
+ *    ├─ Transient UI state (modal open, tabs) ✅
+ *    └─ Cached results (optional - for optimistic updates) ⚠️
+ *
+ * ============================================================================
+ * BENEFITS OF HYBRID APPROACH
+ * ============================================================================
+ *
+ * 1. Separation of Concerns
+ *    - React Query: Manages server state (data, caching, synchronization)
+ *    - Zustand: Manages local/UI state (forms, preferences, UI flags)
+ *    - Each tool solves its specific problem perfectly
+ *
+ * 2. Automatic Cache Management
+ *    - React Query handles stale-time, cache-time, refetching
+ *    - No manual cache invalidation needed (React Query does it)
+ *    - Background refetching keeps data fresh
+ *
+ * 3. Better DevTools & Debugging
+ *    - React Query DevTools shows all queries, mutations, cache state
+ *    - Zustand DevTools shows all state changes and actions
+ *    - Combined: Full visibility into both server and local state
+ *
+ * 4. Enterprise Patterns
+ *    - Matches industry standards (React, Vue, Angular all use similar)
+ *    - Request deduplication (same query = same response)
+ *    - Smart retries (exponential backoff)
+ *    - Cancelable requests
+ *
+ * 5. Type Safety
+ *    - React Query provides full TypeScript inference
+ *    - Query responses are automatically typed
+ *    - useResults() returns Results<T> with proper typing
+ *
+ * ============================================================================
+ * MIGRATION STEPS (Phased Approach)
+ * ============================================================================
+ *
+ * Phase 1: Infrastructure (✅ DONE)
+ * ├─ Install @tanstack/react-query v5
+ * ├─ Create QueryClientProvider in main.tsx
+ * ├─ Configure queryClient with sensible defaults
+ * ├─ Set up error handling and logging
+ * └─ Create custom hooks (useResults, useSubmitSurvey)
+ *
+ * Phase 2: Results Component Migration (NEXT)
+ * ├─ Update Results component to use useResults hook
+ * ├─ Remove results fetching from Zustand
+ * ├─ Keep data caching in Zustand for optimistic updates (optional)
+ * ├─ Add React Query DevTools
+ * └─ Update tests to mock React Query
+ *
+ * Phase 3: Form Submission Migration (AFTER PHASE 2)
+ * ├─ Update SurveyForm to use useSubmitSurvey mutation
+ * ├─ Replace manual submission logic with mutation
+ * ├─ Automatic cache invalidation on success
+ * └─ Error handling via mutation state
+ *
+ * Phase 4: Zustand Cleanup (AFTER PHASE 3)
+ * ├─ Remove fetchResults action from store
+ * ├─ Remove loading/error from fetching (keep for UI)
+ * ├─ Keep local form state and settings
+ * ├─ Simplify store reducer
+ * └─ Update tests
+ *
+ * Phase 5: Performance Optimization (AFTER PHASE 4)
+ * ├─ Add prefetching for /results route
+ * ├─ Implement optimistic updates
+ * ├─ Add pagination/infinite queries if needed
+ * └─ Profile and measure improvements
+ *
+ * ============================================================================
+ * KEY CONFIGURATION DECISIONS
+ * ============================================================================
+ *
+ * 1. CACHE STRATEGY
+ *
+ *    Stale Time: 30 seconds
+ *    ├─ After 30s, data is considered "stale"
+ *    ├─ Triggers background refetch if data is accessed
+ *    ├─ User sees old data immediately, gets new data in background
+ *    └─ Trade-off: Freshness vs. performance
+ *
+ *    GC Time (Cache Time): 5 minutes
+ *    ├─ Data remains in cache for 5 minutes even if unused
+ *    ├─ Prevents refetch if user navigates away and back quickly
+ *    ├─ Matches backend cache TTL (5 minutes)
+ *    └─ Reduces unnecessary network requests
+ *
+ * 2. RETRY STRATEGY
+ *
+ *    Queries: 2 retries with exponential backoff
+ *    ├─ 1st retry: 1 second delay
+ *    ├─ 2nd retry: 2 seconds delay
+ *    ├─ No retry on 4xx errors (client errors are permanent)
+ *    └─ Auto-retries on 5xx errors (temporary)
+ *
+ *    Mutations: 0 retries (user controls)
+ *    ├─ User should decide if they want to retry
+ *    ├─ Form submission shouldn't silently retry
+ *    └─ Prevents duplicate submissions
+ *
+ * 3. REFETCH BEHAVIOR
+ *
+ *    ✅ Refetch on window focus
+ *    ├─ User returns to tab → data refreshes
+ *    └─ Keeps data fresh across tab switches
+ *
+ *    ✅ Refetch on reconnect
+ *    ├─ Internet reconnected → refetch data
+ *    └─ Recovers from network outages
+ *
+ *    ✅ Refetch on mount
+ *    ├─ Component mounts → check if data is stale
+ *    └─ Fresh data when navigating to route
+ *
+ * ============================================================================
+ * REPLACING ZUSTAND METHODS
+ * ============================================================================
+ *
+ * OLD (Zustand):
+ * ├─ fetchResults() → Manual fetch + setState
+ * ├─ setResults(data) → Store results in state
+ * ├─ loading: boolean → Manual state
+ * └─ error: string | null → Manual state
+ *
+ * NEW (React Query):
+ * ├─ useResults() → Auto-fetch + auto-cache
+ * ├─ data: Results | undefined → From query
+ * ├─ isLoading: boolean → From query
+ * ├─ error: Error | null → From query
+ * ├─ isFetching: boolean → Background refetch
+ * └─ refetch() → Manual refetch when needed
+ *
+ * ZUSTAND SIMPLIFIED TO:
+ * ├─ Survey form state ✅
+ * ├─ Settings (dark mode, language) ✅
+ * └─ UI flags (modal open, tabs) ✅
+ *
+ * ============================================================================
+ * CODE EXAMPLES (What's Changed)
+ * ============================================================================
+ *
+ * BEFORE (Current - Zustand only):
+ *
+ *   // In component
+ *   const { data, loading, error, fetchResults } = useResults();
+ *
+ *   useEffect(() => {
+ *     if (!data && !loading) {
+ *       fetchResults(); // Manual fetch
+ *     }
+ *   }, [data, loading, fetchResults]);
+ *
+ *   // In Zustand store
+ *   fetchResults: async () => {
+ *     set({ loading: true });
+ *     try {
+ *       const data = await fetchResults();
+ *       set({ data, loading: false, error: null });
+ *     } catch (error) {
+ *       set({ error: error.message, loading: false });
+ *     }
+ *   }
+ *
+ * AFTER (React Query):
+ *
+ *   // In component
+ *   const { data, isLoading, error } = useResults();
+ *
+ *   // No need for useEffect - React Query handles it automatically
+ *   // Queries stale-time, cache-time, refetching all automatic
+ *
+ *   // To refetch manually:
+ *   const { refetch } = useResults();
+ *   <button onClick={() => refetch()}>Refresh</button>
+ *
+ * BENEFIT: ~50% less code, better performance, no manual cache management
+ *
+ * ============================================================================
+ * ERROR HANDLING
+ * ============================================================================
+ *
+ * React Query errors automatically:
+ * 1. Log to console (with full context)
+ * 2. Trigger retry logic (configurable)
+ * 3. Make error available to components
+ *
+ * Component handles error:
+ *   const { error, refetch } = useResults();
+ *
+ *   if (error) {
+ *     return (
+ *       <ErrorMessage
+ *         message={error.message}
+ *         onRetry={() => refetch()}
+ *       />
+ *     );
+ *   }
+ *
+ * ============================================================================
+ * TESTING STRATEGY
+ * ============================================================================
+ *
+ * Before: Mock Zustand store directly
+ *   vi.mock('@/store/useSurveyStore', () => ({
+ *     useResults: () => mockData,
+ *   }));
+ *
+ * After: Mock React Query (QueryClient)
+ *   const queryClient = new QueryClient({
+ *     defaultOptions: { queries: { retry: false } },
+ *   });
+ *
+ *   queryClient.setQueryData(
+ *     surveyQueryKeys.results(),
+ *     mockResults
+ *   );
+ *
+ * Both approaches work - React Query testing is more flexible
+ *
+ * ============================================================================
+ * NEXT STEPS
+ * ============================================================================
+ *
+ * ✅ Tier 1.1: React Query Setup (COMPLETE)
+ *
+ * → Tier 1.2: Migrate Results Component
+ *    └─ Replace useResults() hook in Results.tsx
+ *    └─ Wire up useResults from React Query
+ *    └─ Update tests
+ *
+ * → Tier 1.3: Migrate Form Submission
+ *    └─ Replace manual submission with useSubmitSurvey mutation
+ *    └─ Automatic cache invalidation
+ *
+ * → Tier 1.4: Cleanup & Optimization
+ *    └─ Remove old fetching logic from Zustand
+ *    └─ Add React Query DevTools
+ *    └─ Prefetch data for routes
+ *
+ * ============================================================================
+ */
+
+export const TIER_1_1_COMPLETE = true;

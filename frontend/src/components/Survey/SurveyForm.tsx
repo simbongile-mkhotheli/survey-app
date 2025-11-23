@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 
 import { SurveySchema } from '@/validation';
 import type { SurveyFormValues } from '@/validation';
@@ -12,7 +12,7 @@ import { Loading, ErrorMessage, InlineError, TextField } from '@/components/ui';
 import RatingRow from './RatingRow';
 import styles from './SurveyForm.module.css';
 
-export default function SurveyForm() {
+function SurveyForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { handleError } = useErrorHandler({ logToStore: false });
 
@@ -27,21 +27,29 @@ export default function SurveyForm() {
     reValidateMode: 'onBlur',
   });
 
-  const onSubmit: SubmitHandler<SurveyFormValues> = async (data) => {
-    try {
-      setSubmitError(null);
-      await submitSurvey(data);
-      reset();
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to submit survey';
-      setSubmitError(errorMessage);
-      handleError(
-        err instanceof Error ? err : new Error(errorMessage),
-        'Survey submission',
-      );
-    }
-  };
+  const onSubmit: SubmitHandler<SurveyFormValues> = useCallback(
+    async (data) => {
+      try {
+        setSubmitError(null);
+        await submitSurvey(data);
+        reset();
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Failed to submit survey';
+        setSubmitError(errorMessage);
+        handleError(
+          err instanceof Error ? err : new Error(errorMessage),
+          'Survey submission',
+        );
+      }
+    },
+    [reset, handleError],
+  );
+
+  // Callback for clearing error state
+  const handleClearError = useCallback(() => {
+    setSubmitError(null);
+  }, []);
 
   return (
     <div className={styles.page}>
@@ -55,7 +63,7 @@ export default function SurveyForm() {
           title="Submission Failed"
           severity="error"
           showRetry
-          onRetry={() => setSubmitError(null)}
+          onRetry={handleClearError}
         />
       )}
 
@@ -233,3 +241,7 @@ export default function SurveyForm() {
     </div>
   );
 }
+
+export default memo(SurveyForm);
+
+SurveyForm.displayName = 'SurveyForm';

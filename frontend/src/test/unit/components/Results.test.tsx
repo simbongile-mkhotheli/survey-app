@@ -8,9 +8,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Results from '@/components/Results/Results';
 
-// Mock the store
+// Mock React Query hook
 const mockUseResults = vi.fn();
-vi.mock('@/store/useSurveyStore', () => ({
+vi.mock('@/hooks/useQuery', () => ({
   useResults: () => mockUseResults(),
 }));
 
@@ -53,9 +53,9 @@ describe('Results', () => {
   it('displays loading state initially', () => {
     mockUseResults.mockReturnValue({
       data: null,
-      loading: true,
+      isLoading: true,
       error: null,
-      fetchResults: vi.fn(),
+      refetch: vi.fn(),
     });
 
     render(<Results />);
@@ -66,9 +66,9 @@ describe('Results', () => {
   it('displays results when data is loaded', async () => {
     mockUseResults.mockReturnValue({
       data: mockResults,
-      loading: false,
+      isLoading: false,
       error: null,
-      fetchResults: vi.fn(),
+      refetch: vi.fn(),
     });
 
     render(<Results />);
@@ -83,9 +83,9 @@ describe('Results', () => {
   it('displays error message when API call fails', async () => {
     mockUseResults.mockReturnValue({
       data: null,
-      loading: false,
-      error: 'Failed to load results',
-      fetchResults: vi.fn(),
+      isLoading: false,
+      error: new Error('Failed to load results'),
+      refetch: vi.fn(),
     });
 
     render(<Results />);
@@ -103,9 +103,9 @@ describe('Results', () => {
 
     mockUseResults.mockReturnValue({
       data: emptyResults,
-      loading: false,
+      isLoading: false,
       error: null,
-      fetchResults: vi.fn(),
+      refetch: vi.fn(),
     });
 
     render(<Results />);
