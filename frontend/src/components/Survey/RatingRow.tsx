@@ -3,6 +3,7 @@ import type { UseFormRegister } from 'react-hook-form';
 import type { InputHTMLAttributes } from 'react';
 import styles from './RatingRow.module.css';
 import type { SurveyFormValues } from '@/validation';
+import { RATING_SCALE_LABELS } from './SurveyForm.constants';
 
 interface RatingRowProps {
   label: string;
@@ -24,8 +25,11 @@ function RatingRow({
       <tr className={`${styles.row} ${isEvenRow ? styles.evenRow : ''}`}>
         <td className={styles.labelCell}>{label}</td>
         <div className={styles.optionsContainer}>
-          {[1, 2, 3, 4, 5].map((value) => (
+          {[1, 2, 3, 4, 5].map((value, index) => (
             <td key={value} className={styles.cell}>
+              <span className={styles.cellLabel}>
+                {RATING_SCALE_LABELS[index]}
+              </span>
               <input
                 type="radio"
                 value={value}
