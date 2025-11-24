@@ -5,7 +5,7 @@
   "main": "dist/backend/src/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
-    "build": "tsc && tsc-alias --project tsconfig.json",
+    "build": "prisma generate && tsc && tsc-alias --project tsconfig.json",
     "start": "npm run build && node scripts/wait-for-db.js && npm run migrate:deploy && node dist/backend/src/server.js",
     "migrate:deploy": "prisma migrate deploy",
     "typecheck": "tsc --noEmit",
