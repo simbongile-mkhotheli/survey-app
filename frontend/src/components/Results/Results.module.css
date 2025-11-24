@@ -3,6 +3,9 @@
   max-width: 900px;
   margin: 0 auto;
   padding: var(--spacing-4);
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 @media (min-width: 768px) {
@@ -24,6 +27,9 @@
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
