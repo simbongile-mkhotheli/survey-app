@@ -26,5 +26,4 @@ model SurveyResponse {
   @@index([dateOfBirth], name: "idx_survey_dob")
   @@index([submittedAt], name: "idx_survey_submitted")
   @@index([submittedAt, id], name: "idx_survey_submitted_id")
-  @@map("survey_responses")
 }
