@@ -2,16 +2,40 @@
 .container {
   max-width: 900px;
   margin: 0 auto;
-  padding: var(--spacing-8);
+  padding: var(--spacing-4);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: var(--spacing-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: var(--spacing-8);
+  }
 }
 
 .card {
   background: var(--color-white);
   border-radius: var(--radius-2xl);
-  padding: var(--spacing-8);
+  padding: var(--spacing-4);
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: var(--spacing-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    padding: var(--spacing-8);
+  }
 }
 
 .heading {
@@ -26,17 +50,30 @@
   background-clip: text;
 }
 
-/* Each row: label on left, value on right */
+/* Each row: mobile-first stacked layout */
 .resultRow {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-4);
-  margin-bottom: var(--spacing-3);
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: var(--spacing-3);
+  margin-bottom: var(--spacing-2);
   border-radius: var(--radius-lg);
   background: var(--color-gray-50);
   transition: all var(--transition-fast);
   border: 2px solid transparent;
+  gap: var(--spacing-2);
+}
+
+@media (min-width: 768px) {
+  .resultRow {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-4);
+    margin-bottom: var(--spacing-3);
+    gap: 0;
+  }
 }
 
 .resultRow:hover {

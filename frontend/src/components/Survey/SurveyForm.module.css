@@ -11,11 +11,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-6) var(--spacing-8);
+  padding: var(--spacing-3) var(--spacing-4);
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding: var(--spacing-6) var(--spacing-8);
+  }
 }
 
 .headerLeft {
@@ -29,30 +35,64 @@
 
 .main {
   flex: 1;
-  padding: var(--spacing-8) var(--spacing-8);
+  padding: var(--spacing-4) var(--spacing-4);
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
+}
+
+@media (min-width: 768px) {
+  .main {
+    padding: var(--spacing-6) var(--spacing-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .main {
+    padding: var(--spacing-8) var(--spacing-8);
+  }
 }
 
 /* Card wrapper for form content */
 .formCard {
   background: var(--color-white);
   border-radius: var(--radius-2xl);
-  padding: var(--spacing-8);
+  padding: var(--spacing-4);
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* Row layout */
+@media (min-width: 768px) {
+  .formCard {
+    padding: var(--spacing-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .formCard {
+    padding: var(--spacing-8);
+  }
+}
+
+/* Row layout - mobile first: stack vertically */
 .row {
   display: flex;
-  align-items: flex-start;
-  margin-bottom: var(--spacing-6);
-  padding: var(--spacing-4);
+  flex-direction: column;
+  align-items: stretch;
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-3);
   border-radius: var(--radius-lg);
   transition: background-color var(--transition-base);
+}
+
+@media (min-width: 768px) {
+  .row {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-6);
+    padding: var(--spacing-4);
+  }
 }
 
 .row:hover {
@@ -63,11 +103,21 @@
   margin-bottom: 0;
 }
 
-/* Column for labels */
+/* Column for labels - full width on mobile */
 .colLabel {
-  flex-basis: 25%;
+  width: 100%;
   text-align: left;
-  padding-right: var(--spacing-2);
+  padding-right: 0;
+  margin-bottom: var(--spacing-2);
+}
+
+@media (min-width: 768px) {
+  .colLabel {
+    flex-basis: 25%;
+    width: auto;
+    padding-right: var(--spacing-2);
+    margin-bottom: 0;
+  }
 }
 
 /* Label text */
@@ -78,11 +128,17 @@
   line-height: var(--line-height-relaxed);
 }
 
-/* Column for inputs */
+/* Column for inputs - full width on mobile */
 .colInput {
-  flex-basis: 75%;
+  width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .colInput {
+    flex-basis: 75%;
+  }
 }
 
 /* Inline column for inputs (checkboxes) */
