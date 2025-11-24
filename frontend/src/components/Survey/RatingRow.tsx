@@ -23,18 +23,20 @@ function RatingRow({
     <>
       <tr className={`${styles.row} ${isEvenRow ? styles.evenRow : ''}`}>
         <td className={styles.labelCell}>{label}</td>
-        {[1, 2, 3, 4, 5].map((value) => (
-          <td key={value} className={styles.cell}>
-            <input
-              type="radio"
-              value={value}
-              className={styles.radioInput}
-              {...(register(
-                fieldName,
-              ) as unknown as InputHTMLAttributes<HTMLInputElement>)}
-            />
-          </td>
-        ))}
+        <div className={styles.optionsContainer}>
+          {[1, 2, 3, 4, 5].map((value) => (
+            <td key={value} className={styles.cell}>
+              <input
+                type="radio"
+                value={value}
+                className={styles.radioInput}
+                {...(register(
+                  fieldName,
+                ) as unknown as InputHTMLAttributes<HTMLInputElement>)}
+              />
+            </td>
+          ))}
+        </div>
       </tr>
 
       {/* Only render error row if there's an error */}
