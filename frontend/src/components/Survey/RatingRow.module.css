@@ -6,6 +6,10 @@
   padding: var(--spacing-3);
   border-radius: var(--radius-lg);
   background-color: var(--color-white);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 @media (min-width: 768px) {
@@ -55,6 +59,9 @@
   grid-template-columns: repeat(5, 1fr);
   gap: var(--spacing-2);
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 @media (min-width: 768px) {
@@ -76,6 +83,10 @@
   gap: var(--spacing-2);
   min-height: auto;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 @media (min-width: 768px) {
