@@ -34,10 +34,17 @@ export const queryClient = new QueryClient({
        * - Second retry after 2s
        * Doesn't retry on 4xx errors (client errors)
        */
-      retry: (failureCount, error: any) => {
-        // Don't retry on client errors (4xx)
-        if (error?.response?.status >= 400 && error?.response?.status < 500) {
-          return false;
+      retry: (failureCount, error: unknown) => {
+        // Type guard for error object with response property
+        if (error instanceof Error && 'response' in error) {
+          const response = (error as Record<string, unknown>).response as
+            | Record<string, unknown>
+            | undefined;
+          const status = response?.status as number | undefined;
+          // Don't retry on client errors (4xx)
+          if (status && status >= 400 && status < 500) {
+            return false;
+          }
         }
         // Retry up to 2 times on server errors (5xx) and network errors
         return failureCount < 2;

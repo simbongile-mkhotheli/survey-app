@@ -87,7 +87,8 @@ export const getRatingLabel = (rating: number): string => {
  * isValidFood('InvalidFood'); // Returns: false
  */
 export const isValidFood = (food: string): boolean => {
-  return FOOD_OPTIONS.includes(food as any);
+  // Type guard: ensure food is a string in FOOD_OPTIONS array
+  return typeof food === 'string' && FOOD_OPTIONS.includes(food);
 };
 
 /**

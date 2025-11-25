@@ -6,6 +6,7 @@
 
 import { useCallback } from 'react';
 import { useAppStore } from '@/store/useSurveyStore';
+import { logWithContext } from '@/utils/logger';
 
 // Utility to safely check environment (compatible with all environments)
 const isDevelopment = () => {
@@ -40,11 +41,12 @@ export function useErrorHandler(options: ErrorHandlerOptions = {}) {
         ? `${context}: ${errorMessage}`
         : errorMessage;
 
-      // Log to console in development
-      if (logToConsole && isDevelopment()) {
-        // eslint-disable-next-line no-console -- Development debugging only, gated by isDevelopment()
-        console.error('Error handled:', { error, context, fullMessage });
-      }
+      // Log error using structured logger
+      logWithContext.error(fullMessage, {
+        error: errorMessage,
+        context,
+        isDevelopment: isDevelopment(),
+      });
 
       // Store error in global state
       if (logToStore) {

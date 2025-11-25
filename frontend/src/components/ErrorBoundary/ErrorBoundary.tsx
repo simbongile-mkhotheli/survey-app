@@ -7,6 +7,7 @@
 import { Component } from 'react';
 import type { ErrorInfo } from 'react';
 import type { ErrorBoundaryProps, ErrorState } from './types';
+import { logWithContext } from '@/utils/logger';
 import styles from './ErrorBoundary.module.css';
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
@@ -25,11 +26,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log the error in development only
-    if (import.meta.env.DEV) {
-      // eslint-disable-next-line no-console
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
-    }
+    // Log error using structured logger
+    logWithContext.error('ErrorBoundary caught an error', {
+      error: error.message,
+      stack: error.stack,
+      errorInfo: errorInfo.componentStack,
+    });
 
     // Store error info in state
     this.setState({
