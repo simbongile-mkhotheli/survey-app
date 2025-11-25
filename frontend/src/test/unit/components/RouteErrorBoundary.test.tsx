@@ -124,7 +124,7 @@ describe('RouteErrorBoundary', () => {
     );
 
     expect(onError).toHaveBeenCalled();
-    const [_error, _errorInfo, metadata] = onError.mock.calls[0];
+    const [, , metadata] = onError.mock.calls[0];
     expect(metadata.route).toBe('TestRoute');
     expect(metadata.severity).toBeDefined();
   });

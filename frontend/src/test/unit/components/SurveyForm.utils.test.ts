@@ -20,13 +20,13 @@ import {
   validateAllRatings,
   foodsToString,
   formatErrorMessage,
-} from '../../../components/Survey/SurveyForm.utils';
+} from '@/components/Survey/SurveyForm.utils';
 import {
   FOOD_OPTIONS,
   RATING_FIELDS,
   RATING_SCALE_LABELS,
   ERROR_MESSAGES,
-} from '../../../components/Survey/SurveyForm.constants';
+} from '@/components/Survey/SurveyForm.constants';
 
 describe('SurveyForm Constants and Utilities', () => {
   describe('Constants Structure', () => {
@@ -137,7 +137,7 @@ describe('SurveyForm Constants and Utilities', () => {
     });
 
     it('should throw error for null rating', () => {
-      expect(() => getRatingLabel(null as any)).toThrow();
+      expect(() => getRatingLabel(null as unknown as number)).toThrow();
     });
   });
 
@@ -181,7 +181,7 @@ describe('SurveyForm Constants and Utilities', () => {
     });
 
     it('should reject non-array input', () => {
-      const result = validateFoodSelection('Pizza' as any);
+      const result = validateFoodSelection('Pizza' as unknown as string[]);
       expect(result.isValid).toBe(false);
       expect(result.error).toContain('array');
     });

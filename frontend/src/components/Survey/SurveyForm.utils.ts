@@ -172,7 +172,7 @@ export const isValidRating = (
  * // Returns: { isValid: false, invalidFields: ['ratingTv'] }
  */
 export const validateAllRatings = (
-  ratings: Record<string, any>,
+  ratings: Record<string, unknown>,
 ): {
   isValid: boolean;
   invalidFields: string[];

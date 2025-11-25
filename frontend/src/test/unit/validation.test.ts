@@ -31,7 +31,8 @@ describe('Validation Schemas', () => {
       });
 
       it('should reject form with missing required fields', () => {
-        const { firstName: _firstName, ...incompleteData } = validFormData;
+        const { firstName, ...incompleteData } = validFormData;
+        void firstName; // unused but extracted for clarity
         const result = SurveySchema.safeParse(incompleteData);
         expect(result.success).toBe(false);
       });
