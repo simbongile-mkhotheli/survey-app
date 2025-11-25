@@ -20,9 +20,9 @@ export default [
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      'react': react,
+      react: react,
       'jsx-a11y': jsxA11y,
-      'import': importPlugin,
+      import: importPlugin,
     },
     rules: {
       // =========== React Hooks ===========

@@ -9,6 +9,13 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
+import {
+  FOOD_OPTIONS,
+  RATING_FIELDS,
+  RATING_SCALE_LABELS,
+  ERROR_MESSAGES,
+} from '@/components/Survey/SurveyForm.constants';
 import {
   getFoodOptions,
   getRatingFields,
@@ -21,12 +28,6 @@ import {
   foodsToString,
   formatErrorMessage,
 } from '@/components/Survey/SurveyForm.utils';
-import {
-  FOOD_OPTIONS,
-  RATING_FIELDS,
-  RATING_SCALE_LABELS,
-  ERROR_MESSAGES,
-} from '@/components/Survey/SurveyForm.constants';
 
 describe('SurveyForm Constants and Utilities', () => {
   describe('Constants Structure', () => {
