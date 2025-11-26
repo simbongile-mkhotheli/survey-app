@@ -13,27 +13,51 @@ import { config } from '@/config/env';
 /**
  * Helmet configuration for security headers
  * Protects against: XSS, Clickjacking, MIME sniffing, etc.
+ * OWASP A05:2021 - Broken Access Control & A01:2021 - Injection
  */
 export const helmetConfig = helmet({
   contentSecurityPolicy: {
     directives: {
+      // Default: restrict to self unless explicitly allowed
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      // Scripts: only from self, no inline (except for critical initializers)
       scriptSrc: ["'self'"],
+      // Styles: self + unsafe-inline (React inline styles)
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      // Images: self, data URIs, and HTTPS sources
       imgSrc: ["'self'", 'data:', 'https:'],
+      // Connections: API calls to self only
       connectSrc: ["'self'"],
+      // Fonts: self only
       fontSrc: ["'self'"],
+      // Objects/plugins: complete prohibition
       objectSrc: ["'none'"],
+      // Media: self only
       mediaSrc: ["'self'"],
+      // Frames: complete prohibition to prevent clickjacking
       frameSrc: ["'none'"],
+      // Forms: self only
+      formAction: ["'self'"],
+      // Base URI: prevent injection of base tags
+      baseUri: ["'self'"],
     },
   },
-  crossOriginEmbedderPolicy: false, // For development compatibility
+  // Cross-Origin policies
+  crossOriginEmbedderPolicy: false, // For frontend/backend separation compatibility
+  crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+  crossOriginResourcePolicy: { policy: 'same-origin' },
+  // HSTS: enforce HTTPS for 1 year
   hsts: {
-    maxAge: 31536000,
+    maxAge: 31536000, // 1 year
     includeSubDomains: true,
-    preload: true,
+    preload: true, // Allow HSTS preload list inclusion
   },
+  // X-Frame-Options: prevent clickjacking
+  frameguard: { action: 'deny' },
+  // X-Content-Type-Options: prevent MIME sniffing
+  noSniff: true,
+  // XSS Filter (legacy, but still useful for older browsers)
+  xssFilter: true,
 });
 
 /**
@@ -139,24 +163,43 @@ export const requestSizeLimit = (
 
 /**
  * Security headers middleware
- * Additional custom security headers
+ * Additional custom security headers for advanced protection
+ * OWASP A01:2021 - Broken Access Control & A05:2021 - Broken Access Control
  */
 export const securityHeaders = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  // Remove server fingerprinting
+  // Remove server fingerprinting - don't reveal technology stack
   res.removeHeader('X-Powered-By');
+  res.removeHeader('Server');
 
-  // Additional security headers
+  // Comprehensive security headers
   res.set({
+    // MIME type security
     'X-Content-Type-Options': 'nosniff',
     'X-Download-Options': 'noopen',
+    // DNS security
     'X-DNS-Prefetch-Control': 'off',
+    // Cross-domain policy
     'X-Permitted-Cross-Domain-Policies': 'none',
+    // Referrer policy: strict-origin-when-cross-origin for privacy
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Feature-Policy': "camera 'none'; microphone 'none'; geolocation 'self'",
+    // Permissions-Policy: modern replacement for Feature-Policy
+    // Disable all powerful browser features for security
+    'Permissions-Policy':
+      'accelerometer=(), ambient-light-sensor=(), autoplay=(), camera=(), ' +
+      'cross-origin-isolated=(), display-capture=(), document-domain=(), ' +
+      'encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), ' +
+      'fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), ' +
+      'microphone=(), midi=(), navigation-override=(), payment=(), ' +
+      'picture-in-picture=(), publickey-credentials-get=(), ' +
+      'sync-xhr=(), usb=(), xr-spatial-tracking=()',
+    // Prevent MIME type sniffing in older browsers
+    'X-Frame-Options': 'DENY',
+    // Expect-CT: for certificate transparency monitoring
+    'Expect-CT': 'max-age=86400, enforce',
   });
 
   next();

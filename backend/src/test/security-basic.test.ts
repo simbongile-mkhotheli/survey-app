@@ -27,6 +27,7 @@ describe('Basic Security Middleware Tests', () => {
 
       const response = await request(app).get('/test').expect(200);
 
+      // Basic security headers
       expect(response.headers['x-content-type-options']).toBe('nosniff');
       expect(response.headers['x-download-options']).toBe('noopen');
       expect(response.headers['x-dns-prefetch-control']).toBe('off');
@@ -36,6 +37,11 @@ describe('Basic Security Middleware Tests', () => {
       expect(response.headers['referrer-policy']).toBe(
         'strict-origin-when-cross-origin',
       );
+
+      // Advanced security headers
+      expect(response.headers['permissions-policy']).toBeDefined();
+      expect(response.headers['x-frame-options']).toBe('DENY');
+      expect(response.headers['expect-ct']).toBeDefined();
     });
 
     it('should remove X-Powered-By header', async () => {
@@ -47,6 +53,36 @@ describe('Basic Security Middleware Tests', () => {
       const response = await request(app).get('/test').expect(200);
 
       expect(response.headers['x-powered-by']).toBeUndefined();
+    });
+
+    it('should have comprehensive Permissions-Policy header', async () => {
+      app.use(securityHeaders);
+      app.get('/test', (req: Request, res: Response) =>
+        res.json({ success: true }),
+      );
+
+      const response = await request(app).get('/test').expect(200);
+
+      const policy = response.headers['permissions-policy'] as string;
+      expect(policy).toContain('accelerometer=()');
+      expect(policy).toContain('camera=()');
+      expect(policy).toContain('microphone=()');
+      expect(policy).toContain('geolocation=()');
+      expect(policy).toContain('payment=()');
+      expect(policy).toContain('fullscreen=(self)');
+    });
+
+    it('should have Expect-CT header for certificate transparency', async () => {
+      app.use(securityHeaders);
+      app.get('/test', (req: Request, res: Response) =>
+        res.json({ success: true }),
+      );
+
+      const response = await request(app).get('/test').expect(200);
+
+      const expectCt = response.headers['expect-ct'] as string;
+      expect(expectCt).toContain('max-age=86400');
+      expect(expectCt).toContain('enforce');
     });
   });
 
