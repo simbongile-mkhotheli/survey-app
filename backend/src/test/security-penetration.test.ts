@@ -1,6 +1,7 @@
 // backend/src/test/security-penetration.test.ts
 // Comprehensive penetration testing for OWASP Top 10 vulnerabilities
 
+import { describe, it, beforeEach, expect, vi } from 'vitest';
 import request from 'supertest';
 import express, { Request, Response } from 'express';
 import { inputSanitizeConfig } from '@/middleware/security';
@@ -424,9 +425,8 @@ describe('Security Penetration Testing - OWASP Top 10', () => {
     describe('Weak Password Handling', () => {
       it('should validate password strength requirements', async () => {
         // Password validation should be enforced
-        const validatePassword = (password: string) => {
-          return password.length >= 8;
-        };
+        const validatePassword = (password: string): boolean =>
+          password.length >= 8;
 
         expect(validatePassword('123')).toBe(false);
         expect(validatePassword('secure-password-123')).toBe(true);
@@ -481,11 +481,14 @@ describe('Security Penetration Testing - OWASP Top 10', () => {
       it('should not expose stack traces in production errors', async () => {
         const isProduction = false; // Would be true in prod
         app.get('/error', (req: Request, res: Response) => {
+          const errorObj: Record<string, unknown> = {
+            message: 'Internal server error',
+          };
+          if (isProduction) {
+            errorObj.stack = undefined;
+          }
           res.status(500).json({
-            error: {
-              message: 'Internal server error',
-              ...(isProduction && { stack: undefined }),
-            },
+            error: errorObj,
           });
         });
 
