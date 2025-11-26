@@ -1,10 +1,14 @@
+// Test Database Schema
+// Standalone schema for SQLite test database
+// Used in CI/CD and local testing workflows
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./test.db"
+  url      = env("DATABASE_URL")
 }
 
 model SurveyResponse {
