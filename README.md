@@ -1,4 +1,4 @@
-# Survey App - Enterprise-Grade Full-Stack Application
+# Lifestyle Survey App - Enterprise-Grade Full-Stack Application
 
 A professional survey platform demonstrating industry best practices in enterprise software development, including SOLID principles, comprehensive testing, security hardening, and production-ready DevOps practices.
 
