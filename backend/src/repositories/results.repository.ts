@@ -16,7 +16,7 @@ export class ResultsRepository implements IResultsRepository {
     eatOut: number;
     tv: number;
   }> {
-    // Check cache first
+    // Avoid expensive aggregation queries by serving frequently accessed statistics from cache
     const cacheKey = CACHE_KEYS.ratingAverages;
     const cached = await cacheManager.get<{
       movies: number;
@@ -29,7 +29,7 @@ export class ResultsRepository implements IResultsRepository {
       return cached;
     }
 
-    // Track query performance
+    // Monitor slow queries to identify performance bottlenecks in production
     const queryTracker = requestId
       ? this.queryTracker.trackQuery(requestId, 'aggregate_ratings')
       : null;
@@ -60,7 +60,7 @@ export class ResultsRepository implements IResultsRepository {
         : 0,
     };
 
-    // Cache the result (5 minutes TTL)
+    // Cache aggregated results for 5 minutes to reduce database load from repeated queries
     await cacheManager.set(cacheKey, averages, 300);
 
     return averages;
@@ -69,7 +69,7 @@ export class ResultsRepository implements IResultsRepository {
   async getFoodDistribution(
     requestId?: string,
   ): Promise<Array<{ food: string; count: number }>> {
-    // Check cache first
+    // Avoid recalculating food preference distributions on every request
     const cacheKey = CACHE_KEYS.foodDistribution;
     const cached =
       await cacheManager.get<Array<{ food: string; count: number }>>(cacheKey);
@@ -78,18 +78,17 @@ export class ResultsRepository implements IResultsRepository {
       return cached;
     }
 
-    // OPTIMIZED: Use database aggregation instead of fetching all records
-    // This query is much more efficient for large datasets
+    // Track performance to identify when this becomes a bottleneck as data grows
     const queryTracker = requestId
       ? this.queryTracker.trackQuery(requestId, 'food_distribution_optimized')
       : null;
 
-    // Get all responses and process food distribution in application layer
+    // Process in application layer to handle CSV parsing consistently across all records
     const responses = await this.prisma.surveyResponse.findMany({
       select: { foods: true },
     });
 
-    // Process food distribution in application layer
+    // Map reduces memory consumption by accumulating counts as we iterate
     const foodCounts = new Map<string, number>();
 
     responses.forEach((response: { foods: string }) => {
@@ -99,21 +98,21 @@ export class ResultsRepository implements IResultsRepository {
       });
     });
 
-    // Convert to array and sort by count
+    // Sort by frequency to highlight most popular foods in analytics dashboard
     const distribution = Array.from(foodCounts.entries())
       .map(([food, count]) => ({ food, count }))
       .sort((a, b) => b.count - a.count);
 
     queryTracker?.end();
 
-    // Cache the result (5 minutes TTL)
+    // Cache for 5 minutes since food preferences change slowly over time
     await cacheManager.set(cacheKey, distribution, 300);
 
     return distribution;
   }
 
   async getTotalResponses(requestId?: string): Promise<number> {
-    // Check cache first
+    // Serve count from cache to prevent COUNT(*) queries on every /results request
     const cacheKey = CACHE_KEYS.totalCount;
     const cached = await cacheManager.get<number>(cacheKey);
 
@@ -121,7 +120,7 @@ export class ResultsRepository implements IResultsRepository {
       return cached;
     }
 
-    // Track query performance
+    // Monitor latency of count operations which can be slow on large tables
     const queryTracker = requestId
       ? this.queryTracker.trackQuery(requestId, 'count_responses')
       : null;
@@ -130,21 +129,22 @@ export class ResultsRepository implements IResultsRepository {
 
     queryTracker?.end();
 
-    // Cache the result (2 minutes TTL for frequently changing data)
+    // Shorter TTL (2 min) because response count changes frequently as users submit surveys
     await cacheManager.set(cacheKey, count, 120);
 
     return count;
   }
 
   /**
-   * Get optimized age statistics using database aggregation
+   * Retrieve min/max/average age from survey responses
+   * Caches to avoid recalculating on every dashboard view
    */
   async getAgeStatistics(requestId?: string): Promise<{
     avg: number | null;
     min: number | null;
     max: number | null;
   }> {
-    // Check cache first
+    // Avoid recalculating age statistics for every dashboard request
     const cacheKey = CACHE_KEYS.ageStatistics;
     const cached = await cacheManager.get<{
       avg: number | null;
@@ -156,12 +156,12 @@ export class ResultsRepository implements IResultsRepository {
       return cached;
     }
 
-    // Track query performance
+    // Monitor performance since we're scanning and processing potentially large result sets
     const queryTracker = requestId
       ? this.queryTracker.trackQuery(requestId, 'age_statistics')
       : null;
 
-    // Get all birth dates and calculate ages in application layer
+    // Fetch birth dates to calculate current age on demand (avoids storing computed age)
     const responses = await this.prisma.surveyResponse.findMany({
       select: { dateOfBirth: true },
       where: {
@@ -177,7 +177,7 @@ export class ResultsRepository implements IResultsRepository {
       return result;
     }
 
-    // Calculate ages - handle both Date objects and string dates
+    // Handle both Date objects and string formats for database flexibility
     const currentYear = new Date().getFullYear();
     const ages = responses.map((r: { dateOfBirth: Date | string }) => {
       const birthDate =
@@ -193,21 +193,22 @@ export class ResultsRepository implements IResultsRepository {
     const maxAge = Math.max(...ages);
 
     const result = {
-      avg: Math.round(avgAge * 10) / 10, // Round to 1 decimal place
+      avg: Math.round(avgAge * 10) / 10,
       min: minAge,
       max: maxAge,
     };
 
     queryTracker?.end();
 
-    // Cache the result (5 minutes TTL)
+    // Cache for 5 minutes since demographic trends stabilize over short periods
     await cacheManager.set(cacheKey, result, 300);
 
     return result;
   }
 
   /**
-   * Invalidate all cached results when new data is added
+   * Invalidate all cached results when new survey data is submitted
+   * Ensures analytics dashboard shows fresh statistics within TTL window
    */
   async invalidateCache(): Promise<void> {
     await cacheManager.invalidateSurveyCache();

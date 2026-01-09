@@ -9,15 +9,14 @@ export class ResultsService implements IResultsService {
   constructor(private resultsRepository: IResultsRepository) {}
 
   /**
-   * Retrieve and aggregate survey results from the database.
-   * Delegates to repository layer following SRP
-   * Now includes performance tracking and caching
+   * Orchestrate retrieval of aggregated survey statistics
+   * Composition of repository layer calls with business logic transformation
    */
   async getResults(requestId?: string): Promise<SurveyResultsDTO> {
     const startTime = Date.now();
 
     try {
-      // Execute queries in parallel for better performance
+      // Execute independent queries concurrently to minimize total response time
       const [totalCount, avgRatings, foodDistribution, ageStats] =
         await Promise.all([
           this.resultsRepository.getTotalResponses(requestId),
@@ -26,12 +25,12 @@ export class ResultsService implements IResultsService {
           this.resultsRepository.getAgeStatistics(requestId),
         ]);
 
-      // Record business metrics
-      businessMetrics.recordResultsQuery(false); // Assuming no cache info here
+      // Track aggregated statistics for SLA monitoring and capacity planning
+      businessMetrics.recordResultsQuery(false);
 
       const duration = Date.now() - startTime;
 
-      // Log successful results query
+      // Log performance metrics for debugging slow requests and trending analysis
       logWithContext.info('Survey results retrieved', {
         requestId,
         operation: 'get_results',
@@ -43,13 +42,13 @@ export class ResultsService implements IResultsService {
         },
       });
 
-      // Calculate food percentages
+      // Convert raw counts to percentages for frontend analytics visualization
       const toPercentage = (count: number) =>
         totalCount > 0
           ? parseFloat(((count / totalCount) * 100).toFixed(1))
           : null;
 
-      // Find specific food counts using helper function
+      // Map user-friendly food names to counts (handles variant spellings)
       const pizzaCount = findFoodCount(foodDistribution, ['pizza']);
       const pastaCount = findFoodCount(foodDistribution, ['pasta']);
       const papAndWorsCount = findFoodCount(foodDistribution, [
@@ -59,7 +58,7 @@ export class ResultsService implements IResultsService {
 
       return {
         totalCount,
-        age: ageStats, // Now using actual database-computed age statistics
+        age: ageStats,
         foodPercentages: {
           pizza: toPercentage(pizzaCount),
           pasta: toPercentage(pastaCount),

@@ -4,10 +4,8 @@ import { responseFormatter } from '@/utils/response';
 import { ResultsQuerySchema } from '@/validation/validation';
 
 /**
- * Controller to handle GET /api/results
- * - Validates query parameters (none currently)
- * - Fetches aggregated survey results following SRP and DIP
- * - Returns standardized success response via responseFormatter
+ * Handle GET /api/results request with validation and dependency injection
+ * Decouples HTTP layer from business logic (service layer patterns)
  */
 export async function handleGetSurveyResults(
   req: Request,
@@ -15,13 +13,13 @@ export async function handleGetSurveyResults(
   next: NextFunction,
 ) {
   try {
-    // Ensures no unexpected query parameters are passed
+    // Fail fast on invalid inputs to prevent downstream processing
     ResultsQuerySchema.parse(req.query);
 
     const container = Container.getInstance();
     const resultsService = container.resultsService;
 
-    // Pass request ID for performance tracking
+    // Propagate request ID through service layer for distributed tracing and debugging
     const requestId = req.headers['x-request-id'] as string;
     const results = await resultsService.getResults(requestId);
 
