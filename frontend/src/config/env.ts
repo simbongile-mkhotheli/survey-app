@@ -52,7 +52,7 @@ export const env = parseEnv();
 export const config = {
   // API configuration
   apiUrl: env.VITE_API_URL,
-  apiTimeout: 10000, // 10 seconds
+  apiTimeout: 20000, // 20 seconds (temporarily increased for optimization)
 
   // App configuration
   appName: env.VITE_APP_NAME,
