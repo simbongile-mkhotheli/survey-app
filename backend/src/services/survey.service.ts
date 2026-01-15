@@ -28,15 +28,7 @@ export class SurveyService implements ISurveyService {
       const result = await this.surveyRepository.create(data);
 
       // Invalidate cached results since new data has been added
-      // Run cache invalidation asynchronously (fire-and-forget) so it
-      // doesn't block the HTTP response. This prevents slow cache ops
-      // (eg. Redis KEYS/DEL) from causing request timeouts in serverless
-      // environments like Vercel.
-      this.resultsRepository.invalidateCache().catch((err) => {
-        logWithContext.error('Failed to invalidate cache asynchronously', err, {
-          operation: 'invalidate_cache',
-        });
-      });
+      await this.resultsRepository.invalidateCache();
 
       const duration = Date.now() - startTime;
 
