@@ -42,61 +42,19 @@
 
 .main {
   flex: 1;
-  padding: var(--spacing-1) var(--spacing-1);
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
-}
-
-@media (min-width: 480px) {
-  .main {
-    padding: var(--spacing-2) var(--spacing-2);
-  }
-}
-
-@media (min-width: 768px) {
-  .main {
-    padding: var(--spacing-6) var(--spacing-6);
-  }
-}
-
-@media (min-width: 1024px) {
-  .main {
-    padding: var(--spacing-8) var(--spacing-8);
-  }
+  /* Responsive padding from utility class */
+  composes: containerResponsive from global;
 }
 
 /* Card wrapper for form content */
 .formCard {
-  background: var(--color-white);
-  border-radius: var(--radius-2xl);
-  padding: var(--spacing-1);
-  box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-@media (min-width: 480px) {
-  .formCard {
-    padding: var(--spacing-2);
-  }
-}
-
-@media (min-width: 768px) {
-  .formCard {
-    padding: var(--spacing-6);
-  }
-}
-
-@media (min-width: 1024px) {
-  .formCard {
-    padding: var(--spacing-8);
-  }
+  /* Card base styles from utility class */
+  composes: cardBase from global;
 }
 
 /* Row layout - mobile first: stack vertically */
@@ -284,7 +242,7 @@
   border: 1px solid var(--color-gray-200);
   padding: var(--spacing-2);
   text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-brand);
   color: var(--color-white);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-xs);
@@ -295,7 +253,7 @@
   border: 1px solid var(--color-gray-200);
   padding: var(--spacing-2);
   text-align: left;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-brand);
   color: var(--color-white);
   font-weight: var(--font-weight-semibold);
   width: 35%;
@@ -342,7 +300,7 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-white);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-brand);
   border: none;
   border-radius: var(--radius-lg);
   cursor: pointer;

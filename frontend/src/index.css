@@ -98,6 +98,9 @@
   --color-bg-row-even: var(--color-gray-50);
   --color-bg-row-hover: var(--color-gray-100);
 
+  /* ===== Brand Gradient ===== */
+  --gradient-brand: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
   /* ===== Spacing System ===== */
   --spacing-0: 0;
   --spacing-1: 0.25rem; /* 4px */
@@ -209,4 +212,85 @@ h6 {
 p {
   margin: 0;
 }
+}
+
+/* ===== Reusable Utility Classes ===== */
+
+/**
+ * Responsive Container Padding
+ * Applies mobile-first padding that scales with viewport
+ * Used by: Results, SurveyForm, Pagination, and other container elements
+ */
+.containerResponsive {
+  padding: var(--spacing-1);
+}
+
+@media (min-width: 480px) {
+  .containerResponsive {
+    padding: var(--spacing-2);
+  }
+}
+
+@media (min-width: 768px) {
+  .containerResponsive {
+    padding: var(--spacing-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .containerResponsive {
+    padding: var(--spacing-8);
+  }
+}
+
+/**
+ * Card Base Styles
+ * Consolidates card styling from multiple components
+ * Applies white background, shadow, and responsive padding
+ * Used by: Results, SurveyForm, and any card-based layout
+ */
+.cardBase {
+  background: var(--color-white);
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-1);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .cardBase {
+    padding: var(--spacing-2);
+  }
+}
+
+@media (min-width: 768px) {
+  .cardBase {
+    padding: var(--spacing-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cardBase {
+    padding: var(--spacing-8);
+  }
+}
+
+/**
+ * Button Interactive States
+ * Base hover and focus styles for interactive elements
+ * Combines shadow elevation and transform for depth
+ */
+.buttonHover:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.buttonFocus:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
 }
