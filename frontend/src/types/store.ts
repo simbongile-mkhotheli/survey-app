@@ -25,9 +25,7 @@ export interface SurveyResultsStore extends BaseAsyncState<ResultsData> {
 
 // App Settings Store
 export interface AppSettingsStore {
-  darkMode: boolean;
   language: 'en' | 'af';
-  toggleDarkMode: () => void;
   setLanguage: (language: 'en' | 'af') => void;
   resetSettings: () => void;
 }

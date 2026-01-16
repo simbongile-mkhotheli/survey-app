@@ -19,7 +19,6 @@ describe('Survey Store (useAppStore)', () => {
       loading: false,
       error: null,
       hasFetched: false,
-      darkMode: false,
       language: 'en',
     });
   });
@@ -32,23 +31,11 @@ describe('Survey Store (useAppStore)', () => {
       expect(state.loading).toBe(false);
       expect(state.error).toBeNull();
       expect(state.hasFetched).toBe(false);
-      expect(state.darkMode).toBe(false);
       expect(state.language).toBe('en');
     });
   });
 
   describe('Settings Actions', () => {
-    it('should toggle dark mode', () => {
-      useAppStore.setState({ darkMode: false });
-      expect(useAppStore.getState().darkMode).toBe(false);
-
-      useAppStore.getState().toggleDarkMode();
-      expect(useAppStore.getState().darkMode).toBe(true);
-
-      useAppStore.getState().toggleDarkMode();
-      expect(useAppStore.getState().darkMode).toBe(false);
-    });
-
     it('should set language', () => {
       useAppStore.setState({ language: 'en' });
       expect(useAppStore.getState().language).toBe('en');
@@ -62,16 +49,14 @@ describe('Survey Store (useAppStore)', () => {
 
     it('should reset settings to defaults', () => {
       // Change settings
-      useAppStore.setState({ darkMode: true, language: 'af' });
+      useAppStore.setState({ language: 'af' });
 
-      expect(useAppStore.getState().darkMode).toBe(true);
       expect(useAppStore.getState().language).toBe('af');
 
       // Reset
       useAppStore.getState().resetSettings();
       const state = useAppStore.getState();
 
-      expect(state.darkMode).toBe(false);
       expect(state.language).toBe('en');
     });
   });
@@ -85,7 +70,6 @@ describe('Survey Store (useAppStore)', () => {
       expect(typeof state.setLoading).toBe('function');
       expect(typeof state.setError).toBe('function');
       expect(typeof state.reset).toBe('function');
-      expect(typeof state.toggleDarkMode).toBe('function');
       expect(typeof state.setLanguage).toBe('function');
       expect(typeof state.resetSettings).toBe('function');
     });
@@ -99,7 +83,6 @@ describe('Survey Store (useAppStore)', () => {
       expect(state).toHaveProperty('loading');
       expect(state).toHaveProperty('error');
       expect(state).toHaveProperty('hasFetched');
-      expect(state).toHaveProperty('darkMode');
       expect(state).toHaveProperty('language');
     });
 

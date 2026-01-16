@@ -163,24 +163,3 @@
     opacity: 0;
   }
 }
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .overlay {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-
-  .text {
-    color: #9ca3af;
-  }
-
-  .spinnerRing {
-    border-color: #374151;
-    border-top-color: #60a5fa;
-  }
-
-  .dot,
-  .pulse {
-    background-color: #60a5fa;
-  }
-}
