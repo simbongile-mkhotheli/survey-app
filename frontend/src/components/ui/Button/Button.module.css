@@ -52,36 +52,36 @@
 
 /* Color Variants */
 .primary {
-  background-color: var(--color-btn-primary);
+  background-color: var(--color-primary);
   color: var(--color-text-inverse);
-  border-color: var(--color-btn-primary);
+  border-color: var(--color-primary);
 }
 
 .primary:hover:not(:disabled) {
-  background-color: var(--color-btn-primary-hover);
-  border-color: var(--color-btn-primary-hover);
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .secondary {
-  background-color: var(--color-btn-secondary);
+  background-color: var(--color-secondary);
   color: var(--color-text-inverse);
-  border-color: var(--color-btn-secondary);
+  border-color: var(--color-secondary);
 }
 
 .secondary:hover:not(:disabled) {
-  background-color: var(--color-btn-secondary-hover);
-  border-color: var(--color-btn-secondary-hover);
+  background-color: var(--color-secondary-hover);
+  border-color: var(--color-secondary-hover);
 }
 
 .danger {
-  background-color: var(--color-btn-danger);
+  background-color: var(--color-error);
   color: var(--color-text-inverse);
-  border-color: var(--color-btn-danger);
+  border-color: var(--color-error);
 }
 
 .danger:hover:not(:disabled) {
-  background-color: var(--color-btn-danger-hover);
-  border-color: var(--color-btn-danger-hover);
+  background-color: var(--color-error-hover);
+  border-color: var(--color-error-hover);
 }
 
 .ghost {

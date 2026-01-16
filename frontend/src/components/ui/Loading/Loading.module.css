@@ -54,7 +54,7 @@
 
 .spinnerRing {
   border: 3px solid var(--color-gray-100);
-  border-top: 3px solid var(--color-btn-primary);
+  border-top: 3px solid var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -93,7 +93,7 @@
 
 .dot {
   border-radius: 50%;
-  background-color: var(--color-btn-primary);
+  background-color: var(--color-primary);
   animation: pulse-dot 1.4s ease-in-out infinite both;
 }
 

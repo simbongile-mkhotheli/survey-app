@@ -1,13 +1,20 @@
 :root {
-  /* ===== Color System ===== */
+  /* ===== Color System (2-4 Core Colors) ===== */
 
-  /* Primary Color - For accents, borders, focus states */
-  --color-primary: #28a0e5;
+  /* Primary Color - Main brand color for accents, buttons, focus */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-active: #1d4ed8;
 
-  /* Semantic Colors - For error state feedback */
+  /* Secondary Color - Neutral gray for secondary elements */
+  --color-secondary: #6b7280;
+  --color-secondary-hover: #4b5563;
+
+  /* Semantic Color - Error state feedback */
   --color-error: #e53935;
+  --color-error-hover: #d32f2f;
 
-  /* Neutral Colors */
+  /* Neutral Colors - Grayscale palette */
   --color-white: #ffffff;
   --color-black: #000000;
   --color-gray-50: #f9fafb;
@@ -21,32 +28,17 @@
   --color-gray-800: #1f2937;
   --color-gray-900: #111827;
 
-  /* Surface Colors */
+  /* Semantic Aliases - Consistent naming across components */
   --color-surface: var(--color-white);
   --color-surface-hover: var(--color-gray-50);
-
-  /* Text Colors */
   --color-text: var(--color-gray-900);
   --color-text-secondary: var(--color-gray-600);
   --color-text-muted: var(--color-gray-500);
   --color-text-inverse: var(--color-white);
-
-  /* Border Colors */
   --color-border: var(--color-gray-300);
-
-  /* Background Colors */
   --color-bg-header: var(--color-gray-50);
   --color-bg-row-even: #f9f9f9;
   --color-bg-row-hover: var(--color-gray-100);
-
-  /* Button Colors */
-  --color-btn-primary: #3b82f6;
-  --color-btn-primary-hover: #2563eb;
-  --color-btn-primary-active: #1d4ed8;
-  --color-btn-secondary: var(--color-gray-500);
-  --color-btn-secondary-hover: var(--color-gray-600);
-  --color-btn-danger: #dc2626;
-  --color-btn-danger-hover: #b91c1c;
 
   /* ===== Spacing System ===== */
   --spacing-0: 0;
@@ -158,4 +150,5 @@ h6 {
 
 p {
   margin: 0;
+}
 }
