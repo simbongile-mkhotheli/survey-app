@@ -479,6 +479,21 @@ npm run test:reset-db
 PORT=5001 npm run dev
 ```
 
+## 🎨 UI/UX Improvements Planned:
+
+### Styling Enhancements
+- **Goal**: Beef up the styling to make the app sleeker and more polished
+- **Status**: In planning
+- **Areas of Focus**:
+  - Typography refinements
+  - Color scheme enhancements
+  - Spacing and padding optimizations
+  - Border radius and subtle shadows
+  - Hover and interaction states
+  - Transition smoothness
+  - Component-level styling consistency
+  - Animation polish
+
 ## 📄 License
 
 [Add your license here]
