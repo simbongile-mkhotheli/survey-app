@@ -92,7 +92,7 @@
 
 .ghost:hover:not(:disabled) {
   background-color: var(--color-gray-50);
-  border-color: var(--color-gray-400);
+  border-color: var(--color-gray-300);
 }
 
 /* Layout */
