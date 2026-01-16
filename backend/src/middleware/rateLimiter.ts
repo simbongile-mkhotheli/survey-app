@@ -31,7 +31,7 @@ async function initializeRedis() {
           );
           return null; // Stop retrying
         }
-        return Math.min(times * 50, 2000);
+        return Math.min(times * 50, 1000);
       },
       lazyConnect: true,
     });
