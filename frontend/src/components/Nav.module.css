@@ -51,13 +51,13 @@
   background: rgba(255, 255, 255, 0.2);
   color: var(--color-white);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   border-color: rgba(255, 255, 255, 0.3);
 }
 
 .link:focus-visible {
   outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline-offset: var(--spacing-1);
 }
 
 /* Navigation icon */
@@ -98,7 +98,7 @@
     rgba(118, 75, 162, 0.4)
   );
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  box-shadow: var(--shadow-md);
   border: 1px solid rgba(255, 255, 255, 0.3);
   white-space: nowrap;
   transform: translateY(-2px);
@@ -109,7 +109,7 @@
 .active::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: calc(var(--spacing-1) * -1);
   left: var(--spacing-3);
   right: var(--spacing-3);
   height: 2px;
@@ -118,7 +118,7 @@
     rgba(102, 126, 234, 0.8),
     rgba(118, 75, 162, 0.8)
   );
-  border-radius: 1px;
+  border-radius: var(--radius-md);
 }
 
 @media (min-width: 480px) {
@@ -140,10 +140,10 @@
     rgba(102, 126, 234, 0.5),
     rgba(118, 75, 162, 0.5)
   );
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+  box-shadow: var(--shadow-lg);
 }
 
 .active:focus-visible {
   outline: 2px solid var(--color-white);
-  outline-offset: 2px;
+  outline-offset: var(--spacing-1);
 }
