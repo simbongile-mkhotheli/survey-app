@@ -393,22 +393,8 @@ import { SurveyService } from '../../../services/survey.service';
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Development guidelines
 - [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) - Complete API reference
 - [docs/README.md](docs/README.md) - Architecture deep-dive
-- [.github/copilot-instructions.md](.github/copilot-instructions.md) - AI development guidelines
 
 ## 🆘 Troubleshooting
-
-### Production: Survey Submission Timeout (Vercel)
-
-**Issue**: When the app loads for the first time in production and a user submits a completed survey, a timeout error occurs (exceeds 5000ms).
-
-**Possible Cause**: This appears to be a Vercel cold start or serverless function initialization quirk.
-
-**Workaround**: 
-- Retry the survey submission
-- Ensure backend service has warmed up before submitting
-- Consider implementing client-side retry logic with exponential backoff
-
-**Portfolio Note**: This is a known limitation when deploying to serverless environments. For production use, consider a dedicated server or pre-warming strategies.
 
 ### Database Connection Failed
 
