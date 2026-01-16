@@ -30,7 +30,7 @@
 
 .text {
   margin: 0;
-  color: #6b7280;
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
@@ -53,8 +53,8 @@
 }
 
 .spinnerRing {
-  border: 3px solid #f3f4f6;
-  border-top: 3px solid #3b82f6;
+  border: 3px solid var(--color-gray-100);
+  border-top: 3px solid var(--color-btn-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -93,7 +93,7 @@
 
 .dot {
   border-radius: 50%;
-  background-color: #3b82f6;
+  background-color: var(--color-btn-primary);
   animation: pulse-dot 1.4s ease-in-out infinite both;
 }
 

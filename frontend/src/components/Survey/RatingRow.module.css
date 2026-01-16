@@ -140,7 +140,7 @@
   align-items: center;
   gap: var(--spacing-1);
   padding: var(--spacing-1) var(--spacing-2);
-  background-color: #fff5f5;
+  background-color: rgba(229, 57, 53, 0.05);
   border-left: 3px solid var(--color-error);
 }
 

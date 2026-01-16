@@ -56,7 +56,7 @@
 /* Error state */
 .textboxError {
   border-color: var(--color-error);
-  background: #fff5f5;
+  background: rgba(229, 57, 53, 0.05);
 }
 
 .textboxError:focus {

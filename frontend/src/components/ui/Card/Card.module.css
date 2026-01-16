@@ -57,20 +57,20 @@
 }
 
 .section:not(:last-child) {
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--color-gray-100);
 }
 
 /* Variants */
 .default {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
 }
 
 .bordered {
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--color-border);
 }
 
 .elevated {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   box-shadow:
     0 1px 3px 0 rgba(0, 0, 0, 0.1),
     0 1px 2px 0 rgba(0, 0, 0, 0.06);
