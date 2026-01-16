@@ -63,6 +63,17 @@
   --color-warning-variant-hover: #b45309;
 
   --color-info-variant: #2563eb;
+
+  /* Loading Component Sizes */
+  --size-spinner-sm: 24px;
+  --size-spinner-md: 32px;
+  --size-spinner-lg: 48px;
+  --size-dot-sm: 6px;
+  --size-dot-md: 8px;
+  --size-dot-lg: 12px;
+
+  /* Overlay backdrop */
+  --color-overlay-bg: rgba(255, 255, 255, 0.8);
   --color-info-variant-hover: #1d4ed8;
 
   /* Neutral Colors - Grayscale palette (essential shades only) */

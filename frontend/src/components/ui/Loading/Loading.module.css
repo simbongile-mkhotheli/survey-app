@@ -17,7 +17,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--color-overlay-bg);
   z-index: 9999;
 }
 
@@ -60,19 +60,19 @@
 }
 
 .sm .spinnerRing {
-  width: 24px;
-  height: 24px;
+  width: var(--size-spinner-sm);
+  height: var(--size-spinner-sm);
   border-width: 2px;
 }
 
 .md .spinnerRing {
-  width: 32px;
-  height: 32px;
+  width: var(--size-spinner-md);
+  height: var(--size-spinner-md);
 }
 
 .lg .spinnerRing {
-  width: 48px;
-  height: 48px;
+  width: var(--size-spinner-lg);
+  height: var(--size-spinner-lg);
   border-width: 4px;
 }
 
@@ -98,18 +98,18 @@
 }
 
 .sm .dot {
-  width: 6px;
-  height: 6px;
+  width: var(--size-dot-sm);
+  height: var(--size-dot-sm);
 }
 
 .md .dot {
-  width: 8px;
-  height: 8px;
+  width: var(--size-dot-md);
+  height: var(--size-dot-md);
 }
 
 .lg .dot {
-  width: 12px;
-  height: 12px;
+  width: var(--size-dot-lg);
+  height: var(--size-dot-lg);
 }
 
 .dot:nth-child(1) {
@@ -139,18 +139,18 @@
 }
 
 .sm .pulse {
-  width: 24px;
-  height: 24px;
+  width: var(--size-spinner-sm);
+  height: var(--size-spinner-sm);
 }
 
 .md .pulse {
-  width: 32px;
-  height: 32px;
+  width: var(--size-spinner-md);
+  height: var(--size-spinner-md);
 }
 
 .lg .pulse {
-  width: 48px;
-  height: 48px;
+  width: var(--size-spinner-lg);
+  height: var(--size-spinner-lg);
 }
 
 @keyframes pulse-grow {
