@@ -9,7 +9,7 @@ This is a **full-stack monorepo** with React frontend, Node.js/Express backend, 
 - **Clean Architecture**: Layered SOLID-compliant design with dependency injection
 - **Comprehensive Testing**: 336 unit tests (89 frontend + 247 backend) with 95%+ code coverage
 - **Security-First**: OWASP compliance, input sanitization, SQL injection prevention
-- **Production-Ready**: Docker containerization, health checks, monitoring, CI/CD
+- **Production-Ready**: Health checks, monitoring, CI/CD pipeline
 - **Professional Code Quality**: ESLint zero-warnings, TypeScript strict mode, Prettier formatting
 - **Dynamic Test Data**: Faker.js for realistic test scenarios (no hardcoded values)
 - **Industry Standards**: Conventional Commits, semantic versioning, professional documentation
@@ -36,8 +36,6 @@ This is a **full-stack monorepo** with React frontend, Node.js/Express backend, 
 
 ### DevOps & Infrastructure
 
-- **Docker** with multi-stage builds for optimization
-- **Docker Compose** for local development
 - **GitHub Actions** for CI/CD pipeline
 - **Kubernetes** health check endpoints
 - **Health monitoring** with database connectivity checks
@@ -47,8 +45,7 @@ This is a **full-stack monorepo** with React frontend, Node.js/Express backend, 
 ### Prerequisites
 
 - Node.js 20+
-- Docker & Docker Compose
-- PostgreSQL 14+ (or use Docker)
+- PostgreSQL 14+
 - Git
 
 ### Local Development Setup
@@ -77,10 +74,6 @@ cp .env.example .env.local
 #### 3. Start Services
 
 ```bash
-# Option A: Docker Compose (recommended)
-docker-compose up
-
-# Option B: Manual setup
 # Terminal 1: Backend
 cd backend && npm run dev
 
@@ -161,12 +154,10 @@ npm run check:all
 │   └── validation.ts            # Common Zod schemas
 │
 ├── .github/
-│   ├── copilot-instructions.md  # AI development guidelines
 │   └── workflows/               # GitHub Actions CI/CD
 │
 ├── COMMIT_STANDARDS.md          # Conventional Commits guide
 ├── CONTRIBUTING.md              # Developer guidelines
-├── docker-compose.yml           # Local development stack
 └── README.md                     # This file
 ```
 
@@ -331,43 +322,14 @@ The repository uses **husky** to enforce:
 - **Caching**: Redis for distributed caching (5-minute TTL)
 - **Compression**: gzip compression with size threshold
 
-## 🐳 Docker Deployment
-
-### Build Production Images
-
-```bash
-docker-compose -f docker-compose.prod.yml build
-```
-
-### Run Production Stack
-
-```bash
-docker-compose -f docker-compose.prod.yml up
-```
-
-### Environment Variables (Production)
-
-```bash
-# Backend
-DATABASE_URL=postgresql://user:pass@host:5432/survey_prod
-REDIS_HOST=redis.example.com
-REDIS_ENABLED=true
-LOG_LEVEL=info
-SECURITY_HTTPS_REDIRECT=true
-
-# Frontend
-VITE_API_URL=https://api.example.com
-```
-
 ## 🚦 CI/CD Pipeline
 
 The project uses **GitHub Actions** for:
 
 1. **Code Quality**: ESLint, TypeScript, Prettier
 2. **Testing**: Full test suite with coverage reporting
-3. **Build Validation**: Docker image builds
-4. **Security Scanning**: Dependency audits, SAST
-5. **Deployment**: Automatic deployment on main branch
+3. **Security Scanning**: Dependency audits, SAST
+4. **Deployment**: Automatic deployment on main branch
 
 See [`.github/workflows`](.github/workflows) for pipeline configuration.
 
@@ -451,11 +413,11 @@ import { SurveyService } from '../../../services/survey.service';
 ### Database Connection Failed
 
 ```bash
-# Ensure PostgreSQL is running
-docker-compose ps
-
 # Check connection string
 echo $DATABASE_URL
+
+# Verify PostgreSQL is running and accessible
+psql $DATABASE_URL -c "SELECT 1;"
 
 # Run migrations
 npx prisma migrate dev

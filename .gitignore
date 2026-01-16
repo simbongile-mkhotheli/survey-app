@@ -14,10 +14,6 @@ node_modules/
 .env.*.local
 backend/.env.test
 
-# Docker
-docker-compose.override.yml
-.env.docker.local
-
 # Logs
 logs/
 *.log
@@ -46,6 +42,7 @@ Thumbs.db
 
 # Private files (do not push to GitHub)
 .github/workflows/test.yml
+.github/copilot-instructions.md
 backend/TEST_DATABASE_SETUP.md
 
 # Git commit messages
