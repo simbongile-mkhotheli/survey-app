@@ -14,6 +14,25 @@
   --color-error: #e53935;
   --color-error-hover: #d32f2f;
 
+  /* Warning Color - Component-level warnings */
+  --color-warning: #ea580c;
+  --color-warning-hover: #c2410c;
+
+  /* Critical Color - Critical error states */
+  --color-critical: #991b1b;
+  --color-critical-border: #7f1d1d;
+
+  /* Error Background & Border - Light error states */
+  --color-error-bg: rgba(229, 57, 53, 0.05);
+  --color-error-border: rgba(229, 57, 53, 0.3);
+
+  /* Warning Background & Border - Light warning states */
+  --color-warning-bg: rgba(234, 88, 12, 0.05);
+  --color-warning-border: rgba(234, 88, 12, 0.3);
+
+  /* Backdrop Color - Semi-transparent overlays */
+  --color-backdrop: rgba(0, 0, 0, 0.08);
+
   /* Neutral Colors - Grayscale palette (essential shades only) */
   --color-white: #ffffff;
   --color-black: #000000;
