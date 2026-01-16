@@ -33,6 +33,19 @@
   /* Backdrop Color - Semi-transparent overlays */
   --color-backdrop: rgba(0, 0, 0, 0.08);
 
+  /* Severity Levels - Route Error Boundary */
+  --color-severity-critical: #dc2626;
+  --color-severity-critical-bg: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
+  --color-severity-high: #f59e0b;
+  --color-severity-high-bg: linear-gradient(135deg, #fed7aa 0%, #fbbd23 100%);
+  --color-severity-medium: #eab308;
+  --color-severity-medium-bg: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+  --color-severity-low: #3b82f6;
+  --color-severity-low-bg: linear-gradient(135deg, #e0e7ff 0%, #bfdbfe 100%);
+
+  /* Success Color - Recovery status */
+  --color-success: #10b981;
+
   /* Neutral Colors - Grayscale palette (essential shades only) */
   --color-white: #ffffff;
   --color-black: #000000;
