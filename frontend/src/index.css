@@ -50,19 +50,18 @@
   --color-info: #2563eb;
   --color-info-bg: #eff6ff;
   --color-info-border: #93c5fd;
+  --color-info-hover: #1d4ed8;
 
   /* Error/Warning variant for messages */
-  --color-error-variant: #dc2626;
-  --color-error-variant-bg: #fef2f2;
-  --color-error-variant-border: #fca5a5;
-  --color-error-variant-hover: #b91c1c;
+  --color-error-variant: #e53935;
+  --color-error-variant-bg: rgba(229, 57, 53, 0.05);
+  --color-error-variant-border: rgba(229, 57, 53, 0.3);
+  --color-error-variant-hover: #d32f2f;
 
-  --color-warning-variant: #d97706;
-  --color-warning-variant-bg: #fffbeb;
-  --color-warning-variant-border: #fed7aa;
-  --color-warning-variant-hover: #b45309;
-
-  --color-info-variant: #2563eb;
+  --color-warning-variant: #ea580c;
+  --color-warning-variant-bg: rgba(234, 88, 12, 0.05);
+  --color-warning-variant-border: rgba(234, 88, 12, 0.3);
+  --color-warning-variant-hover: #c2410c;
 
   /* Loading Component Sizes */
   --size-spinner-sm: 24px;
@@ -74,7 +73,6 @@
 
   /* Overlay backdrop */
   --color-overlay-bg: rgba(255, 255, 255, 0.8);
-  --color-info-variant-hover: #1d4ed8;
 
   /* Neutral Colors - Grayscale palette (essential shades only) */
   --color-white: #ffffff;
@@ -97,7 +95,7 @@
   --color-text-inverse: var(--color-white);
   --color-border: var(--color-gray-300);
   --color-bg-header: var(--color-gray-50);
-  --color-bg-row-even: #f9f9f9;
+  --color-bg-row-even: var(--color-gray-50);
   --color-bg-row-hover: var(--color-gray-100);
 
   /* ===== Spacing System ===== */
@@ -162,8 +160,8 @@
   --transition-fast: 150ms ease-in-out;
   --transition-base: 200ms ease-in-out;
   --transition-slow: 300ms ease-in-out;
+}
 
-  /* ===== Transition System ===== */
 body {
   font-family: var(--font-family-base);
   font-size: var(--font-size-base);
