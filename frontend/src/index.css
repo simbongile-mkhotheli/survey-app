@@ -35,7 +35,11 @@
 
   /* Severity Levels - Route Error Boundary */
   --color-severity-critical: #dc2626;
-  --color-severity-critical-bg: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
+  --color-severity-critical-bg: linear-gradient(
+    135deg,
+    #fee2e2 0%,
+    #fca5a5 100%
+  );
   --color-severity-high: #f59e0b;
   --color-severity-high-bg: linear-gradient(135deg, #fed7aa 0%, #fbbd23 100%);
   --color-severity-medium: #eab308;
@@ -62,6 +66,9 @@
   --color-warning-variant-bg: rgba(234, 88, 12, 0.05);
   --color-warning-variant-border: rgba(234, 88, 12, 0.3);
   --color-warning-variant-hover: #c2410c;
+
+  /* Info Color Variant - Missing definition added */
+  --color-info-variant-hover: #1d4ed8;
 
   /* Loading Component Sizes */
   --size-spinner-sm: 24px;
@@ -212,7 +219,6 @@ h6 {
 p {
   margin: 0;
 }
-}
 
 /* ===== Reusable Utility Classes ===== */
 
@@ -277,20 +283,4 @@ p {
   .cardBase {
     padding: var(--spacing-8);
   }
-}
-
-/**
- * Button Interactive States
- * Base hover and focus styles for interactive elements
- * Combines shadow elevation and transform for depth
- */
-.buttonHover:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.buttonFocus:focus-visible {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  box-shadow: var(--shadow-focus);
 }
