@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: var(--spacing-4);
 }
 
 .overlay {
@@ -25,26 +25,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--spacing-3);
 }
 
 .text {
   margin: 0;
   color: var(--color-text-secondary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 /* Size Variants */
 .sm .text {
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
 }
 
 .md .text {
-  font-size: 1rem;
+  font-size: var(--font-size-base);
 }
 
 .lg .text {
-  font-size: 1.125rem;
+  font-size: var(--font-size-lg);
 }
 
 /* Spinner Animation */
@@ -56,7 +56,7 @@
   border: 3px solid var(--color-gray-100);
   border-top: 3px solid var(--color-primary);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin var(--transition-slow) linear infinite;
 }
 
 .sm .spinnerRing {
@@ -88,7 +88,7 @@
 /* Dots Animation */
 .dots {
   display: flex;
-  gap: 0.25rem;
+  gap: var(--spacing-1);
 }
 
 .dot {
@@ -134,7 +134,7 @@
 /* Pulse Animation */
 .pulse {
   border-radius: 50%;
-  background-color: #3b82f6;
+  background-color: var(--color-primary);
   animation: pulse-grow 1.5s ease-in-out infinite;
 }
 
