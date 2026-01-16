@@ -46,6 +46,25 @@
   /* Success Color - Recovery status */
   --color-success: #10b981;
 
+  /* Info Color - Information messages */
+  --color-info: #2563eb;
+  --color-info-bg: #eff6ff;
+  --color-info-border: #93c5fd;
+
+  /* Error/Warning variant for messages */
+  --color-error-variant: #dc2626;
+  --color-error-variant-bg: #fef2f2;
+  --color-error-variant-border: #fca5a5;
+  --color-error-variant-hover: #b91c1c;
+
+  --color-warning-variant: #d97706;
+  --color-warning-variant-bg: #fffbeb;
+  --color-warning-variant-border: #fed7aa;
+  --color-warning-variant-hover: #b45309;
+
+  --color-info-variant: #2563eb;
+  --color-info-variant-hover: #1d4ed8;
+
   /* Neutral Colors - Grayscale palette (essential shades only) */
   --color-white: #ffffff;
   --color-black: #000000;

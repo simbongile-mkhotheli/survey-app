@@ -5,100 +5,100 @@
  */
 
 .container {
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin: 0.5rem 0;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  margin: var(--spacing-2) 0;
   border: 1px solid;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--spacing-3);
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-2);
 }
 
 .icon {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
   flex-shrink: 0;
 }
 
 .title {
   margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
 }
 
 .message {
   margin: 0;
-  line-height: 1.5;
+  line-height: var(--line-height-normal);
 }
 
 .retryButton {
   align-self: flex-start;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: var(--transition-base);
 }
 
 /* Severity Variants */
 .error {
-  background-color: #fef2f2;
-  border-color: #fca5a5;
-  color: #dc2626;
+  background-color: var(--color-error-variant-bg);
+  border-color: var(--color-error-variant-border);
+  color: var(--color-error-variant);
 }
 
 .error .retryButton {
-  background-color: #dc2626;
-  color: white;
-  border-color: #dc2626;
+  background-color: var(--color-error-variant);
+  color: var(--color-text-inverse);
+  border-color: var(--color-error-variant);
 }
 
 .error .retryButton:hover {
-  background-color: #b91c1c;
-  border-color: #b91c1c;
+  background-color: var(--color-error-variant-hover);
+  border-color: var(--color-error-variant-hover);
 }
 
 .warning {
-  background-color: #fffbeb;
-  border-color: #fed7aa;
-  color: #d97706;
+  background-color: var(--color-warning-variant-bg);
+  border-color: var(--color-warning-variant-border);
+  color: var(--color-warning-variant);
 }
 
 .warning .retryButton {
-  background-color: #d97706;
-  color: white;
-  border-color: #d97706;
+  background-color: var(--color-warning-variant);
+  color: var(--color-text-inverse);
+  border-color: var(--color-warning-variant);
 }
 
 .warning .retryButton:hover {
-  background-color: #b45309;
-  border-color: #b45309;
+  background-color: var(--color-warning-variant-hover);
+  border-color: var(--color-warning-variant-hover);
 }
 
 .info {
-  background-color: #eff6ff;
-  border-color: #93c5fd;
-  color: #2563eb;
+  background-color: var(--color-info-bg);
+  border-color: var(--color-info-border);
+  color: var(--color-info);
 }
 
 .info .retryButton {
-  background-color: #2563eb;
-  color: white;
-  border-color: #2563eb;
+  background-color: var(--color-info);
+  color: var(--color-text-inverse);
+  border-color: var(--color-info);
 }
 
 .info .retryButton:hover {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
+  background-color: var(--color-info-variant-hover);
+  border-color: var(--color-info-variant-hover);
 }
 
 /* Inline Error Styles */
@@ -127,15 +127,15 @@
 /* Responsive Design */
 @media (max-width: 640px) {
   .container {
-    padding: 0.75rem;
+    padding: var(--spacing-3);
   }
 
   .title {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
   }
 
   .message {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
   }
 
   .retryButton {
