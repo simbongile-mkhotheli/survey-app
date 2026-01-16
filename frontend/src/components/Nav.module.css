@@ -50,9 +50,8 @@
 .link:hover {
   background: rgba(255, 255, 255, 0.2);
   color: var(--color-white);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
   border-color: rgba(255, 255, 255, 0.3);
+  composes: hoverElevate from global;
 }
 
 .link:focus-visible {

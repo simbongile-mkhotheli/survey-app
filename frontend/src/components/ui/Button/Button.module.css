@@ -18,12 +18,7 @@
   transition: all var(--transition-base);
   text-decoration: none;
   white-space: nowrap;
-}
-
-.button:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  box-shadow: var(--shadow-focus);
+  composes: focusRing from global;
 }
 
 .button:disabled {
@@ -60,6 +55,7 @@
 .primary:hover:not(:disabled) {
   background-color: var(--color-primary-hover);
   border-color: var(--color-primary-hover);
+  composes: hoverElevate from global;
 }
 
 .secondary {
@@ -71,6 +67,7 @@
 .secondary:hover:not(:disabled) {
   background-color: var(--color-secondary-hover);
   border-color: var(--color-secondary-hover);
+  composes: hoverElevate from global;
 }
 
 .danger {
@@ -82,6 +79,7 @@
 .danger:hover:not(:disabled) {
   background-color: var(--color-error-hover);
   border-color: var(--color-error-hover);
+  composes: hoverElevate from global;
 }
 
 .ghost {
@@ -93,6 +91,7 @@
 .ghost:hover:not(:disabled) {
   background-color: var(--color-gray-50);
   border-color: var(--color-gray-300);
+  composes: hoverElevate from global;
 }
 
 /* Layout */
@@ -118,9 +117,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-/* Focus styles for accessibility */
-.button:focus-visible {
-  box-shadow: var(--shadow-focus);
 }

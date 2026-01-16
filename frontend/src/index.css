@@ -284,3 +284,33 @@ p {
     padding: var(--spacing-8);
   }
 }
+
+/**
+ * Button Hover Elevation
+ * Combines shadow elevation and transform for interactive feedback
+ * Used by: Button component variants, Nav links, Form submit buttons
+ */
+.hoverElevate:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/**
+ * Button Active State
+ * Returns element to baseline after press
+ * Used by: Button component on click/active states
+ */
+.activePress:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/**
+ * Focus Ring Utility
+ * Accessible focus indicator with shadow ring
+ * Used by: All interactive elements
+ */
+.focusRing:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
