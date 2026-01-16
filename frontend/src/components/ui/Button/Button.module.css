@@ -87,7 +87,7 @@
 .ghost {
   background-color: transparent;
   color: var(--color-gray-700);
-  border-color: var(--color-border-dark);
+  border-color: var(--color-border);
 }
 
 .ghost:hover:not(:disabled) {

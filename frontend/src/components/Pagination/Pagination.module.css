@@ -3,9 +3,9 @@
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-  background: var(--color-bg-tertiary, #f5f5f5);
+  background: var(--color-gray-50);
   border-radius: 8px;
-  border: 1px solid var(--color-border, #e0e0e0);
+  border: 1px solid var(--color-border);
   margin-top: 1.5rem;
 }
 
@@ -21,7 +21,7 @@
 }
 
 .itemCount strong {
-  color: var(--color-text-primary, #333);
+  color: var(--color-text);
   font-weight: 600;
 }
 
@@ -47,7 +47,7 @@
 
 .select {
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--color-border, #e0e0e0);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   background: white;
   font-size: 0.9rem;
@@ -56,19 +56,19 @@
 }
 
 .select:hover:not(:disabled) {
-  border-color: var(--color-primary, #007bff);
+  border-color: var(--color-primary);
 }
 
 .select:focus {
   outline: none;
-  border-color: var(--color-primary, #007bff);
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .select:disabled {
-  background: var(--color-bg-disabled, #f5f5f5);
+  background: var(--color-gray-100);
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .buttons {
@@ -81,10 +81,10 @@
 
 .button {
   padding: 0.5rem 1rem;
-  border: 1px solid var(--color-border, #e0e0e0);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   background: white;
-  color: var(--color-text-primary, #333);
+  color: var(--color-text);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -93,9 +93,9 @@
 }
 
 .button:hover:not(:disabled) {
-  background: var(--color-bg-hover, #f9f9f9);
-  border-color: var(--color-primary, #007bff);
-  color: var(--color-primary, #007bff);
+  background: var(--color-surface-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -105,9 +105,9 @@
 }
 
 .button:disabled {
-  background: var(--color-bg-disabled, #f5f5f5);
-  border-color: var(--color-border, #e0e0e0);
-  color: var(--color-text-disabled, #999);
+  background: var(--color-gray-100);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -120,7 +120,7 @@
 }
 
 .pageIndicator strong {
-  color: var(--color-text-primary, #333);
+  color: var(--color-text);
   font-weight: 600;
 }
 

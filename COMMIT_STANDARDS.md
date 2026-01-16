@@ -94,23 +94,35 @@ Specifies what part of the codebase is affected:
 
 ### 3. Subject (Required)
 
+**CRITICAL: Keep subject lines SHORT (max 50 characters)**
+
+This ensures commit history is clean and readable:
+- ✅ **Short**: Readable in one-line git log, GitHub UI, notification emails
+- ✅ **Focused**: Forces clear thinking about scope of changes
+- ✅ **Professional**: Industry standard across all major projects
+
+**Rules:**
+
 - **Imperative mood**: Use "add" not "added" or "adds"
 - **No period**: Don't end with a period
 - **Lowercase**: Start lowercase unless using proper nouns
-- **Concise**: Keep under 50 characters ideally
+- **Max 50 chars**: Hard limit for readability (GitHub's default column width)
 - **Specific**: Describe WHAT changed and WHY
 
-**Good:**
+**Examples:**
 
-- `feat(survey): add CSV export for survey responses`
-- `fix(cache): prevent stale data after mutation`
-- `refactor(validation): extract phone validation to utility`
+✅ **Good (short, clear):**
+- `feat(survey): add CSV export`
+- `fix(cache): prevent stale data`
+- `refactor(validation): extract phone validator`
+- `docs: update API guide`
 
-**Bad:**
+❌ **Bad (too long or unclear):**
+- `feat(survey): add comprehensive survey response export functionality to CSV format` (way too long)
+- `feat(survey): added stuff` (vague)
+- `feat: Make improvements to the survey export.` (period, capitalized wrong)
 
-- `feat(survey): added stuff` (vague, past tense)
-- `feat(survey): Update survey response export functionality.` (period, too long)
-- `feat: Made improvements` (no scope, vague)
+**Length check:** If your subject needs more explanation, use the body section instead.
 
 ### 4. Body (Optional but Recommended for Significant Changes)
 
