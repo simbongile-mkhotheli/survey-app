@@ -45,13 +45,3 @@ export const RESULTS_EMPTY = {
     'No survey responses available yet. Be the first to submit a survey!',
   SEVERITY: 'info',
 } as const;
-
-export const RESULTS_FORMATTING = {
-  // Unit suffixes
-  YEARS_UNIT: 'years',
-  PERCENT_SUFFIX: '%',
-
-  // Default values
-  NA_TEXT: 'N/A',
-  SPACER_HEIGHT: '2rem',
-} as const;

@@ -35,32 +35,6 @@ export const RATING_SCALE_LABELS = [
 ] as const;
 
 /**
- * Form field labels for personal details
- */
-export const FORM_LABELS = {
-  firstName: 'First Name',
-  lastName: 'Last Name',
-  email: 'Email Address',
-  contactNumber: 'Contact Number',
-  dateOfBirth: 'Date of Birth',
-  foods: 'Preferred Foods',
-  ratings: 'Rate Your Agreement',
-  submit: 'Submit Survey',
-  loading: 'Submitting...',
-} as const;
-
-/**
- * Form field placeholder text
- */
-export const FORM_PLACEHOLDERS = {
-  firstName: 'Enter your first name',
-  lastName: 'Enter your last name',
-  email: 'your.email@example.com',
-  contactNumber: '+1 (555) 123-4567',
-  dateOfBirth: 'Select your date of birth',
-} as const;
-
-/**
  * Form instruction and helper text
  */
 export const FORM_INSTRUCTIONS = {

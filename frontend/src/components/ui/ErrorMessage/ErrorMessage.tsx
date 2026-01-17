@@ -1,10 +1,9 @@
 /**
  * Error Message Component
  * ======================
- * Consistent error display with retry functionality
+ * Consistent error display with optional retry functionality
  */
 
-import type { ReactNode } from 'react';
 import styles from './ErrorMessage.module.css';
 
 export interface ErrorMessageProps {
@@ -14,29 +13,20 @@ export interface ErrorMessageProps {
   title?: string;
   /** Show retry button */
   showRetry?: boolean;
-  /** Retry button text */
-  retryText?: string;
   /** Retry callback */
   onRetry?: () => void;
   /** Error severity */
   severity?: 'error' | 'warning' | 'info';
-  /** Custom className */
-  className?: string;
-  /** Children to render below error message */
-  children?: ReactNode;
 }
 
 export function ErrorMessage({
   message,
   title = 'Error',
   showRetry = false,
-  retryText = 'Try Again',
   onRetry,
   severity = 'error',
-  className = '',
-  children,
 }: ErrorMessageProps) {
-  const containerClasses = [styles.container, styles[severity], className]
+  const containerClasses = [styles.container, styles[severity]]
     .filter(Boolean)
     .join(' ');
 
@@ -61,15 +51,13 @@ export function ErrorMessage({
 
         <p className={styles.message}>{message}</p>
 
-        {children}
-
         {showRetry && onRetry && (
           <button
             className={styles.retryButton}
             onClick={onRetry}
             type="button"
           >
-            {retryText}
+            Try Again
           </button>
         )}
       </div>
@@ -84,20 +72,14 @@ export function ErrorMessage({
  */
 export interface InlineErrorProps {
   message: string;
-  className?: string;
   id?: string;
 }
 
-export function InlineError({ message, className = '', id }: InlineErrorProps) {
+export function InlineError({ message, id }: InlineErrorProps) {
   if (!message) return null;
 
   return (
-    <div
-      className={`${styles.inlineError} ${className}`}
-      id={id}
-      role="alert"
-      aria-live="polite"
-    >
+    <div className={styles.inlineError} id={id} role="alert" aria-live="polite">
       <span className={styles.inlineIcon} aria-hidden="true">
         ⚠️
       </span>
