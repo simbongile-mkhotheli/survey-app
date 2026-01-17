@@ -18,10 +18,6 @@ export type {
 // Form Components
 export { TextField } from './TextField';
 
-// Button Components
-export { Button } from './Button/Button';
-export type { ButtonProps } from './Button/Button';
-
 // Card Components
 export { Card, CardSection } from './Card/Card';
 export type { CardProps, CardSectionProps } from './Card/Card';
