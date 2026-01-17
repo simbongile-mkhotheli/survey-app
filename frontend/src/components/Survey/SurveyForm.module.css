@@ -311,7 +311,8 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  composes: hoverElevate from global;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(102, 126, 234, 0.6);
 }
 
 .submitButton:active:not(:disabled) {
