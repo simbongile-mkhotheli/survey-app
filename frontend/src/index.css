@@ -121,6 +121,11 @@
   --spacing-12: 3rem; /* 48px */
   --spacing-16: 4rem; /* 64px */
 
+  /* ===== Responsive Breakpoints ===== */
+  --breakpoint-sm: 480px; /* Small devices (landscape phones) */
+  --breakpoint-md: 768px; /* Medium devices (tablets) */
+  --breakpoint-lg: 1024px; /* Large devices (desktops) */
+
   /* ===== Border Radius System ===== */
   --radius-md: 0.375rem; /* 6px */
   --radius-lg: 0.5rem; /* 8px */
@@ -171,6 +176,28 @@
   --transition-base: 200ms ease-in-out;
   --transition-slow: 300ms ease-in-out;
 }
+
+/**
+ * ===== RESPONSIVE BREAKPOINT STANDARDS =====
+ *
+ * Mobile-First Approach: Start with mobile styles, then add min-width breakpoints
+ *
+ * Standardized Breakpoints (min-width):
+ * - 480px (--breakpoint-sm): Landscape phones / small devices
+ * - 768px (--breakpoint-md): Tablets / medium devices
+ * - 1024px (--breakpoint-lg): Desktops / large devices
+ *
+ * Reverse Queries (max-width):
+ * - max-width: 479px: Mobile only (below 480px breakpoint)
+ * - max-width: 767px: Mobile/tablet (below 768px breakpoint)
+ *
+ * Example Usage:
+ * @media (min-width: 480px) { ... }  // Apply on tablets and up
+ * @media (min-width: 768px) { ... }  // Apply on medium and up
+ * @media (max-width: 479px) { ... }  // Apply on mobile only
+ *
+ * All component files MUST use these exact values for consistency.
+ */
 
 body {
   font-family: var(--font-family-base);
