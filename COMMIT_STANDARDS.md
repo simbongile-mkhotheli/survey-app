@@ -96,10 +96,14 @@ Specifies what part of the codebase is affected:
 
 **CRITICAL: Keep subject lines SHORT (max 50 characters)**
 
+**Most commits should ONLY have a subject line. Body/footer rarely needed.**
+
 This ensures commit history is clean and readable:
+
 - ✅ **Short**: Readable in one-line git log, GitHub UI, notification emails
 - ✅ **Focused**: Forces clear thinking about scope of changes
 - ✅ **Professional**: Industry standard across all major projects
+- ✅ **Quick**: Fast to write, fast to review
 
 **Rules:**
 
@@ -107,24 +111,30 @@ This ensures commit history is clean and readable:
 - **No period**: Don't end with a period
 - **Lowercase**: Start lowercase unless using proper nouns
 - **Max 50 chars**: Hard limit for readability (GitHub's default column width)
-- **Specific**: Describe WHAT changed and WHY
+- **Specific but concise**: What changed and why in as few words as possible
 
 **Examples:**
 
 ✅ **Good (short, clear):**
+
 - `feat(survey): add CSV export`
 - `fix(cache): prevent stale data`
 - `refactor(validation): extract phone validator`
+- `refactor(types): remove unused async helpers`
 - `docs: update API guide`
+- `test(form): add validation tests`
 
 ❌ **Bad (too long or unclear):**
+
 - `feat(survey): add comprehensive survey response export functionality to CSV format` (way too long)
 - `feat(survey): added stuff` (vague)
 - `feat: Make improvements to the survey export.` (period, capitalized wrong)
 
-**Length check:** If your subject needs more explanation, use the body section instead.
+**Golden Rule:** If you need more than 50 characters, you can usually say it shorter. Remove adjectives.
 
-### 4. Body (Optional but Recommended for Significant Changes)
+### 4. Body (Optional, Only When Necessary)
+
+Only add a body when the subject line alone is insufficient. Most commits don't need one.
 
 - **Explain WHY**, not WHAT (WHAT is in the code)
 - **Wrap at 72 characters** per line
@@ -166,24 +176,27 @@ Used for:
   Related to #126
   ```
 
-- **Co-authors**
+- **Co-authors** (rare)
   ```
   Co-authored-by: Jane Doe <jane@example.com>
   ```
 
-**Complete Example:**
+**Example with body (only when needed):**
 
 ```
-feat(survey): add bulk survey deletion with confirmation
+refactor(cache): simplify invalidation logic
 
-- Add bulk select checkboxes to survey list
-- Implement confirmation modal before deletion
-- Update cache after deletion to prevent stale data
-- Add loading state during deletion process
-
-Fixes #1234
-Related to #1235
+Consolidate three separate invalidation methods into one utility
+function. Reduces code duplication and makes cache management clearer.
 ```
+
+**Example without body (preferred):**
+
+```
+refactor(cache): simplify invalidation logic
+```
+
+The second one is preferred. If the commit title clearly explains the change, skip the body.
 
 ## Breaking Changes
 
@@ -240,18 +253,17 @@ feat(kubelet): allow recovery from container logs rotation
 ❌ **Wrong:**
 
 - `Updated stuff` - no type, vague subject
-- `feat: Updated the form to add validation` - wrong mood
+- `feat: Updated the form to add validation` - wrong mood, too verbose
 - `feat(survey): Added new survey creation feature.` - period, added not add
 - `FEAT(SURVEY): ADD SURVEY` - type/scope should be lowercase
-- `fix(a): b` - scope too vague, subject too short
-- `feat: This is a very long commit message that explains in excessive detail everything we did` - too long
+- `feat: This is a very long commit message that explains in excessive detail` - too long
 
 ✅ **Correct:**
 
-- `feat(survey): add survey creation form`
-- `fix(validation): handle null phone numbers correctly`
-- `test(form): add comprehensive validation test suite`
-- `refactor(cache): extract invalidation logic to utility function`
+- `feat(survey): add survey form`
+- `fix(validation): handle null phone numbers`
+- `test(form): add validation tests`
+- `refactor(cache): simplify invalidation`
 
 ## Semantic Versioning Connection
 
