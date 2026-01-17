@@ -21,6 +21,4 @@ export interface ErrorState {
 
 export interface ErrorHandlerOptions {
   logToStore?: boolean;
-  logToConsole?: boolean;
-  showToast?: boolean;
 }
