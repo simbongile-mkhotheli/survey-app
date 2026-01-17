@@ -17,7 +17,7 @@ import { Component } from 'react';
 import type { ErrorInfo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { RouteErrorBoundaryProps, RouteErrorState } from './types';
-import type { ErrorMetadata } from '@/types/async.types';
+import type { ErrorMetadata } from './types';
 import { logWithContext } from '@/utils/logger';
 import styles from './RouteErrorBoundary.module.css';
 
@@ -152,14 +152,6 @@ class RouteErrorBoundaryImpl extends Component<
   handleNavigateToSafe = (route: string) => {
     if (this.props.onNavigate) {
       this.props.onNavigate(route);
-    }
-  };
-
-  handleReportError = () => {
-    const { error, errorMetadata } = this.state;
-
-    if (this.props.onReportError && error) {
-      this.props.onReportError(error, errorMetadata);
     }
   };
 

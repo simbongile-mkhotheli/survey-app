@@ -5,7 +5,29 @@
  */
 
 import type { ReactNode, ErrorInfo } from 'react';
-import type { ErrorMetadata } from '@/types/async.types';
+
+/**
+ * Metadata attached to errors for analytics and debugging
+ */
+export interface ErrorMetadata {
+  /** React component stack trace */
+  component?: string;
+
+  /** ISO timestamp of error occurrence */
+  timestamp: number;
+
+  /** Error severity level */
+  severity: 'low' | 'medium' | 'high' | 'critical';
+
+  /** Route or context where error occurred */
+  route?: string;
+
+  /** User agent string */
+  userAgent: string;
+
+  /** Additional context data */
+  context?: Record<string, unknown>;
+}
 
 /**
  * Props for RouteErrorBoundary component
@@ -35,9 +57,6 @@ export interface RouteErrorBoundaryProps {
 
   /** Called when user navigates to safe route */
   onNavigate?: (route: string) => void;
-
-  /** Called when user wants to report error */
-  onReportError?: (error: Error, metadata?: ErrorMetadata) => void;
 }
 
 /**
