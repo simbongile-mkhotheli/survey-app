@@ -394,42 +394,10 @@ import { SurveyService } from '../../../services/survey.service';
 - [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) - Complete API reference
 - [docs/README.md](docs/README.md) - Architecture deep-dive
 
-## 🆘 Troubleshooting
-
-### Database Connection Failed
-
-```bash
-# Check connection string
-echo $DATABASE_URL
-
-# Verify PostgreSQL is running and accessible
-psql $DATABASE_URL -c "SELECT 1;"
-
-# Run migrations
-npx prisma migrate dev
-```
-
-### Tests Failing
-
-```bash
-# Clear node_modules and reinstall
-rm -rf node_modules package-lock.json
-npm install
-
-# Resync database (test environment)
-npm run test:reset-db
-```
-
-### Port Already in Use
-
-```bash
-# Change port via environment variable
-PORT=5001 npm run dev
-```
-
 ## 🎨 UI/UX Improvements Planned:
 
 ### Styling Enhancements
+
 - **Goal**: Beef up the styling to make the app sleeker and more polished
 - **Status**: In planning
 - **Areas of Focus**:
@@ -450,6 +418,22 @@ PORT=5001 npm run dev
 
 - **Maintainer**: Simbongile Mkhotheli
 - **Contributors**: See [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## 🆘 Troubleshooting
+
+### Production: Survey Submission Timeout (Vercel)
+
+**Issue**: When the app loads for the first time in production and a user submits a completed survey, a timeout error occurs (exceeds 5000ms).
+
+**Possible Cause**: This appears to be a Vercel cold start or serverless function initialization quirk.
+
+**Workaround**:
+
+- Retry the survey submission
+- Ensure backend service has warmed up before submitting
+- Consider implementing client-side retry logic with exponential backoff
+
+**Portfolio Note**: This is a known limitation when deploying to serverless environments. For production use, consider a dedicated server or pre-warming strategies.
 
 ## 🙏 Acknowledgments
 
