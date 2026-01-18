@@ -410,15 +410,6 @@ import { SurveyService } from '../../../services/survey.service';
   - Component-level styling consistency
   - Animation polish
 
-## 📄 License
-
-[Add your license here]
-
-## 👥 Team
-
-- **Maintainer**: Simbongile Mkhotheli
-- **Contributors**: See [CONTRIBUTING.md](CONTRIBUTING.md)
-
 ## 🆘 Troubleshooting
 
 ### Production: Survey Submission Timeout (Vercel)
@@ -433,7 +424,8 @@ import { SurveyService } from '../../../services/survey.service';
 - Ensure backend service has warmed up before submitting
 - Consider implementing client-side retry logic with exponential backoff
 
-**Portfolio Note**: This is a known limitation when deploying to serverless environments. For production use, consider a dedicated server or pre-warming strategies.
+**Portfolio Note**: This is a known limitation when deploying to serverless environments.
+For production use, consider a dedicated server or pre-warming strategies.
 
 ## 🙏 Acknowledgments
 
@@ -445,3 +437,16 @@ Built with industry best practices from:
 - OWASP Top 10 (security hardening)
 - Conventional Commits (commit standards)
 - Semantic Versioning (release management)
+
+## 📄 License
+
+This project is licensed under the MIT License.
+See the LICENSE file for details.
+
+If you have not added the file yet, add a LICENSE file at the root of the repo.
+MIT is the safest and most common choice for portfolio projects.
+
+## 👥 Team
+
+- **Maintainer**: Simbongile Mkhotheli
+- **Contributors**: See [CONTRIBUTING.md](CONTRIBUTING.md)
