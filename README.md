@@ -443,9 +443,6 @@ Built with industry best practices from:
 This project is licensed under the MIT License.
 See the LICENSE file for details.
 
-If you have not added the file yet, add a LICENSE file at the root of the repo.
-MIT is the safest and most common choice for portfolio projects.
-
 ## 👥 Team
 
 - **Maintainer**: Simbongile Mkhotheli
