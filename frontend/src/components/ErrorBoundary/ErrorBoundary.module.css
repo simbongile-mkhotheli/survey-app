@@ -22,20 +22,20 @@
 }
 
 /* Error Level Variations */
-.critical {
+.criticalError {
   min-height: 50vh;
   background-color: #991b1b;
   color: white;
   border-color: #7f1d1d;
 }
 
-.page {
+.pageError {
   min-height: 200px;
   background-color: #fef2f2;
   border-color: #fca5a5;
 }
 
-.component {
+.componentError {
   min-height: 100px;
   background-color: #fffbeb;
   border-color: #fed7aa;
@@ -48,15 +48,15 @@
   font-weight: 600;
 }
 
-.critical .title {
+.criticalError .title {
   font-size: 2rem;
 }
 
-.page .title {
+.pageError .title {
   font-size: 1.5rem;
 }
 
-.component .title {
+.componentError .title {
   font-size: 1.25rem;
 }
 
@@ -137,14 +137,14 @@
   border-color: #4b5563;
 }
 
-.component .retry,
-.component .reload {
+.componentError .retry,
+.componentError .reload {
   background-color: #d97706;
   border-color: #d97706;
 }
 
-.component .retry:hover,
-.component .reload:hover {
+.componentError .retry:hover,
+.componentError .reload:hover {
   background-color: #b45309;
   border-color: #b45309;
 }
@@ -155,15 +155,15 @@
     padding: 1rem;
   }
 
-  .critical .title {
+  .criticalError .title {
     font-size: 1.5rem;
   }
 
-  .page .title {
+  .pageError .title {
     font-size: 1.25rem;
   }
 
-  .component .title {
+  .componentError .title {
     font-size: 1.125rem;
   }
 

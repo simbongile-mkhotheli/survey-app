@@ -7,39 +7,6 @@
   overflow-x: hidden;
 }
 
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-2) var(--spacing-2);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-}
-
-@media (min-width: 480px) {
-  .header {
-    padding: var(--spacing-3) var(--spacing-4);
-  }
-}
-
-@media (min-width: 768px) {
-  .header {
-    padding: var(--spacing-6) var(--spacing-8);
-  }
-}
-
-.headerLeft {
-  font-size: var(--font-size-sm);
-}
-
-.surveysText {
-  font-style: italic;
-  color: var(--color-white);
-}
-
 .main {
   flex: 1;
   padding: var(--spacing-1) var(--spacing-1);
@@ -172,14 +139,6 @@
   }
 }
 
-/* Inline column for inputs (checkboxes) */
-.colInputInline {
-  flex-basis: 75%;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
-}
-
 /* Checkbox group wrapper */
 .checkboxGroup {
   display: flex;
@@ -301,33 +260,6 @@
   width: 35%;
 }
 
-/* Table data label cell */
-.tdLabel {
-  border: 1px solid var(--color-border);
-  padding: var(--spacing-2);
-  text-align: left;
-}
-
-/* Centered table data cell */
-.tdCenter {
-  border: 1px solid var(--color-border);
-  padding: var(--spacing-2);
-  text-align: center;
-}
-
-/* Even table row background */
-.rowEven {
-  background-color: var(--color-bg-row-even);
-}
-
-/* Radio button */
-.radio {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--color-primary);
-}
-
 /* Submit button container */
 .submitContainer {
   margin-top: var(--spacing-10);
@@ -371,17 +303,6 @@
   opacity: 0.6;
   cursor: not-allowed;
   transform: none !important;
-}
-
-/* Error message text */
-.errorText {
-  display: block;
-  min-height: 1.25rem;
-  margin: var(--spacing-1) 0;
-  padding-left: var(--spacing-1);
-  font-size: var(--font-size-xs);
-  color: var(--color-error);
-  line-height: var(--line-height-tight);
 }
 
 /* Success banner after submission */
