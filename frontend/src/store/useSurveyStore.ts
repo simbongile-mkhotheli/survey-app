@@ -24,7 +24,6 @@ export const useAppStore = create<AppStore>()(
         hasFetched: false,
 
         // App Settings State
-        darkMode: false,
         language: 'en',
 
         // Survey Results Actions
@@ -58,17 +57,14 @@ export const useAppStore = create<AppStore>()(
           set({ data: null, loading: false, error: null, hasFetched: false }),
 
         // App Settings Actions
-        toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
-
         setLanguage: (language) => set({ language }),
 
-        resetSettings: () => set({ darkMode: false, language: 'en' }),
+        resetSettings: () => set({ language: 'en' }),
       }),
       {
         name: SETTINGS_STORAGE_KEY,
         // Only persist settings, not survey data
         partialize: (state: AppStore) => ({
-          darkMode: state.darkMode,
           language: state.language,
         }),
       },
@@ -95,9 +91,7 @@ export const useResults = () =>
 
 export const useSettings = () =>
   useAppStore((state) => ({
-    darkMode: state.darkMode,
     language: state.language,
-    toggleDarkMode: state.toggleDarkMode,
     setLanguage: state.setLanguage,
     resetSettings: state.resetSettings,
   }));

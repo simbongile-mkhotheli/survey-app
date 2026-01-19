@@ -199,7 +199,7 @@ Store (Zustand)
 ├── Survey data
 ├── Results data
 ├── UI state
-└── Settings (dark mode, language)
+└── Settings (language)
 ```
 
 ## 🔐 Security

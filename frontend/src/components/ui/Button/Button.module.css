@@ -120,40 +120,6 @@
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .primary {
-    background-color: var(--color-btn-primary-hover);
-    border-color: var(--color-btn-primary-hover);
-  }
-
-  .primary:hover:not(:disabled) {
-    background-color: var(--color-btn-primary-active);
-    border-color: var(--color-btn-primary-active);
-  }
-
-  .secondary {
-    background-color: var(--color-gray-600);
-    border-color: var(--color-gray-600);
-    color: var(--color-gray-50);
-  }
-
-  .secondary:hover:not(:disabled) {
-    background-color: var(--color-gray-700);
-    border-color: var(--color-gray-700);
-  }
-
-  .ghost {
-    color: var(--color-gray-50);
-    border-color: var(--color-gray-600);
-  }
-
-  .ghost:hover:not(:disabled) {
-    background-color: var(--color-gray-700);
-    border-color: var(--color-gray-500);
-  }
-}
-
 /* Focus styles for accessibility */
 .button:focus-visible {
   box-shadow: var(--shadow-focus);
