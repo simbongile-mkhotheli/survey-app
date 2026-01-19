@@ -17,7 +17,7 @@
  * │  ├─ Results data (fetched from API) ⚠️  MOVE TO REACT QUERY
  * │  ├─ Loading state (manual) ⚠️  MOVE TO REACT QUERY
  * │  ├─ Error state (manual) ⚠️  MOVE TO REACT QUERY
- * │  ├─ Dark mode, language (local) ✅ KEEP
+ * │  ├─ Language (local) ✅ KEEP
  * │  └─ Manual fetch/refetch logic ⚠️  REPLACE WITH REACT QUERY
  *
  * AFTER (Hybrid - GOAL):
@@ -29,7 +29,7 @@
  * │
  * └─ Zustand Store (Local/UI State)
  *    ├─ Survey form data ✅
- *    ├─ UI settings (dark mode, language) ✅
+ *    ├─ UI settings (language) ✅
  *    ├─ Transient UI state (modal open, tabs) ✅
  *    └─ Cached results (optional - for optimistic updates) ⚠️
  *
@@ -165,7 +165,7 @@
  *
  * ZUSTAND SIMPLIFIED TO:
  * ├─ Survey form state ✅
- * ├─ Settings (dark mode, language) ✅
+ * ├─ Settings (language) ✅
  * └─ UI flags (modal open, tabs) ✅
  *
  * ============================================================================
