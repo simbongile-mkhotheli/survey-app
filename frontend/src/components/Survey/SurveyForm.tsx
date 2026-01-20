@@ -139,15 +139,14 @@ function SurveyForm() {
    */
   useEffect(() => {
     if (isSubmitSuccessful) {
-      // Reset form immediately, not after delay
-      reset();
-
       // Show success message
       setShowSuccessMessage(true);
 
-      // Auto-dismiss success message after 3 seconds
+      // Auto-dismiss success message after 3 seconds, then reset form state
       const timer = setTimeout(() => {
         setShowSuccessMessage(false);
+        // Reset form including the isSubmitSuccessful flag
+        reset();
       }, 3000);
       return () => clearTimeout(timer);
     }
