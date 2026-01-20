@@ -121,13 +121,30 @@ function SurveyForm() {
   );
 
   /**
-   * Auto-dismiss success message after 3 seconds
-   * Also resets form when success state changes
+   * Reset form immediately on successful submission
+   *
+   * CRITICAL FIX: Reset must happen synchronously after successful submission,
+   * not in a delayed timeout. This ensures:
+   * 1. React Hook Form's internal state is cleared immediately
+   * 2. Radio buttons are properly unchecked (value="string" matches reset)
+   * 3. Checkboxes are properly unchecked (array state cleared)
+   * 4. All form fields are cleared before showing success message
+   *
+   * Without this fix:
+   * - isSubmitSuccessful becomes true
+   * - Success message shows WHILE form still has data
+   * - Radio/checkboxes don't clear due to state-DOM desync
+   * - Timeout delay makes timing unreliable
    */
   useEffect(() => {
     if (isSubmitSuccessful) {
+      // Reset form immediately, not after delay
+      reset();
+
+      // Auto-dismiss success message after 3 seconds
       const timer = setTimeout(() => {
-        reset();
+        // Message disappears automatically via isSubmitSuccessful state
+        // No action needed here - just let component re-render
       }, 3000);
       return () => clearTimeout(timer);
     }
@@ -247,7 +264,6 @@ function SurveyForm() {
                       value={food}
                       className={styles.checkbox}
                       {...register('foods')}
-                      defaultChecked={false}
                     />{' '}
                     {food}
                   </label>

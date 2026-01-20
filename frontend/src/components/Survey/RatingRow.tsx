@@ -32,7 +32,7 @@ function RatingRow({
               </span>
               <input
                 type="radio"
-                value={value}
+                value={String(value)}
                 className={styles.radioInput}
                 {...(register(
                   fieldName,
