@@ -42,7 +42,7 @@
 import { useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, useCallback, memo } from 'react';
+import { useState, useCallback, memo, useEffect } from 'react';
 
 import { SurveySchema } from '@/validation';
 import type { SurveyFormValues } from '@/validation';
@@ -105,7 +105,7 @@ function SurveyForm() {
       try {
         setSubmitError(null);
         await submitSurvey(data);
-        reset();
+        // Form will be reset by useEffect when isSubmitSuccessful becomes true
       } catch (err) {
         const errorMessage = formatErrorMessage(
           err instanceof Error ? err : new Error('Failed to submit survey'),
@@ -117,8 +117,21 @@ function SurveyForm() {
         );
       }
     },
-    [reset, handleError],
+    [handleError],
   );
+
+  /**
+   * Auto-dismiss success message after 3 seconds
+   * Also resets form when success state changes
+   */
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      const timer = setTimeout(() => {
+        reset();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSubmitSuccessful, reset]);
 
   /**
    * Clears submission error state
