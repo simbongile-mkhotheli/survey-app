@@ -8,9 +8,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  border: 1px solid #f87171;
+  padding: var(--spacing-8);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-error);
   background-color: var(--color-white);
   color: var(--color-error);
 }
@@ -24,75 +24,69 @@
 /* Error Level Variations */
 .criticalError {
   min-height: 50vh;
-  background-color: green;
-  color: orangered;
-  border-color: #d4c006;
+  background-color: #fef2f2;
+  color: var(--color-error);
+  border-color: var(--color-error);
 }
 
 .pageError {
   min-height: 200px;
-  border-radius: 0.5rem;
-  background-color: #eee9e9;
+  border-radius: var(--radius-lg);
+  background-color: #fef2f2;
 }
 
 .componentError {
   min-height: 100px;
-  background-color: red;
-  border-color: #fed7aa;
-  color: #d97706;
+  background-color: #fef2f2;
+  border-color: var(--color-error);
+  color: var(--color-error);
 }
 
 /* Typography */
 .title {
-  margin: 0 0 1rem 0;
-  font-weight: 600;
+  margin: 0 0 var(--spacing-4) 0;
+  font-weight: var(--font-weight-semibold);
 }
 
 .criticalError .title {
-  font-size: 2rem;
+  font-size: var(--font-size-4xl);
 }
 
 .pageError .title {
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl);
 }
 
 .componentError .title {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
 }
 
 .message {
-  margin: 0 0 1.5rem 0;
-  line-height: 1.5;
+  margin: 0 0 var(--spacing-6) 0;
+  line-height: var(--line-height-normal);
   opacity: 0.9;
 }
 
 /* Error Details */
 .errorDetails {
-  margin: 1rem 0;
+  margin: var(--spacing-4) 0;
   text-align: left;
 }
 
 .errorDetails summary {
   cursor: pointer;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  padding: 0.25rem 0;
-}
-
-.errorDetails summary:hover {
-  opacity: 0.8;
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-2);
+  padding: var(--spacing-1) 0;
 }
 
 .errorText {
   background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 0.25rem;
-  padding: 0.75rem;
-  margin: 0.5rem 0 0 0;
-  font-family:
-    ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo,
-    monospace;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  border-radius: var(--radius-base);
+  padding: var(--spacing-3);
+  margin: var(--spacing-2) 0 0 0;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
   overflow-x: auto;
   white-space: pre-wrap;
   word-break: break-word;
@@ -101,40 +95,43 @@
 /* Action Buttons */
 .actions {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--spacing-3);
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: var(--spacing-6);
 }
 
 .button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-base);
   border: 1px solid transparent;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-default);
 }
 
 .retry {
   background-color: #3b82f6;
-  color: white;
+  color: var(--color-white);
   border-color: #3b82f6;
 }
 
 .retry:hover {
   background-color: #2563eb;
   border-color: #2563eb;
+  transform: translateY(-2px);
 }
 
 .reload {
-  background-color: #6b7280;
-  color: white;
-  border-color: #6b7280;
+  background-color: var(--color-text-secondary);
+  color: var(--color-white);
+  border-color: var(--color-text-secondary);
 }
 
 .reload:hover {
   background-color: #4b5563;
   border-color: #4b5563;
+  transform: translateY(-2px);
 }
 
 .componentError .retry,
@@ -152,19 +149,19 @@
 /* Responsive Design */
 @media (max-width: 640px) {
   .errorBoundary {
-    padding: 1rem;
+    padding: var(--spacing-4);
   }
 
   .criticalError .title {
-    font-size: 1.5rem;
+    font-size: var(--font-size-2xl);
   }
 
   .pageError .title {
-    font-size: 1.25rem;
+    font-size: var(--font-size-xl);
   }
 
   .componentError .title {
-    font-size: 1.125rem;
+    font-size: var(--font-size-lg);
   }
 
   .actions {
