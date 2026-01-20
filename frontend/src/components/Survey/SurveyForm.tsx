@@ -65,6 +65,7 @@ import { formatErrorMessage } from './SurveyForm.utils';
  */
 function SurveyForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const { handleError } = useErrorHandler({ logToStore: false });
 
   const {
@@ -141,10 +142,12 @@ function SurveyForm() {
       // Reset form immediately, not after delay
       reset();
 
+      // Show success message
+      setShowSuccessMessage(true);
+
       // Auto-dismiss success message after 3 seconds
       const timer = setTimeout(() => {
-        // Message disappears automatically via isSubmitSuccessful state
-        // No action needed here - just let component re-render
+        setShowSuccessMessage(false);
       }, 3000);
       return () => clearTimeout(timer);
     }
@@ -178,7 +181,7 @@ function SurveyForm() {
       )}
 
       {/* Success State */}
-      {isSubmitSuccessful && (
+      {showSuccessMessage && (
         <ErrorMessage
           message="Your survey has been submitted successfully! Thank you for your participation."
           title="Success!"
@@ -341,7 +344,7 @@ function SurveyForm() {
           </div>
 
           {/* Success Message */}
-          {isSubmitSuccessful && (
+          {showSuccessMessage && (
             <div className={styles.successBanner}>
               Thank you for submitting!
             </div>
