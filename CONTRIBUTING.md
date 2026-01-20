@@ -15,7 +15,6 @@ npm install
 1. **Start Development**
 
 ```bash
-docker-compose up
 npm run dev
 ```
 

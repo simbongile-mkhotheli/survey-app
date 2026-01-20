@@ -81,7 +81,6 @@ Specifies what part of the codebase is affected:
 - `validation` - Input validation schemas
 - `types` - TypeScript type definitions
 - `config` - Configuration files
-- `docker` - Docker/containerization
 - `monorepo` - Monorepo structure
 - `deps` - Dependencies management
 - `tests` - Test infrastructure
