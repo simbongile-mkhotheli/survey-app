@@ -76,6 +76,18 @@ function SurveyForm() {
     resolver: zodResolver(SurveySchema),
     mode: 'onBlur',
     reValidateMode: 'onBlur',
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      contactNumber: '',
+      dateOfBirth: '',
+      foods: [],
+      ratingMovies: undefined,
+      ratingRadio: undefined,
+      ratingEatOut: undefined,
+      ratingTV: undefined,
+    },
   });
 
   /**
