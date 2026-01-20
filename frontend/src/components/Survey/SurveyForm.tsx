@@ -234,6 +234,7 @@ function SurveyForm() {
                       value={food}
                       className={styles.checkbox}
                       {...register('foods')}
+                      defaultChecked={false}
                     />{' '}
                     {food}
                   </label>
