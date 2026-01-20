@@ -180,15 +180,6 @@ function SurveyForm() {
         />
       )}
 
-      {/* Success State */}
-      {showSuccessMessage && (
-        <ErrorMessage
-          message="Your survey has been submitted successfully! Thank you for your participation."
-          title="Success!"
-          severity="info"
-        />
-      )}
-
       {/* Personal Details */}
       <main className={styles.main}>
         <div className={styles.formCard}>
@@ -343,11 +334,13 @@ function SurveyForm() {
             </button>
           </div>
 
-          {/* Success Message */}
+          {/* Success State */}
           {showSuccessMessage && (
-            <div className={styles.successBanner}>
-              Thank you for submitting!
-            </div>
+            <ErrorMessage
+              message="Your survey has been submitted successfully! Thank you for your participation."
+              title="Success!"
+              severity="info"
+            />
           )}
         </div>
       </main>
