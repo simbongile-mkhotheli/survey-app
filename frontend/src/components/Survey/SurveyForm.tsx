@@ -139,14 +139,26 @@ function SurveyForm() {
    */
   useEffect(() => {
     if (isSubmitSuccessful) {
+      // Reset form immediately with all fields cleared
+      reset({
+        firstName: '',
+        lastName: '',
+        email: '',
+        contactNumber: '',
+        dateOfBirth: '',
+        foods: [],
+        ratingMovies: undefined,
+        ratingRadio: undefined,
+        ratingEatOut: undefined,
+        ratingTV: undefined,
+      });
+
       // Show success message
       setShowSuccessMessage(true);
 
-      // Auto-dismiss success message after 3 seconds, then reset form state
+      // Auto-dismiss success message after 3 seconds
       const timer = setTimeout(() => {
         setShowSuccessMessage(false);
-        // Reset form including the isSubmitSuccessful flag
-        reset();
       }, 3000);
       return () => clearTimeout(timer);
     }
