@@ -25,12 +25,12 @@
 /* Text input */
 .textbox {
   padding: var(--spacing-2) var(--spacing-3);
-  border: 2px solid var(--color-gray-300);
-  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-xl);
   font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
+  color: var(--color-text);
   background: var(--color-surface);
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base);
   font-family: inherit;
   box-shadow: var(--shadow-sm);
   max-width: 400px;
@@ -39,8 +39,10 @@
 .textbox:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
-  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 3px rgba(40, 160, 229, 0.15),
+    var(--shadow-base);
+  transform: translateY(-2px);
 }
 
 .textbox::placeholder {

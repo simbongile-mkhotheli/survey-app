@@ -40,12 +40,13 @@
   background: var(--color-white);
   border-radius: var(--radius-2xl);
   padding: var(--spacing-1);
-  box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-elevated);
+  backdrop-filter: blur(10px);
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all var(--transition-base);
 }
 
 @media (min-width: 480px) {
