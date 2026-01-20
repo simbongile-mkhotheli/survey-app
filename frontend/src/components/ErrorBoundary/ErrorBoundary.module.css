@@ -11,8 +11,8 @@
   padding: 2rem;
   border-radius: 0.5rem;
   border: 1px solid #f87171;
-  background-color: #fef2f2;
-  color: #dc2626;
+  background-color: var(--color-body);
+  color: var(--color-error);
 }
 
 .errorContent {
@@ -24,20 +24,20 @@
 /* Error Level Variations */
 .criticalError {
   min-height: 50vh;
-  background-color: #991b1b;
-  color: white;
-  border-color: #7f1d1d;
+  background-color: green;
+  color: orangered;
+  border-color: #d4c006;
 }
 
 .pageError {
   min-height: 200px;
-  background-color: #fef2f2;
-  border-color: #fca5a5;
+  border-radius: 0.5rem;
+  background-color: #eee9e9;
 }
 
 .componentError {
   min-height: 100px;
-  background-color: #fffbeb;
+  background-color: red;
   border-color: #fed7aa;
   color: #d97706;
 }

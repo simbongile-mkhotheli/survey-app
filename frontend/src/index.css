@@ -51,15 +51,6 @@
   --color-bg-row-even: #f9f9f9;
   --color-bg-row-hover: var(--color-gray-100);
 
-  /* Button Colors */
-  --color-btn-primary: #3b82f6;
-  --color-btn-primary-hover: #2563eb;
-  --color-btn-primary-active: #1d4ed8;
-  --color-btn-secondary: var(--color-gray-500);
-  --color-btn-secondary-hover: var(--color-gray-600);
-  --color-btn-danger: #dc2626;
-  --color-btn-danger-hover: #b91c1c;
-
   /* ===== Spacing System ===== */
   --spacing-0: 0;
   --spacing-1: 0.25rem; /* 4px */
