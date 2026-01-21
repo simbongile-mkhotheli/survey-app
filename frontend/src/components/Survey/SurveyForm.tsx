@@ -25,6 +25,7 @@ function SurveyFormInner() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    setValue,
   } = useForm<SurveyFormValues>({
     resolver: zodResolver(SurveySchema),
     mode: 'onBlur',
@@ -69,7 +70,12 @@ function SurveyFormInner() {
       ratingEatOut: undefined,
       ratingTV: undefined,
     });
-  }, [reset]);
+
+    setValue('ratingMovies', undefined);
+    setValue('ratingRadio', undefined);
+    setValue('ratingEatOut', undefined);
+    setValue('ratingTV', undefined);
+  }, [reset, setValue]);
 
   const onSubmit: SubmitHandler<SurveyFormValues> = useCallback(
     async (data) => {
@@ -78,7 +84,6 @@ function SurveyFormInner() {
 
         await submitSurvey(data);
 
-        // synchronous reset to defaults (uses undefined for rating fields)
         resetToDefaults();
 
         setShowSuccessMessage(true);
@@ -267,7 +272,9 @@ function SurveyFormInner() {
             <div className={styles.submitContainer}>
               <button
                 type="submit"
-                className={`${styles.submitButton} ${isSubmitting ? styles.submitButtonDisabled : ''}`}
+                className={`${styles.submitButton} ${
+                  isSubmitting ? styles.submitButtonDisabled : ''
+                }`}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Submitting…' : 'SUBMIT'}
