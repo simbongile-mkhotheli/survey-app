@@ -1,9 +1,9 @@
-import { memo } from 'react';
+// RatingRow.tsx
+import React, { memo } from 'react';
 import type { UseFormRegister } from 'react-hook-form';
-import type { InputHTMLAttributes } from 'react';
-import styles from './RatingRow.module.css';
 import type { SurveyFormValues } from '@/validation';
 import { RATING_SCALE_LABELS } from './SurveyForm.constants';
+import styles from './RatingRow.module.css';
 
 interface RatingRowProps {
   label: string;
@@ -20,35 +20,44 @@ function RatingRow({
   error,
   isEvenRow = false,
 }: RatingRowProps) {
+  const values = [1, 2, 3, 4, 5];
+
   return (
     <>
       <tr className={`${styles.row} ${isEvenRow ? styles.evenRow : ''}`}>
         <td className={styles.labelCell}>{label}</td>
-        <div className={styles.optionsContainer}>
-          {[1, 2, 3, 4, 5].map((value, index) => (
+
+        {values.map((value, idx) => {
+          const id = `${String(fieldName)}-${value}`;
+          return (
             <td key={value} className={styles.cell}>
-              <span className={styles.cellLabel}>
-                {RATING_SCALE_LABELS[index]}
-              </span>
+              <label htmlFor={id} className={styles.cellLabel}>
+                {RATING_SCALE_LABELS[idx]}
+              </label>
+
               <input
+                id={id}
                 type="radio"
+                {...register(fieldName, { setValueAs: (v) => Number(v) })}
                 value={String(value)}
                 className={styles.radioInput}
-                {...(register(
-                  fieldName,
-                ) as unknown as InputHTMLAttributes<HTMLInputElement>)}
+                aria-invalid={Boolean(error)}
+                aria-describedby={
+                  error ? `${String(fieldName)}-error` : undefined
+                }
               />
             </td>
-          ))}
-        </div>
+          );
+        })}
       </tr>
 
-      {/* Only render error row if there's an error */}
       {error && (
         <tr className={styles.errorRow}>
           <td colSpan={6}>
-            <div className={styles.errorContainer}>
-              <span className={styles.errorIcon}>⚠️</span>
+            <div
+              id={`${String(fieldName)}-error`}
+              className={styles.errorContainer}
+            >
               <span className={styles.errorText}>{error}</span>
             </div>
           </td>

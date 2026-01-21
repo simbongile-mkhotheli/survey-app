@@ -44,18 +44,32 @@ function SurveyFormInner() {
   });
 
   const clearSuccessTimer = () => {
-    if (successTimerRef.current) {
+    if (successTimerRef.current !== null) {
       window.clearTimeout(successTimerRef.current);
       successTimerRef.current = null;
     }
   };
 
   useEffect(() => {
-    // cleanup on unmount
     return () => {
       clearSuccessTimer();
     };
   }, []);
+
+  const resetToDefaults = useCallback(() => {
+    reset({
+      firstName: '',
+      lastName: '',
+      email: '',
+      contactNumber: '',
+      dateOfBirth: '',
+      foods: [],
+      ratingMovies: undefined,
+      ratingRadio: undefined,
+      ratingEatOut: undefined,
+      ratingTV: undefined,
+    });
+  }, [reset]);
 
   const onSubmit: SubmitHandler<SurveyFormValues> = useCallback(
     async (data) => {
@@ -64,25 +78,12 @@ function SurveyFormInner() {
 
         await submitSurvey(data);
 
-        // Synchronous reset — clears RHF internal state and avoids DOM desync
-        reset({
-          firstName: '',
-          lastName: '',
-          email: '',
-          contactNumber: '',
-          dateOfBirth: '',
-          foods: [],
-          ratingMovies: undefined,
-          ratingRadio: undefined,
-          ratingEatOut: undefined,
-          ratingTV: undefined,
-        });
+        // synchronous reset to defaults (uses undefined for rating fields)
+        resetToDefaults();
 
         setShowSuccessMessage(true);
 
-        // Auto-dismiss success message after 3s (track timer for cleanup)
         clearSuccessTimer();
-        // window.setTimeout returns number in browsers
         successTimerRef.current = window.setTimeout(() => {
           setShowSuccessMessage(false);
           successTimerRef.current = null;
@@ -98,10 +99,9 @@ function SurveyFormInner() {
         );
       }
     },
-    [handleError, reset],
+    [handleError, resetToDefaults],
   );
 
-  // Retries submission using current form values (runs validation first)
   const handleRetry = useCallback(() => {
     handleSubmit(onSubmit)();
   }, [handleSubmit, onSubmit]);
@@ -189,7 +189,6 @@ function SurveyFormInner() {
               </div>
             </div>
 
-            {/* Favorite Foods */}
             <div className={styles.row}>
               <div className={styles.colFull}>
                 <span className={styles.labelText}>
@@ -212,7 +211,6 @@ function SurveyFormInner() {
               </div>
             </div>
 
-            {/* Rating Table */}
             <div className={styles.row}>
               <div className={styles.colFull}>
                 <div className={styles.instruction}>
@@ -291,7 +289,6 @@ function SurveyFormInner() {
   );
 }
 
-// export memoized component and set displayName on the memoized value
 const SurveyForm = memo(SurveyFormInner);
 SurveyForm.displayName = 'SurveyForm';
 export default SurveyForm;
