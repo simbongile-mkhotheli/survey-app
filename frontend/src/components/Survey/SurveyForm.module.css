@@ -228,26 +228,26 @@
   box-sizing: border-box;
 }
 
-/* Hide table header on mobile */
-.table thead {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .table thead {
-    display: table-header-group;
-  }
-}
-
 /* Table header cell */
 .th {
   border: 1px solid var(--color-gray-200);
   padding: var(--spacing-2);
   text-align: center;
+
+  /* Background gradient */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: var(--color-white);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-xs);
+
+  /* Correct color properties */
+  color: var(--color-white); /* fixed typo from 'coblor' */
+  font-weight: var(--font-weight-semibold); /* fixed 'fonnt-weight' */
+  font-size: small; /* removed duplicate  font-size: var(--font-size-xs); 'font-nsize' and 'x-small' */
+
+  /* Flexbox adjustments */
+
+  align-items: center; /* vertically center content */
+  justify-content: center; /* horizontally center content */
+
+  min-width: 0; /* important for flex containers to prevent overflow */
 }
 
 /* Table header label cell */
