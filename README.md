@@ -215,40 +215,6 @@ The application implements **OWASP Top 10** protections:
 - ✅ **Security Headers**: Helmet + custom headers
 - ✅ **Error Handling**: Generic messages (no stack traces to clients)
 
-## 📊 Monitoring & Observability
-
-### Health Checks
-
-```bash
-# Liveness probe
-GET /health/live
-
-# Readiness probe (checks database)
-GET /health/ready
-
-# Full health check
-GET /health
-```
-
-### Metrics (Prometheus format)
-
-```bash
-GET /metrics
-```
-
-Tracks:
-
-- HTTP request metrics
-- Database query performance
-- Cache hit ratios
-- Business metrics (surveys created, etc.)
-
-### Logging
-
-- **Console**: Development environment (colorized)
-- **Rotating Files**: Production environment (JSON format)
-- **Request Tracing**: X-Request-ID header propagation
-- **Error Tracking**: Fingerprinting + severity classification
 
 ## 📚 API Documentation
 
