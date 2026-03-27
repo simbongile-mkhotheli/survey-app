@@ -1,6 +1,10 @@
 // backend/src/server.ts
-import express from 'express';
 import dotenv from 'dotenv';
+
+// Load environment variables BEFORE importing config
+dotenv.config();
+
+import express from 'express';
 import cors from 'cors';
 import 'express-async-errors';
 import swaggerUi from 'swagger-ui-express';
@@ -39,8 +43,6 @@ import {
 import { cacheManager } from '@/config/cache';
 import { logger } from '@/config/logger';
 import { config } from '@/config/env';
-
-dotenv.config();
 
 // Validate environment on startup
 function validateEnvironment() {

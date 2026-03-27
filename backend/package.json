@@ -1,6 +1,7 @@
 {
   "name": "survey-backend",
   "version": "1.0.0",
+  "type": "commonjs",
   "description": "Express + Prisma backend for Survey App",
   "main": "dist/backend/src/server.js",
   "scripts": {
