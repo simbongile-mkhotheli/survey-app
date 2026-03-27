@@ -106,7 +106,8 @@ app.use(
       if (origins.includes(incomingOrigin)) {
         return callback(null, true);
       }
-      callback(new Error(`CORS denied: ${incomingOrigin}`));
+      logger.warn('CORS request denied', { origin: incomingOrigin });
+      callback(null, false);
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
