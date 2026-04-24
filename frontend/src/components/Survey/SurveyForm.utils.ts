@@ -87,8 +87,7 @@ export const getRatingLabel = (rating: number): string => {
  * isValidFood('InvalidFood'); // Returns: false
  */
 export const isValidFood = (food: string): boolean => {
-  // Type guard: ensure food is a string in FOOD_OPTIONS array
-  return typeof food === 'string' && FOOD_OPTIONS.includes(food);
+  return FOOD_OPTIONS.some((option) => option === food);
 };
 
 /**
@@ -172,7 +171,7 @@ export const isValidRating = (
  * // Returns: { isValid: false, invalidFields: ['ratingTv'] }
  */
 export const validateAllRatings = (
-  ratings: Record<string, unknown>,
+  ratings: Record<string, number | string | null | undefined>,
 ): {
   isValid: boolean;
   invalidFields: string[];

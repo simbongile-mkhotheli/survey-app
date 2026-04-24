@@ -1,23 +1,19 @@
 // backend/src/repositories/survey.repository.ts
-import {
-  PrismaClient,
-  type SurveyResponse as PrismaSurveyResponse,
-} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import type { ISurveyRepository } from '@/interfaces/repository.interface';
 import type { SurveyInput } from '@/validation/validation';
 import type { SurveyResponse } from '@/interfaces/service.interface';
 import { foodUtils } from '@/utils/foodUtils';
 import { dateUtils } from '@/utils/dateUtils';
 
+type SurveyRecord = Awaited<
+  ReturnType<PrismaClient['surveyResponse']['findUniqueOrThrow']>
+>;
+
 export class SurveyRepository implements ISurveyRepository {
   constructor(private prisma: PrismaClient) {}
 
-  /**
-   * Maps Prisma model to domain type
-   * Ensures type safety and explicit field mapping
-   * Handles any differences between database and domain models
-   */
-  private mapToDomain(raw: PrismaSurveyResponse): SurveyResponse {
+  private mapToDomain(raw: SurveyRecord): SurveyResponse {
     return {
       id: raw.id,
       firstName: raw.firstName,
@@ -64,8 +60,8 @@ export class SurveyRepository implements ISurveyRepository {
   }
 
   async findAll(): Promise<SurveyResponse[]> {
-    const surveys = await this.prisma.surveyResponse.findMany();
-    return surveys.map((s) => this.mapToDomain(s));
+    const surveys: SurveyRecord[] = await this.prisma.surveyResponse.findMany();
+    return surveys.map((survey) => this.mapToDomain(survey));
   }
 
   async count(): Promise<number> {

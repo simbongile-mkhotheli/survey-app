@@ -18,8 +18,10 @@ export interface ErrorMessageProps {
   retryText?: string;
   /** Retry callback */
   onRetry?: () => void;
+  /** Close callback */
+  onClose?: () => void;
   /** Error severity */
-  severity?: 'error' | 'warning' | 'info';
+  severity?: 'error' | 'warning' | 'info' | 'success';
   /** Custom className */
   className?: string;
   /** Children to render below error message */
@@ -32,6 +34,7 @@ export function ErrorMessage({
   showRetry = false,
   retryText = 'Try Again',
   onRetry,
+  onClose,
   severity = 'error',
   className = '',
   children,
@@ -46,6 +49,8 @@ export function ErrorMessage({
         return '⚠️';
       case 'info':
         return 'ℹ️';
+      case 'success':
+        return '✅';
       default:
         return '❌';
     }
@@ -70,6 +75,16 @@ export function ErrorMessage({
             type="button"
           >
             {retryText}
+          </button>
+        )}
+
+        {onClose && (
+          <button
+            className={styles.retryButton}
+            onClick={onClose}
+            type="button"
+          >
+            Dismiss
           </button>
         )}
       </div>

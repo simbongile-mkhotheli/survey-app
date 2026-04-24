@@ -23,7 +23,6 @@ export default function Nav() {
         to={ROUTES.HOME}
         end
         className={({ isActive }) => (isActive ? styles.active : styles.link)}
-        aria-current={({ isActive }) => (isActive ? 'page' : undefined)}
       >
         <span className={styles.navIcon}>📋</span>
         <span className={styles.navLabel}>Survey</span>
@@ -32,7 +31,6 @@ export default function Nav() {
       <NavLink
         to={ROUTES.RESULTS}
         className={({ isActive }) => (isActive ? styles.active : styles.link)}
-        aria-current={({ isActive }) => (isActive ? 'page' : undefined)}
       >
         <span className={styles.navIcon}>📊</span>
         <span className={styles.navLabel}>Results</span>

@@ -68,8 +68,14 @@ class RouteErrorBoundaryImpl extends Component<
       errorMetadata: metadata,
     });
 
-    // Log error with context for analytics
-    logWithContext.error('RouteErrorBoundary caught error', error, metadata);
+    logWithContext.error('RouteErrorBoundary caught error', error, {
+      component: metadata.component,
+      timestamp: metadata.timestamp,
+      severity: metadata.severity,
+      route: metadata.route,
+      userAgent: metadata.userAgent,
+      context: metadata.context,
+    });
 
     // Call optional error handler
     if (this.props.onError) {

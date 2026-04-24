@@ -1,5 +1,5 @@
 // RatingRow.tsx
-import React, { memo } from 'react';
+import { memo } from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 import type { SurveyFormValues } from '@/validation';
 import { RATING_SCALE_LABELS } from './SurveyForm.constants';

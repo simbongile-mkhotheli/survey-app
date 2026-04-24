@@ -299,6 +299,7 @@ export class CacheManager {
         CACHE_KEYS.foodDistribution,
         CACHE_KEYS.ageStatistics,
         CACHE_KEYS.ratingAverages,
+        CACHE_KEYS.totalCount,
       ]),
     ]);
   }

@@ -1,5 +1,5 @@
 // SurveyForm.tsx
-import React, { useCallback, useEffect, useRef, useState, memo } from 'react';
+import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -25,7 +25,6 @@ function SurveyFormInner() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    setValue,
   } = useForm<SurveyFormValues>({
     resolver: zodResolver(SurveySchema),
     mode: 'onBlur',
@@ -70,12 +69,7 @@ function SurveyFormInner() {
       ratingEatOut: undefined,
       ratingTV: undefined,
     });
-
-    setValue('ratingMovies', undefined);
-    setValue('ratingRadio', undefined);
-    setValue('ratingEatOut', undefined);
-    setValue('ratingTV', undefined);
-  }, [reset, setValue]);
+  }, [reset]);
 
   const onSubmit: SubmitHandler<SurveyFormValues> = useCallback(
     async (data) => {
