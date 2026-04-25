@@ -27,7 +27,6 @@ describe('SurveyService', () => {
       getFoodDistribution: vi.fn(),
       getTotalResponses: vi.fn(),
       getAgeStatistics: vi.fn(),
-      invalidateCache: vi.fn(),
     };
 
     surveyService = new SurveyService(

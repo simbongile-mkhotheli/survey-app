@@ -25,5 +25,4 @@ export interface IResultsRepository {
     min: number | null;
     max: number | null;
   }>;
-  invalidateCache(): Promise<void>;
 }

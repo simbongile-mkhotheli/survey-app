@@ -52,10 +52,7 @@ export class Container {
 
   public get surveyService(): ISurveyService {
     if (!this._surveyService) {
-      this._surveyService = new SurveyService(
-        this.surveyRepository,
-        this.resultsRepository,
-      );
+      this._surveyService = new SurveyService(this.surveyRepository);
     }
     return this._surveyService;
   }
