@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SurveySchema } from '@/validation';
 import type { SurveyFormValues } from '@/validation';
 import { submitSurvey } from '@/services/api';
-import { useErrorHandler } from '@/components/ErrorBoundary';
 import { Loading, ErrorMessage, InlineError, TextField } from '@/components/ui';
 
 import RatingRow from './RatingRow';
@@ -17,7 +16,6 @@ import { formatErrorMessage } from './SurveyForm.utils';
 function SurveyFormInner() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const { handleError } = useErrorHandler({ logToStore: false });
   const successTimerRef = useRef<number | null>(null);
 
   const {
@@ -92,13 +90,9 @@ function SurveyFormInner() {
           err instanceof Error ? err : new Error('Failed to submit survey'),
         );
         setSubmitError(errorMessage);
-        handleError(
-          err instanceof Error ? err : new Error(errorMessage),
-          'Survey submission',
-        );
       }
     },
-    [handleError, resetToDefaults],
+    [resetToDefaults],
   );
 
   const handleRetry = useCallback(() => {

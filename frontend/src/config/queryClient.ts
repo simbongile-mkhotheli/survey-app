@@ -6,7 +6,6 @@
  */
 
 import { QueryClient } from '@tanstack/react-query';
-import { logWithContext } from '@/utils/logger';
 
 /**
  * Create and configure QueryClient with custom defaults
@@ -96,36 +95,6 @@ queryClient.setDefaultOptions({
     ...queryClient.getDefaultOptions().queries,
     throwOnError: true,
   },
-});
-
-/**
- * Global error handler for all React Query operations
- * Called whenever a query or mutation fails
- */
-queryClient.getQueryCache().subscribe((event) => {
-  // Handle query state updates that include errors
-  if (event.type === 'updated' && event.action.type === 'error') {
-    const error = event.query.state.error;
-
-    logWithContext.error('React Query error', error as Error, {
-      operation: 'react_query_error',
-      queryKey: event.query.queryKey,
-    });
-  }
-});
-
-/**
- * Global error handler for mutations
- */
-queryClient.getMutationCache().subscribe((event) => {
-  // Handle mutation state updates that include errors
-  if (event.type === 'updated' && event.action.type === 'error') {
-    const error = event.mutation.state.error;
-
-    logWithContext.error('React Query mutation error', error as Error, {
-      operation: 'react_query_mutation_error',
-    });
-  }
 });
 
 export default queryClient;

@@ -7,7 +7,6 @@
 import { Component } from 'react';
 import type { ErrorInfo } from 'react';
 import type { ErrorBoundaryProps, ErrorState } from './types';
-import { logWithContext } from '@/utils/logger';
 import styles from './ErrorBoundary.module.css';
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
@@ -26,27 +25,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log error using structured logger
-    logWithContext.error('ErrorBoundary caught an error', {
-      error: error.message,
-      stack: error.stack,
-      errorInfo: errorInfo.componentStack,
-    });
-
-    // Store error info in state
     this.setState({
       error,
       errorInfo,
     });
 
-    // Call optional error handler
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
-    }
-
-    // In production, you could send this to an error reporting service
-    if (import.meta.env.PROD) {
-      // Example: LoggingService.logError(error, errorInfo);
     }
   }
 

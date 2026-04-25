@@ -26,13 +26,6 @@ vi.mock('@/services/api', () => ({
   submitSurvey: vi.fn(),
 }));
 
-// Mock the error handler hook
-vi.mock('@/components/ErrorBoundary', () => ({
-  useErrorHandler: () => ({
-    handleError: vi.fn(),
-  }),
-}));
-
 import SurveyForm from '@/components/Survey/SurveyForm';
 import { submitSurvey } from '@/services/api';
 
