@@ -1,100 +1,23 @@
 /**
  * Modernized Survey Store
  * ======================
- * Enterprise-grade Zustand store with devtools, persistence, and TypeScript best practices
+ * Minimal Zustand store used for cross-cutting app error state.
  */
 
 import { create } from 'zustand';
-import { useShallow } from 'zustand/react/shallow';
-import { devtools, persist } from 'zustand/middleware';
-import { fetchResults as fetchResultsAPI } from '@/services/api';
+import { devtools } from 'zustand/middleware';
 import type { AppStore } from '@/types/store';
 
-// Settings persistence configuration
-const SETTINGS_STORAGE_KEY = 'survey-app-settings';
+const STORE_NAME = 'survey-app-store';
 
 export const useAppStore = create<AppStore>()(
   devtools(
-    persist(
-      (set, get) => ({
-        // Survey Results State
-        data: null,
-        loading: false,
-        error: null,
-        hasFetched: false,
-
-        // App Settings State
-        language: 'en',
-
-        // Survey Results Actions
-        fetchResults: async () => {
-          const state = get();
-          // Prevent multiple concurrent requests
-          if (state.loading) return;
-
-          set({ loading: true, error: null, hasFetched: true });
-
-          try {
-            const results = await fetchResultsAPI();
-            set({ data: results, loading: false });
-          } catch (error) {
-            const errorMessage =
-              error instanceof Error
-                ? error.message
-                : 'Failed to fetch survey results';
-
-            set({ error: errorMessage, loading: false });
-          }
-        },
-
-        setResults: (data) => set({ data, error: null }),
-
-        setLoading: (loading) => set({ loading }),
-
-        setError: (error) => set({ error, loading: false }),
-
-        reset: () =>
-          set({ data: null, loading: false, error: null, hasFetched: false }),
-
-        // App Settings Actions
-        setLanguage: (language) => set({ language }),
-
-        resetSettings: () => set({ language: 'en' }),
-      }),
-      {
-        name: SETTINGS_STORAGE_KEY,
-        // Only persist settings, not survey data
-        partialize: (state: AppStore) => ({
-          language: state.language,
-        }),
-      },
-    ),
+    (set) => ({
+      error: null,
+      setError: (error) => set({ error }),
+    }),
     {
-      name: 'survey-app-store',
+      name: STORE_NAME,
     },
   ),
 );
-
-// Selectors for better performance
-export const useResults = () =>
-  useAppStore(
-    useShallow((state) => ({
-      data: state.data,
-      loading: state.loading,
-      error: state.error,
-      hasFetched: state.hasFetched,
-      fetchResults: state.fetchResults,
-      setResults: state.setResults,
-      reset: state.reset,
-    })),
-  );
-
-export const useSettings = () =>
-  useAppStore((state) => ({
-    language: state.language,
-    setLanguage: state.setLanguage,
-    resetSettings: state.resetSettings,
-  }));
-
-// Legacy export for backward compatibility
-export const useSurveyStore = useAppStore;

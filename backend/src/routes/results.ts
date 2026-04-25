@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ResultsQuerySchema } from '@/validation/validation';
 import { handleGetSurveyResults } from '@/controllers/results.controller';
+import { validateQuery } from '@/middleware/zodValidator';
 
 /**
  * @swagger
@@ -78,17 +79,6 @@ import { handleGetSurveyResults } from '@/controllers/results.controller';
 
 const router = Router();
 
-router.get(
-  '/',
-  (req, _, next) => {
-    try {
-      ResultsQuerySchema.parse(req.query);
-      next();
-    } catch (err) {
-      next(err);
-    }
-  },
-  handleGetSurveyResults,
-);
+router.get('/', validateQuery(ResultsQuerySchema), handleGetSurveyResults);
 
 export default router;
