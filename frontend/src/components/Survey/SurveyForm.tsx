@@ -1,5 +1,5 @@
 // SurveyForm.tsx
-import { useCallback, useEffect, useRef, useState, memo } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -13,7 +13,7 @@ import styles from './SurveyForm.module.css';
 import { FOOD_OPTIONS, RATING_SCALE_LABELS } from './SurveyForm.constants';
 import { formatErrorMessage } from './SurveyForm.utils';
 
-function SurveyFormInner() {
+export default function SurveyForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const successTimerRef = useRef<number | null>(null);
@@ -283,7 +283,3 @@ function SurveyFormInner() {
     </div>
   );
 }
-
-const SurveyForm = memo(SurveyFormInner);
-SurveyForm.displayName = 'SurveyForm';
-export default SurveyForm;

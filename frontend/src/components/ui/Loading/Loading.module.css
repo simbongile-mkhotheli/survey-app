@@ -1,78 +1,45 @@
-/**
- * Loading Component Styles
- * =======================
- * Consistent loading indicators with animations
- */
-
 .container {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
   padding: 1rem;
 }
 
-.overlay {
+.overlayContainer {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 9999;
-}
-
-.content {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.text {
-  margin: 0;
-  color: #6b7280;
-  font-weight: 500;
-}
-
-/* Size Variants */
-.sm .text {
-  font-size: 0.875rem;
-}
-
-.md .text {
-  font-size: 1rem;
-}
-
-.lg .text {
-  font-size: 1.125rem;
-}
-
-/* Spinner Animation */
 .spinner {
-  position: relative;
-}
-
-.spinnerRing {
+  width: 32px;
+  height: 32px;
   border: 3px solid #f3f6f4;
   border-top: 3px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
-.sm .spinnerRing {
-  width: 24px;
-  height: 24px;
-  border-width: 2px;
+.text {
+  margin: 0;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 1rem;
 }
 
-.md .spinnerRing {
-  width: 32px;
-  height: 32px;
-}
-
-.lg .spinnerRing {
-  width: 48px;
-  height: 48px;
-  border-width: 4px;
+.overlayContainer .text {
+  color: white;
 }
 
 @keyframes spin {
@@ -81,84 +48,5 @@
   }
   100% {
     transform: rotate(360deg);
-  }
-}
-
-/* Dots Animation */
-.dots {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.dot {
-  border-radius: 50%;
-  background-color: #3b82f6;
-  animation: pulse-dot 1.4s ease-in-out infinite both;
-}
-
-.sm .dot {
-  width: 6px;
-  height: 6px;
-}
-
-.md .dot {
-  width: 8px;
-  height: 8px;
-}
-
-.lg .dot {
-  width: 12px;
-  height: 12px;
-}
-
-.dot:nth-child(1) {
-  animation-delay: -0.32s;
-}
-
-.dot:nth-child(2) {
-  animation-delay: -0.16s;
-}
-
-@keyframes pulse-dot {
-  0%,
-  80%,
-  100% {
-    transform: scale(0);
-  }
-  40% {
-    transform: scale(1);
-  }
-}
-
-/* Pulse Animation */
-.pulse {
-  border-radius: 50%;
-  background-color: #3b82f6;
-  animation: pulse-grow 1.5s ease-in-out infinite;
-}
-
-.sm .pulse {
-  width: 24px;
-  height: 24px;
-}
-
-.md .pulse {
-  width: 32px;
-  height: 32px;
-}
-
-.lg .pulse {
-  width: 48px;
-  height: 48px;
-}
-
-@keyframes pulse-grow {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.5);
-    opacity: 0;
   }
 }

@@ -17,10 +17,7 @@ const isRatingNumber = (val: number) =>
   Number.isInteger(val) && val >= 1 && val <= 5;
 const ratingError = { message: 'Please select a rating from 1–5' };
 
-// Helper to create string-based rating field
 const ratingStringField = () => z.string().refine(isRatingString, ratingError);
-
-// Helper to create number-based rating field
 const ratingNumberField = () =>
   z.number().int().refine(isRatingNumber, ratingError);
 
@@ -38,8 +35,8 @@ function validateAgeString(val: string) {
   return age >= 5 && age <= 120;
 }
 
-// Frontend form schema (values produced by form inputs — ratings are strings)
-export const SurveyFormSchema = z.object({
+// Base schema fields (reusable across both schemas)
+const baseFields = {
   firstName: z
     .string()
     .min(1, 'First name is required')
@@ -85,6 +82,11 @@ export const SurveyFormSchema = z.object({
     )
     .min(1, 'Select at least one food')
     .max(10, 'Maximum 10 foods allowed'),
+};
+
+// Frontend form schema (values produced by form inputs — ratings are strings)
+export const SurveyFormSchema = z.object({
+  ...baseFields,
   ratingMovies: ratingStringField(),
   ratingRadio: ratingStringField(),
   ratingEatOut: ratingStringField(),
@@ -95,51 +97,7 @@ export type SurveyFormValues = z.infer<typeof SurveyFormSchema>;
 
 // Backend payload schema (what the API expects — ratings are numbers)
 export const SurveyPayloadSchema = z.object({
-  firstName: z
-    .string()
-    .min(1, 'First name is required')
-    .max(
-      MAX_NAME_LENGTH,
-      `First name must be ${MAX_NAME_LENGTH} characters or less`,
-    )
-    .transform(sanitizeString),
-  lastName: z
-    .string()
-    .min(1, 'Last name is required')
-    .max(
-      MAX_NAME_LENGTH,
-      `Last name must be ${MAX_NAME_LENGTH} characters or less`,
-    )
-    .transform(sanitizeString),
-  email: z
-    .string()
-    .email('Invalid email address')
-    .max(
-      MAX_EMAIL_LENGTH,
-      `Email must be ${MAX_EMAIL_LENGTH} characters or less`,
-    )
-    .toLowerCase()
-    .trim(),
-  contactNumber: z
-    .string()
-    .regex(/^\+?\d{10,15}$/, 'Invalid contact number')
-    .max(MAX_PHONE_LENGTH, 'Contact number too long'),
-  dateOfBirth: z.string().refine(validateAgeString, {
-    message: 'Date of birth must correspond to an age between 5 and 120 years',
-  }),
-  foods: z
-    .array(
-      z
-        .string()
-        .min(1, 'Food name cannot be empty')
-        .max(
-          MAX_FOOD_NAME_LENGTH,
-          `Food name must be ${MAX_FOOD_NAME_LENGTH} characters or less`,
-        )
-        .transform(sanitizeString),
-    )
-    .min(1, 'Select at least one food')
-    .max(10, 'Maximum 10 foods allowed'),
+  ...baseFields,
   ratingMovies: ratingNumberField(),
   ratingRadio: ratingNumberField(),
   ratingEatOut: ratingNumberField(),

@@ -25,7 +25,6 @@
  * @throws {Error} Gracefully displays error state with retry option
  */
 
-import { useMemo, memo } from 'react';
 import { useResults } from '@/hooks/useQuery';
 import { Loading, ErrorMessage } from '@/components/ui';
 import {
@@ -41,28 +40,20 @@ import {
 } from './Results.constants';
 import styles from './Results.module.css';
 
-/**
- * Individual result row component
- *
- * Displays a labeled result with its value in a highlighted row.
- * Memoized to prevent unnecessary re-renders.
- *
- * @component
- * @param {Object} props Component props
- * @param {string} props.label Result label/description
- * @param {string | number} props.value Result value to display
- * @returns {JSX.Element} Rendered result row
- */
-const ResultRow = memo(
-  ({ label, value }: { label: string; value: string | number }) => (
+function ResultRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number;
+}) {
+  return (
     <div className={styles.resultRow}>
       <span className={styles.label}>{label}</span>
       <span className={styles.value}>{value}</span>
     </div>
-  ),
-);
-
-ResultRow.displayName = 'ResultRow';
+  );
+}
 
 /**
  * Results display component
@@ -74,17 +65,6 @@ ResultRow.displayName = 'ResultRow';
  */
 function Results() {
   const { data: results, isLoading, error, refetch } = useResults();
-
-  // Memoize destructured values to prevent unnecessary re-renders
-  const resultValues = useMemo(() => {
-    if (!results) return null;
-    return {
-      totalCount: results.totalCount,
-      age: results.age,
-      foodPercentages: results.foodPercentages,
-      avgRatings: results.avgRatings,
-    };
-  }, [results]);
 
   if (isLoading) {
     return <Loading text={RESULTS_LOADING.MESSAGE} />;
@@ -118,7 +98,7 @@ function Results() {
     age: { avg, min, max },
     foodPercentages: { pizza, pasta, papAndWors },
     avgRatings: { movies, radio, eatOut, tv },
-  } = resultValues!;
+  } = results;
 
   return (
     <div className={styles.container}>
@@ -174,6 +154,4 @@ function Results() {
   );
 }
 
-export default memo(Results);
-
-Results.displayName = 'Results';
+export default Results;
