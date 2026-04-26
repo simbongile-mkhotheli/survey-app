@@ -12,11 +12,7 @@
  * @version 1.0.0
  */
 
-import {
-  FOOD_OPTIONS,
-  RATING_FIELDS,
-  RATING_SCALE_LABELS,
-} from './SurveyForm.constants';
+import { FOOD_OPTIONS, RATING_SCALE_LABELS } from './SurveyForm.constants';
 
 /**
  * Gets all available food options for selection
@@ -28,21 +24,6 @@ import {
  * // Returns: ['Pizza', 'Pasta', 'Pap and Wors', 'Other']
  */
 export const getFoodOptions = () => FOOD_OPTIONS;
-
-/**
- * Gets all rating fields for the rating table
- *
- * @returns {readonly Array} Array of rating field objects with key, label, and description
- *
- * @example
- * const fields = getRatingFields();
- * // Returns: [
- * //   { key: 'ratingMovies', label: 'I enjoy watching movies', ... },
- * //   { key: 'ratingTv', label: 'I enjoy watching TV', ... },
- * //   ...
- * // ]
- */
-export const getRatingFields = () => RATING_FIELDS;
 
 /**
  * Gets the rating scale labels (Strongly Agree → Strongly Disagree)
