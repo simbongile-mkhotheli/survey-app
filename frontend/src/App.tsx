@@ -1,49 +1,27 @@
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import SurveyForm from '@/components/Survey/SurveyForm';
-import SuspenseFallback from '@/components/SuspenseFallback';
+import Results from '@/components/Results/Results';
 import Nav from '@/components/Nav';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 import appStyles from './App.module.css';
 import surveyStyles from '@/components/Survey/SurveyForm.module.css';
 
-// Lazy-load Results component for better code splitting
-const Results = lazy(() => import('@/components/Results/Results'));
-
 const App: React.FC = () => (
-  <ErrorBoundary level="critical">
-    <div className={appStyles.container}>
-      <header className={surveyStyles.header}>
-        <h1 className={appStyles.heading}>_ Surveys</h1>
-        <Nav />
-      </header>
+  <div className={appStyles.container}>
+    <header className={surveyStyles.header}>
+      <h1 className={appStyles.heading}>_ Surveys</h1>
+      <Nav />
+    </header>
 
-      <main>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ErrorBoundary level="page">
-                <SurveyForm />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/results"
-            element={
-              <ErrorBoundary level="page">
-                <Suspense fallback={<SuspenseFallback />}>
-                  <Results />
-                </Suspense>
-              </ErrorBoundary>
-            }
-          />
-        </Routes>
-      </main>
-    </div>
-  </ErrorBoundary>
+    <main>
+      <Routes>
+        <Route path="/" element={<SurveyForm />} />
+        <Route path="/results" element={<Results />} />
+      </Routes>
+    </main>
+  </div>
 );
 
 export default App;
