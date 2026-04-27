@@ -6,12 +6,7 @@ import { findFoodCount } from '@/utils/foodDistribution';
 export class ResultsService implements IResultsService {
   constructor(private resultsRepository: IResultsRepository) {}
 
-  /**
-   * Orchestrate retrieval of aggregated survey statistics
-   * Composition of repository layer calls with business logic transformation
-   */
   async getResults(requestId?: string): Promise<SurveyResultsDTO> {
-    // Execute independent queries concurrently to minimize total response time
     const [totalCount, avgRatings, foodDistribution, ageStats] =
       await Promise.all([
         this.resultsRepository.getTotalResponses(requestId),
@@ -20,13 +15,11 @@ export class ResultsService implements IResultsService {
         this.resultsRepository.getAgeStatistics(requestId),
       ]);
 
-    // Convert raw counts to percentages for frontend analytics visualization
     const toPercentage = (count: number) =>
       totalCount > 0
         ? parseFloat(((count / totalCount) * 100).toFixed(1))
         : null;
 
-    // Map user-friendly food names to counts (handles variant spellings)
     const pizzaCount = findFoodCount(foodDistribution, ['pizza']);
     const pastaCount = findFoodCount(foodDistribution, ['pasta']);
     const papAndWorsCount = findFoodCount(foodDistribution, [

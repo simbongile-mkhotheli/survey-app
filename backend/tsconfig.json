@@ -18,11 +18,12 @@
       "@/repositories/*": ["src/repositories/*"],
       "@/interfaces/*": ["src/interfaces/*"],
       "@/middleware/*": ["src/middleware/*"],
-      "@/config/*": ["src/config/*"],
       "@/errors/*": ["src/errors/*"],
       "@/validation/*": ["src/validation/*"],
       "@/types/*": ["src/types/*"],
       "@/routes/*": ["src/routes/*"],
+      "@/test/*": ["src/test/*"],
+      "@/utils/*": ["src/utils/*"],
       "@shared/*": ["../shared/*"]
     }
   },
