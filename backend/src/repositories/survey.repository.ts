@@ -51,20 +51,4 @@ export class SurveyRepository implements ISurveyRepository {
 
     return this.mapToDomain(created);
   }
-
-  async findById(id: number): Promise<SurveyResponse | null> {
-    const survey = await this.prisma.surveyResponse.findUnique({
-      where: { id },
-    });
-    return survey ? this.mapToDomain(survey) : null;
-  }
-
-  async findAll(): Promise<SurveyResponse[]> {
-    const surveys: SurveyRecord[] = await this.prisma.surveyResponse.findMany();
-    return surveys.map((survey) => this.mapToDomain(survey));
-  }
-
-  async count(): Promise<number> {
-    return this.prisma.surveyResponse.count();
-  }
 }

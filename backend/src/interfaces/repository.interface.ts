@@ -5,9 +5,6 @@ import type { SurveyResultsDTO } from '@/types/resultsDTO';
 
 export interface ISurveyRepository {
   create(data: SurveyInput): Promise<SurveyResponse>;
-  findById(id: number): Promise<SurveyResponse | null>;
-  findAll(): Promise<SurveyResponse[]>;
-  count(): Promise<number>;
 }
 
 export interface IResultsRepository {
