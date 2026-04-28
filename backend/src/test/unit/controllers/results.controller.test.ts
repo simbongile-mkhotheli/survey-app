@@ -20,13 +20,12 @@ describe('ResultsController', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockRequest = createMockRequest();
-    mockRequest.headers = { 'x-request-id': 'test-request-id' };
     mockResponse = createMockResponse();
     mockNext = createMockNext();
   });
 
   describe('handleGetSurveyResults', () => {
-    it('should return results with 200 status when service succeeds', async () => {
+    it('should return results with 200 status when repository succeeds', async () => {
       const mockResults = {
         totalCount: 100,
         age: { avg: 25.5, min: 18, max: 65 },
@@ -44,32 +43,29 @@ describe('ResultsController', () => {
       };
       mockRequest.query = {};
 
-      vi.mocked(container.resultsService.getResults).mockResolvedValue(
+      vi.mocked(container.resultsRepository.getResults).mockResolvedValue(
         mockResults,
       );
 
       await handleGetSurveyResults(mockRequest, mockResponse, mockNext);
 
-      expect(container.resultsService.getResults).toHaveBeenCalledOnce();
-      expect(container.resultsService.getResults).toHaveBeenCalledWith(
-        'test-request-id',
-      );
+      expect(container.resultsRepository.getResults).toHaveBeenCalledOnce();
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalled();
       expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('should delegate error handling to middleware when service throws', async () => {
-      const serviceError = new Error('Database connection failed');
+    it('should delegate error handling to middleware when repository throws', async () => {
+      const repositoryError = new Error('Database connection failed');
       mockRequest.query = {};
 
-      vi.mocked(container.resultsService.getResults).mockRejectedValue(
-        serviceError,
+      vi.mocked(container.resultsRepository.getResults).mockRejectedValue(
+        repositoryError,
       );
 
       await handleGetSurveyResults(mockRequest, mockResponse, mockNext);
 
-      expect(mockNext).toHaveBeenCalledWith(serviceError);
+      expect(mockNext).toHaveBeenCalledWith(repositoryError);
       expect(mockResponse.status).not.toHaveBeenCalled();
     });
 
@@ -82,7 +78,7 @@ describe('ResultsController', () => {
         avgRatings: { movies: null, radio: null, eatOut: null, tv: null },
       };
 
-      vi.mocked(container.resultsService.getResults).mockResolvedValue(
+      vi.mocked(container.resultsRepository.getResults).mockResolvedValue(
         emptyResults,
       );
 

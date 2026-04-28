@@ -31,27 +31,25 @@ describe('SurveyController', () => {
       const mockCreated = createMockSurveyResponse({ id: 123 });
       mockRequest.body = mockInput;
 
-      vi.mocked(container.surveyService.createSurvey).mockResolvedValue(
+      vi.mocked(container.surveyRepository.create).mockResolvedValue(
         mockCreated,
       );
 
       await handleCreateSurvey(mockRequest, mockResponse, mockNext);
 
-      expect(container.surveyService.createSurvey).toHaveBeenCalledOnce();
-      expect(container.surveyService.createSurvey).toHaveBeenCalledWith(
-        mockInput,
-      );
+      expect(container.surveyRepository.create).toHaveBeenCalledOnce();
+      expect(container.surveyRepository.create).toHaveBeenCalledWith(mockInput);
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalled();
       expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('should delegate error handling to middleware when service fails', async () => {
+    it('should delegate error handling to middleware when repository fails', async () => {
       const mockInput = createMockSurveyInput();
       const databaseError = new Error('Unique constraint violation on email');
       mockRequest.body = mockInput;
 
-      vi.mocked(container.surveyService.createSurvey).mockRejectedValue(
+      vi.mocked(container.surveyRepository.create).mockRejectedValue(
         databaseError,
       );
 
