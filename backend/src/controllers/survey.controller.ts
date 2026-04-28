@@ -10,10 +10,10 @@ export async function handleCreateSurvey(
   next: NextFunction,
 ) {
   try {
-    const surveyService = container.surveyService;
+    const surveyRepository = container.surveyRepository;
 
     const data = req.body;
-    const created = await surveyService.createSurvey(data);
+    const created = await surveyRepository.create(data);
     return res.status(201).json(responseFormatter.success({ id: created.id }));
   } catch (err) {
     next(err);

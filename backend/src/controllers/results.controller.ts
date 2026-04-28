@@ -11,11 +11,8 @@ export async function handleGetSurveyResults(
   try {
     ResultsQuerySchema.parse(req.query);
 
-    const resultsService = container.resultsService;
-
-    // Propagate request ID through service layer for distributed tracing and debugging
-    const requestId = req.headers['x-request-id'] as string;
-    const results = await resultsService.getResults(requestId);
+    const resultsRepository = container.resultsRepository;
+    const results = await resultsRepository.getResults();
 
     return res.status(200).json(responseFormatter.success(results));
   } catch (err) {
