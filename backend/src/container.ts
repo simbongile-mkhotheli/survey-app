@@ -2,15 +2,15 @@
 import { PrismaClient } from '@prisma/client';
 import { SurveyRepository } from '@/repositories/survey.repository';
 import { ResultsRepository } from '@/repositories/results.repository';
-import { SurveyService } from '@/services/survey.service';
-import { ResultsService } from '@/services/results.service';
 
 const prismaClient = new PrismaClient();
 
+// Singleton instances - reused across the app
+const surveyRepository = new SurveyRepository(prismaClient);
+const resultsRepository = new ResultsRepository(prismaClient);
+
 export const container = {
-  surveyRepository: new SurveyRepository(prismaClient),
-  resultsRepository: new ResultsRepository(prismaClient),
-  surveyService: new SurveyService(new SurveyRepository(prismaClient)),
-  resultsService: new ResultsService(new ResultsRepository(prismaClient)),
+  surveyRepository,
+  resultsRepository,
   cleanup: () => prismaClient.$disconnect(),
 };
