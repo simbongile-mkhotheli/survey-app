@@ -12,19 +12,4 @@ export interface ISurveyRepository {
 
 export interface IResultsRepository {
   getResults(requestId?: string): Promise<SurveyResultsDTO>;
-  getAverageRatings(requestId?: string): Promise<{
-    movies: number;
-    radio: number;
-    eatOut: number;
-    tv: number;
-  }>;
-  getFoodDistribution(
-    requestId?: string,
-  ): Promise<Array<{ food: string; count: number }>>;
-  getTotalResponses(requestId?: string): Promise<number>;
-  getAgeStatistics(requestId?: string): Promise<{
-    avg: number | null;
-    min: number | null;
-    max: number | null;
-  }>;
 }
