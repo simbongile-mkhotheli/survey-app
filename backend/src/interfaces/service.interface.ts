@@ -1,6 +1,5 @@
 // backend/src/interfaces/service.interface.ts
-import type { SurveyInput } from '@/validation/validation';
-import type { SurveyResultsDTO } from '@/types/resultsDTO';
+// backend/src/interfaces/service.interface.ts
 
 export interface SurveyResponse {
   id: number;
@@ -15,12 +14,4 @@ export interface SurveyResponse {
   ratingEatOut: number;
   ratingTV: number;
   submittedAt: Date;
-}
-
-export interface ISurveyService {
-  createSurvey(data: SurveyInput): Promise<SurveyResponse>;
-}
-
-export interface IResultsService {
-  getResults(requestId?: string): Promise<SurveyResultsDTO>;
 }
