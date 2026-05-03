@@ -2,9 +2,9 @@
 import { PrismaClient } from '@prisma/client';
 import type { ISurveyRepository } from '@/interfaces/repository.interface';
 import type { SurveyInput } from '@/validation/validation';
-import type { SurveyResponse } from '@/interfaces/service.interface';
+import type { SurveyResponse } from '@/interfaces/repository.interface';
 import { foodUtils } from '@/utils/foodUtils';
-import { dateUtils } from '@/utils/dateUtils';
+import { parseDate } from '@/utils/dateUtils';
 
 type SurveyRecord = Awaited<
   ReturnType<PrismaClient['surveyResponse']['findUniqueOrThrow']>
@@ -31,7 +31,7 @@ export class SurveyRepository implements ISurveyRepository {
   }
 
   async create(data: SurveyInput): Promise<SurveyResponse> {
-    const dob = dateUtils.parse(data.dateOfBirth);
+    const dob = parseDate(data.dateOfBirth);
     const foodsCsv = foodUtils.toCSV(data.foods);
 
     const created = await this.prisma.surveyResponse.create({
