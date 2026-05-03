@@ -35,7 +35,6 @@ function validateAgeString(val: string) {
   return age >= 5 && age <= 120;
 }
 
-// Base schema fields (reusable across both schemas)
 const baseFields = {
   firstName: z
     .string()
@@ -84,7 +83,6 @@ const baseFields = {
     .max(10, 'Maximum 10 foods allowed'),
 };
 
-// Frontend form schema (values produced by form inputs — ratings are strings)
 export const SurveyFormSchema = z.object({
   ...baseFields,
   ratingMovies: ratingStringField(),
@@ -95,7 +93,6 @@ export const SurveyFormSchema = z.object({
 
 export type SurveyFormValues = z.infer<typeof SurveyFormSchema>;
 
-// Backend payload schema (what the API expects — ratings are numbers)
 export const SurveyPayloadSchema = z.object({
   ...baseFields,
   ratingMovies: ratingNumberField(),
@@ -106,7 +103,6 @@ export const SurveyPayloadSchema = z.object({
 
 export type SurveyInput = z.infer<typeof SurveyPayloadSchema>;
 
-// Helper to convert form values (strings) into payload (numbers)
 export function formToPayload(data: SurveyFormValues): SurveyInput {
   return {
     firstName: data.firstName,
