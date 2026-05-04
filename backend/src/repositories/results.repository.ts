@@ -6,10 +6,6 @@ import { foodUtils } from '@/utils/foodUtils';
 export class ResultsRepository implements IResultsRepository {
   constructor(private prisma: PrismaClient) {}
 
-  /**
-   * Get all results in a single optimized query
-   * Fetches only what's needed: ratings, foods, and dateOfBirth
-   */
   async getResults(): Promise<SurveyResultsDTO> {
     const responses = await this.prisma.surveyResponse.findMany({
       select: {
@@ -42,41 +38,44 @@ export class ResultsRepository implements IResultsRepository {
       };
     }
 
-    // Calculate ratings
-    const avgRatings = {
-      movies: parseFloat(
-        (
-          responses.reduce((sum, r) => sum + r.ratingMovies, 0) / totalCount
-        ).toFixed(1),
-      ),
-      radio: parseFloat(
-        (
-          responses.reduce((sum, r) => sum + r.ratingRadio, 0) / totalCount
-        ).toFixed(1),
-      ),
-      eatOut: parseFloat(
-        (
-          responses.reduce((sum, r) => sum + r.ratingEatOut, 0) / totalCount
-        ).toFixed(1),
-      ),
-      tv: parseFloat(
-        (
-          responses.reduce((sum, r) => sum + r.ratingTV, 0) / totalCount
-        ).toFixed(1),
-      ),
+    const sums = {
+      movies: 0,
+      radio: 0,
+      eatOut: 0,
+      tv: 0,
     };
 
-    // Calculate food percentages
     const foodCounts = new Map<string, number>();
-    responses.forEach((response) => {
-      const foods = foodUtils.fromCSV(response.foods);
-      foods.forEach((food) => {
-        foodCounts.set(food, (foodCounts.get(food) || 0) + 1);
-      });
-    });
+    const ages: number[] = [];
+    const currentYear = new Date().getFullYear();
+
+    for (const response of responses) {
+      sums.movies += response.ratingMovies;
+      sums.radio += response.ratingRadio;
+      sums.eatOut += response.ratingEatOut;
+      sums.tv += response.ratingTV;
+
+      for (const food of foodUtils.fromCSV(response.foods)) {
+        foodCounts.set(food, (foodCounts.get(food) ?? 0) + 1);
+      }
+
+      const birthDate =
+        typeof response.dateOfBirth === 'string'
+          ? new Date(response.dateOfBirth)
+          : response.dateOfBirth;
+
+      ages.push(currentYear - birthDate.getFullYear());
+    }
 
     const toPercentage = (count: number) =>
       parseFloat(((count / totalCount) * 100).toFixed(1));
+
+    const avgRatings = {
+      movies: parseFloat((sums.movies / totalCount).toFixed(1)),
+      radio: parseFloat((sums.radio / totalCount).toFixed(1)),
+      eatOut: parseFloat((sums.eatOut / totalCount).toFixed(1)),
+      tv: parseFloat((sums.tv / totalCount).toFixed(1)),
+    };
 
     const foodPercentages = {
       pizza: toPercentage(foodCounts.get('pizza') || 0),
@@ -87,22 +86,12 @@ export class ResultsRepository implements IResultsRepository {
       ),
     };
 
-    // Calculate age statistics
-    const currentYear = new Date().getFullYear();
-    const ages = responses.map((r) => {
-      const birthDate =
-        typeof r.dateOfBirth === 'string'
-          ? new Date(r.dateOfBirth)
-          : r.dateOfBirth;
-      return currentYear - birthDate.getFullYear();
-    });
-
     const avgAge = ages.reduce((sum, age) => sum + age, 0) / ages.length;
 
     return {
       totalCount,
       age: {
-        avg: Math.round(avgAge * 10) / 10,
+        avg: parseFloat(avgAge.toFixed(1)),
         min: Math.min(...ages),
         max: Math.max(...ages),
       },
