@@ -38,7 +38,7 @@ export class ResultsRepository implements IResultsRepository {
       };
     }
 
-    const sums = {
+    const ratingSums = {
       movies: 0,
       radio: 0,
       eatOut: 0,
@@ -50,10 +50,10 @@ export class ResultsRepository implements IResultsRepository {
     const currentYear = new Date().getFullYear();
 
     for (const response of responses) {
-      sums.movies += response.ratingMovies;
-      sums.radio += response.ratingRadio;
-      sums.eatOut += response.ratingEatOut;
-      sums.tv += response.ratingTV;
+      ratingSums.movies += response.ratingMovies;
+      ratingSums.radio += response.ratingRadio;
+      ratingSums.eatOut += response.ratingEatOut;
+      ratingSums.tv += response.ratingTV;
 
       for (const food of foodUtils.fromCSV(response.foods)) {
         foodCounts.set(food, (foodCounts.get(food) ?? 0) + 1);
@@ -71,10 +71,10 @@ export class ResultsRepository implements IResultsRepository {
       parseFloat(((count / totalCount) * 100).toFixed(1));
 
     const avgRatings = {
-      movies: parseFloat((sums.movies / totalCount).toFixed(1)),
-      radio: parseFloat((sums.radio / totalCount).toFixed(1)),
-      eatOut: parseFloat((sums.eatOut / totalCount).toFixed(1)),
-      tv: parseFloat((sums.tv / totalCount).toFixed(1)),
+      movies: parseFloat((ratingSums.movies / totalCount).toFixed(1)),
+      radio: parseFloat((ratingSums.radio / totalCount).toFixed(1)),
+      eatOut: parseFloat((ratingSums.eatOut / totalCount).toFixed(1)),
+      tv: parseFloat((ratingSums.tv / totalCount).toFixed(1)),
     };
 
     const foodPercentages = {
@@ -91,7 +91,7 @@ export class ResultsRepository implements IResultsRepository {
     return {
       totalCount,
       age: {
-        avg: parseFloat(avgAge.toFixed(1)),
+        avg: Math.round(avgAge * 10) / 10,
         min: Math.min(...ages),
         max: Math.max(...ages),
       },
