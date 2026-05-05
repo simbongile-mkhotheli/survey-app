@@ -1,26 +1,49 @@
 import { PrismaClient } from '@prisma/client';
 import type { IResultsRepository } from '@/interfaces/repository.interface';
 import type { SurveyResultsDTO } from '@/types/resultsDTO';
-import { foodUtils } from '@/utils/foodUtils';
+
+type ResultsRow = {
+  totalCount: bigint | number | string;
+  avgAge: number | string | null;
+  minAge: bigint | number | string | null;
+  maxAge: bigint | number | string | null;
+  avgMovies: number | string | null;
+  avgRadio: number | string | null;
+  avgEatOut: number | string | null;
+  avgTv: number | string | null;
+  pizzaCount: bigint | number | string | null;
+  pastaCount: bigint | number | string | null;
+  papAndWorsCount: bigint | number | string | null;
+};
 
 export class ResultsRepository implements IResultsRepository {
   constructor(private prisma: PrismaClient) {}
 
   async getResults(): Promise<SurveyResultsDTO> {
-    const responses = await this.prisma.surveyResponse.findMany({
-      select: {
-        ratingMovies: true,
-        ratingRadio: true,
-        ratingEatOut: true,
-        ratingTV: true,
-        foods: true,
-        dateOfBirth: true,
-      },
-    });
+    const [row] = await this.prisma.$queryRaw<ResultsRow[]>`
+      WITH food_tokens AS (
+        SELECT LOWER(TRIM(food_item)) AS food
+        FROM "SurveyResponse"
+        CROSS JOIN LATERAL unnest(string_to_array("foods", ',')) AS food_item
+      )
+      SELECT
+        COUNT(*)::bigint AS "totalCount",
+        ROUND(AVG(EXTRACT(YEAR FROM AGE(CURRENT_DATE, "dateOfBirth")))::numeric, 1) AS "avgAge",
+        MIN(EXTRACT(YEAR FROM AGE(CURRENT_DATE, "dateOfBirth"))::int) AS "minAge",
+        MAX(EXTRACT(YEAR FROM AGE(CURRENT_DATE, "dateOfBirth"))::int) AS "maxAge",
+        ROUND(AVG("ratingMovies")::numeric, 1) AS "avgMovies",
+        ROUND(AVG("ratingRadio")::numeric, 1) AS "avgRadio",
+        ROUND(AVG("ratingEatOut")::numeric, 1) AS "avgEatOut",
+        ROUND(AVG("ratingTV")::numeric, 1) AS "avgTv",
+        (SELECT COUNT(*) FROM food_tokens WHERE food = 'pizza')::bigint AS "pizzaCount",
+        (SELECT COUNT(*) FROM food_tokens WHERE food = 'pasta')::bigint AS "pastaCount",
+        (SELECT COUNT(*) FROM food_tokens WHERE food IN ('pap and wors', 'papandwors'))::bigint AS "papAndWorsCount"
+      FROM "SurveyResponse";
+    `;
 
-    const totalCount = responses.length;
+    const totalCount = Number(row?.totalCount ?? 0);
 
-    if (totalCount === 0) {
+    if (!row || totalCount === 0) {
       return {
         totalCount: 0,
         age: { avg: null, min: null, max: null },
@@ -38,65 +61,30 @@ export class ResultsRepository implements IResultsRepository {
       };
     }
 
-    const ratingSums = {
-      movies: 0,
-      radio: 0,
-      eatOut: 0,
-      tv: 0,
-    };
+    const toNumber = (value: bigint | number | string | null): number =>
+      Number(value ?? 0);
 
-    const foodCounts = new Map<string, number>();
-    const ages: number[] = [];
-    const currentYear = new Date().getFullYear();
-
-    for (const response of responses) {
-      ratingSums.movies += response.ratingMovies;
-      ratingSums.radio += response.ratingRadio;
-      ratingSums.eatOut += response.ratingEatOut;
-      ratingSums.tv += response.ratingTV;
-
-      for (const food of foodUtils.fromCSV(response.foods)) {
-        foodCounts.set(food, (foodCounts.get(food) ?? 0) + 1);
-      }
-
-      const birthDate =
-        typeof response.dateOfBirth === 'string'
-          ? new Date(response.dateOfBirth)
-          : response.dateOfBirth;
-
-      ages.push(currentYear - birthDate.getFullYear());
-    }
-
-    const toPercentage = (count: number) =>
-      parseFloat(((count / totalCount) * 100).toFixed(1));
-
-    const avgRatings = {
-      movies: parseFloat((ratingSums.movies / totalCount).toFixed(1)),
-      radio: parseFloat((ratingSums.radio / totalCount).toFixed(1)),
-      eatOut: parseFloat((ratingSums.eatOut / totalCount).toFixed(1)),
-      tv: parseFloat((ratingSums.tv / totalCount).toFixed(1)),
-    };
-
-    const foodPercentages = {
-      pizza: toPercentage(foodCounts.get('pizza') || 0),
-      pasta: toPercentage(foodCounts.get('pasta') || 0),
-      papAndWors: toPercentage(
-        (foodCounts.get('pap and wors') || 0) +
-          (foodCounts.get('papandwors') || 0),
-      ),
-    };
-
-    const avgAge = ages.reduce((sum, age) => sum + age, 0) / ages.length;
+    const toPercentage = (count: bigint | number | string | null) =>
+      parseFloat(((toNumber(count) / totalCount) * 100).toFixed(1));
 
     return {
       totalCount,
       age: {
-        avg: Math.round(avgAge * 10) / 10,
-        min: Math.min(...ages),
-        max: Math.max(...ages),
+        avg: Number(Number(row.avgAge ?? 0).toFixed(1)),
+        min: toNumber(row.minAge),
+        max: toNumber(row.maxAge),
       },
-      foodPercentages,
-      avgRatings,
+      foodPercentages: {
+        pizza: toPercentage(row.pizzaCount),
+        pasta: toPercentage(row.pastaCount),
+        papAndWors: toPercentage(row.papAndWorsCount),
+      },
+      avgRatings: {
+        movies: Number(Number(row.avgMovies ?? 0).toFixed(1)),
+        radio: Number(Number(row.avgRadio ?? 0).toFixed(1)),
+        eatOut: Number(Number(row.avgEatOut ?? 0).toFixed(1)),
+        tv: Number(Number(row.avgTv ?? 0).toFixed(1)),
+      },
     };
   }
 }
