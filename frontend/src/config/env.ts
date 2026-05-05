@@ -14,30 +14,21 @@ const envSchema = z.object({
     .string()
     .min(1, 'App name is required')
     .default('Survey Application'),
-  VITE_NODE_ENV: z
-    .enum(['development', 'production', 'test'])
-    .default('development'),
+  VITE_NODE_ENV: z.enum(['development', 'production']).default('development'),
   VITE_PORT: z.string().optional(),
 });
 
 // Parse and validate environment variables
 const parseEnv = () => {
   try {
-    const isTestMode =
-      import.meta.env.VITEST || import.meta.env.MODE === 'test';
     const mode = import.meta.env.MODE || 'development';
-    // In test mode, allow a safe default API URL so unit tests don't fail on missing env
-    const fallbackApiUrl = isTestMode ? 'http://localhost:3000' : undefined;
 
     return envSchema.parse({
-      VITE_API_URL: import.meta.env.VITE_API_URL ?? fallbackApiUrl,
+      VITE_API_URL: import.meta.env.VITE_API_URL,
       VITE_APP_NAME: import.meta.env.VITE_APP_NAME,
-      VITE_NODE_ENV: isTestMode
-        ? 'test'
-        : ((import.meta.env.VITE_NODE_ENV || mode) as
-            | 'development'
-            | 'production'
-            | 'test'),
+      VITE_NODE_ENV: (import.meta.env.VITE_NODE_ENV || mode) as
+        | 'development'
+        | 'production',
       VITE_PORT: import.meta.env.VITE_PORT,
     });
   } catch {
@@ -58,7 +49,6 @@ export const config = {
   appName: env.VITE_APP_NAME,
   isDevelopment: env.VITE_NODE_ENV === 'development',
   isProduction: env.VITE_NODE_ENV === 'production',
-  isTest: env.VITE_NODE_ENV === 'test',
 
   // Feature flags based on environment
   features: {

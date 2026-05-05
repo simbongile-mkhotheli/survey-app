@@ -6,7 +6,7 @@ declare module '*.module.css';
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
   readonly VITE_APP_NAME: string;
-  readonly VITE_NODE_ENV: 'development' | 'production' | 'test';
+  readonly VITE_NODE_ENV: 'development' | 'production';
   readonly VITE_PORT?: string;
   // Add other environment variables as needed
 }

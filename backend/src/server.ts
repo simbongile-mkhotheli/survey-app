@@ -31,11 +31,9 @@ app.use((req, res) => {
 // Global error handler
 app.use(errorHandler);
 
-// Start the server only when run directly and not during tests
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-  });
-}
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
 
 export default app;
