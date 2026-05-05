@@ -9,7 +9,6 @@
     "build": "prisma generate && tsc && tsc-alias --project tsconfig.json",
     "start": "npm run build && node dist/backend/src/server.js",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
     "lint": "eslint \"src/**/*.{ts,js}\" --quiet",
     "lint:fix": "eslint \"src/**/*.{ts,js}\" --fix"
   },
@@ -36,19 +35,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@faker-js/faker": "^10.1.0",
-    "@testcontainers/postgresql": "^11.8.0",
-    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^8.46.3",
     "@typescript-eslint/parser": "^8.46.3",
-    "@vitest/coverage-v8": "^1.6.1",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.1",
     "globals": "^16.5.0",
-    "supertest": "^6.3.3",
     "ts-node-dev": "^2.0.0",
-    "tsconfig-paths": "^4.2.0",
-    "vitest": "^1.4.7"
+    "tsconfig-paths": "^4.2.0"
   }
 }

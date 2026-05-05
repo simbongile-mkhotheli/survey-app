@@ -22,17 +22,10 @@
       "@/validation/*": ["src/validation/*"],
       "@/types/*": ["src/types/*"],
       "@/routes/*": ["src/routes/*"],
-      "@/test/*": ["src/test/*"],
       "@/utils/*": ["src/utils/*"],
       "@shared/*": ["../shared/*"]
     }
   },
   "include": ["src/**/*.ts", "../shared/**/*.ts"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "src/test/**"
-  ]
+  "exclude": ["node_modules", "dist"]
 }

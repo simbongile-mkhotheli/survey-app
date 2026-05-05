@@ -255,7 +255,6 @@ All errors follow a consistent structure:
 - **Database**: PostgreSQL with Prisma ORM
 - **Validation**: Zod + express-validator
 - **Documentation**: OpenAPI 3.0 + Swagger UI
-- **Testing**: Vitest with comprehensive coverage
 
 ### Design Patterns
 
@@ -277,38 +276,7 @@ src/
 ├── validation/      # Input validation schemas
 ├── types/          # TypeScript type definitions
 ├── errors/         # Custom error classes
-└── test/           # Test suites
 ```
-
-## 🧪 Testing
-
-### Running Tests
-
-```bash
-# All tests
-npm test
-
-# Unit tests only
-npm run test:unit
-
-# Integration tests only
-npm run test:integration
-
-# Watch mode
-npm run test:watch
-
-# Coverage report
-npm run test:coverage
-```
-
-### Test Coverage
-
-- **48 Tests**: Unit, integration, and security tests
-- **Controllers**: Request/response handling
-- **Services**: Business logic validation
-- **Repositories**: Data access patterns
-- **Security**: Middleware and validation
-- **Integration**: End-to-end API flows
 
 ## 🚀 Deployment
 
