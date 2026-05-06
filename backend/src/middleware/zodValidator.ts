@@ -1,25 +1,14 @@
-import { ZodError } from 'zod';
 import type { Request, Response, NextFunction } from 'express';
 
 type SchemaLike = {
   parse: (data: unknown) => unknown;
 };
 
-function sendValidationError(res: Response, error: ZodError) {
-  return res.status(400).json({
-    error: {
-      message: 'Validation failed',
-      type: 'ValidationError',
-      details: error.flatten().fieldErrors,
-    },
-  });
-}
-
 function createValidator(
   source: 'body' | 'query' | 'params',
   schema: SchemaLike,
 ) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const parsed = schema.parse(req[source]);
 
@@ -29,11 +18,7 @@ function createValidator(
 
       next();
     } catch (error) {
-      if (error instanceof ZodError) {
-        return sendValidationError(res, error);
-      }
-
-      return next(error);
+      next(error);
     }
   };
 }
