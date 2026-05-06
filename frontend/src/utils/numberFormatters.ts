@@ -1,27 +1,3 @@
-/**
- * Number Formatting Utilities
- * ============================
- * Centralized number formatting functions for consistent display across application
- * Follows DRY principle - used in Results, Analytics, Reports
- */
-
-/**
- * Format number to 1 decimal place or return 'N/A'
- *
- * Safely converts any numeric input to a string with exactly 1 decimal place.
- * Returns 'N/A' for null, undefined, or NaN values.
- *
- * @param value Number, string representation of number, or null/undefined
- * @returns Formatted string with 1 decimal place (e.g., "28.5") or 'N/A'
- *
- * @example
- * formatDecimal(28.567) // '28.6'
- * formatDecimal('45.123') // '45.1'
- * formatDecimal(null) // 'N/A'
- * formatDecimal(NaN) // 'N/A'
- *
- * @throws Never throws - always returns valid string
- */
 export const formatDecimal = (
   value: number | string | null | undefined,
 ): string => {
@@ -31,23 +7,6 @@ export const formatDecimal = (
   return isNaN(num) || !isFinite(num) ? 'N/A' : num.toFixed(1);
 };
 
-/**
- * Format number to integer or return 'N/A'
- *
- * Safely converts any numeric input to a rounded integer string.
- * Returns 'N/A' for null, undefined, or NaN values.
- *
- * @param value Number, string representation of number, or null/undefined
- * @returns Formatted integer string (e.g., "28") or 'N/A'
- *
- * @example
- * formatInteger(28.7) // '29'
- * formatInteger('45.123') // '45'
- * formatInteger(null) // 'N/A'
- * formatInteger(NaN) // 'N/A'
- *
- * @throws Never throws - always returns valid string
- */
 export const formatInteger = (
   value: number | string | null | undefined,
 ): string => {
@@ -57,22 +16,6 @@ export const formatInteger = (
   return isNaN(num) || !isFinite(num) ? 'N/A' : Math.round(num).toString();
 };
 
-/**
- * Format number as percentage to 1 decimal place
- *
- * Converts number to percentage string with 1 decimal place and % suffix.
- * Useful for displaying percentages (0-100 range).
- *
- * @param value Number 0-100 representing percentage, or null/undefined
- * @returns Formatted percentage string (e.g., "45.5%") or 'N/A'
- *
- * @example
- * formatPercentage(45.567) // '45.6%'
- * formatPercentage('30.2') // '30.2%'
- * formatPercentage(null) // 'N/A'
- *
- * @throws Never throws - always returns valid string
- */
 export const formatPercentage = (
   value: number | string | null | undefined,
 ): string => {

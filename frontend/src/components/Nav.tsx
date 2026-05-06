@@ -1,13 +1,3 @@
-/**
- * Navigation Component
- *
- * Main navigation bar for survey application.
- * - Responsive design for mobile, tablet, and desktop
- * - Active route indicator
- * - Accessible NavLinks with proper ARIA labels
- * - Keyboard navigation support via React Router
- */
-
 import { NavLink } from 'react-router-dom';
 import styles from './Nav.module.css';
 

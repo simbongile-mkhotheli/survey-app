@@ -1,8 +1,3 @@
-/**
- * SurveyForm Constants
- * Minimal configuration needed for the form
- */
-
 export const FOOD_OPTIONS = [
   'Pizza',
   'Pasta',

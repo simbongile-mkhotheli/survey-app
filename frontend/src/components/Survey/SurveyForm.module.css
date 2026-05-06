@@ -298,18 +298,3 @@
   outline: none;
   box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.3);
 }
-
-/* Submit button disabled state */
-.submitButtonDisabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-/* Success banner after submission */
-.successBanner {
-  margin-top: var(--spacing-5);
-  text-align: center;
-  color: var(--color-success);
-  font-weight: var(--font-weight-semibold);
-}

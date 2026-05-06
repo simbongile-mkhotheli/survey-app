@@ -1,37 +1,6 @@
-/**
- * Results Component
- * =================
- * Displays aggregated survey results including totals, age statistics,
- * food preferences, and rating averages.
- *
- * Features:
- * - Automatic data formatting (decimals, integers, percentages)
- * - Loading and error state handling
- * - Empty state messaging
- * - Responsive card layout
- * - Optimized rendering with memoization
- *
- * @component
- * @returns {JSX.Element} Rendered results display or loading/error state
- *
- * @dependencies
- * - useResults hook: Provides survey results data via React Query
- * - Loading, ErrorMessage: UI components for state display
- * - formatDecimal, formatInteger, formatPercentage, formatAge: Number formatters
- *
- * @example
- * <Results />
- *
- * @throws {Error} Gracefully displays error state with retry option
- */
-
 import { useResults } from '@/hooks/useQuery';
 import { Loading, ErrorMessage } from '@/components/ui';
-import {
-  formatDecimal,
-  formatPercentage,
-  formatAge,
-} from '@/utils/numberFormatters';
+import { formatDecimal, formatPercentage } from '@/utils/numberFormatters';
 import {
   RESULTS_LABELS,
   RESULTS_LOADING,
@@ -55,14 +24,6 @@ function ResultRow({
   );
 }
 
-/**
- * Results display component
- *
- * Fetches and displays aggregated survey data with proper formatting.
- * Handles loading, error, and empty states gracefully.
- *
- * @returns {JSX.Element} Results card or appropriate state display
- */
 function Results() {
   const { data: results, isLoading, error, refetch } = useResults();
 
@@ -88,68 +49,68 @@ function Results() {
       <ErrorMessage
         message={RESULTS_EMPTY.MESSAGE}
         title={RESULTS_EMPTY.TITLE}
-        severity="info"
       />
     );
   }
 
-  const {
-    totalCount,
-    age: { avg, min, max },
-    foodPercentages: { pizza, pasta, papAndWors },
-    avgRatings: { movies, radio, eatOut, tv },
-  } = results;
-
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h2 className={styles.heading}>
-          <span aria-hidden="true">📊 </span>
-          <span>{RESULTS_LABELS.HEADING}</span>
-        </h2>
+    <div className={styles.resultsCard}>
+      <h2 className={styles.heading}>{RESULTS_LABELS.HEADING}</h2>
 
-        <ResultRow label={RESULTS_LABELS.TOTAL_SURVEYS} value={totalCount} />
-        <ResultRow label={RESULTS_LABELS.AVERAGE_AGE} value={formatAge(avg)} />
-        <ResultRow
-          label={RESULTS_LABELS.OLDEST_PARTICIPANT}
-          value={formatAge(max)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.YOUNGEST_PARTICIPANT}
-          value={formatAge(min)}
-        />
+      <ResultRow
+        label={RESULTS_LABELS.TOTAL_SURVEYS}
+        value={results.totalCount}
+      />
 
-        <div className={styles.spacer} />
+      <ResultRow
+        label={RESULTS_LABELS.AVERAGE_AGE}
+        value={formatDecimal(results.age.avg)}
+      />
 
-        <ResultRow
-          label={RESULTS_LABELS.PIZZA_PREFERENCE}
-          value={formatPercentage(pizza)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.PASTA_PREFERENCE}
-          value={formatPercentage(pasta)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.PAP_WORS_PREFERENCE}
-          value={formatPercentage(papAndWors)}
-        />
+      <ResultRow
+        label={RESULTS_LABELS.OLDEST_PARTICIPANT}
+        value={formatDecimal(results.age.max)}
+      />
 
-        <div className={styles.spacer} />
+      <ResultRow
+        label={RESULTS_LABELS.YOUNGEST_PARTICIPANT}
+        value={formatDecimal(results.age.min)}
+      />
 
-        <ResultRow
-          label={RESULTS_LABELS.MOVIES_RATING}
-          value={formatDecimal(movies)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.RADIO_RATING}
-          value={formatDecimal(radio)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.EATOUT_RATING}
-          value={formatDecimal(eatOut)}
-        />
-        <ResultRow label={RESULTS_LABELS.TV_RATING} value={formatDecimal(tv)} />
-      </div>
+      <ResultRow
+        label={RESULTS_LABELS.PIZZA_PREFERENCE}
+        value={formatPercentage(results.foodPercentages.pizza)}
+      />
+
+      <ResultRow
+        label={RESULTS_LABELS.PASTA_PREFERENCE}
+        value={formatPercentage(results.foodPercentages.pasta)}
+      />
+
+      <ResultRow
+        label={RESULTS_LABELS.PAP_WORS_PREFERENCE}
+        value={formatPercentage(results.foodPercentages.papAndWors)}
+      />
+
+      <ResultRow
+        label={RESULTS_LABELS.MOVIES_RATING}
+        value={formatDecimal(results.avgRatings.movies)}
+      />
+
+      <ResultRow
+        label={RESULTS_LABELS.RADIO_RATING}
+        value={formatDecimal(results.avgRatings.radio)}
+      />
+
+      <ResultRow
+        label={RESULTS_LABELS.EATOUT_RATING}
+        value={formatDecimal(results.avgRatings.eatOut)}
+      />
+
+      <ResultRow
+        label={RESULTS_LABELS.TV_RATING}
+        value={formatDecimal(results.avgRatings.tv)}
+      />
     </div>
   );
 }

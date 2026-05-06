@@ -1,30 +1,15 @@
-/**
- * Error Message Component
- * ======================
- * Consistent error display with retry functionality
- */
-
 import type { ReactNode } from 'react';
 import styles from './ErrorMessage.module.css';
 
 export interface ErrorMessageProps {
-  /** Error message to display */
   message: string;
-  /** Error title */
   title?: string;
-  /** Show retry button */
   showRetry?: boolean;
-  /** Retry button text */
   retryText?: string;
-  /** Retry callback */
   onRetry?: () => void;
-  /** Close callback */
   onClose?: () => void;
-  /** Error severity */
   severity?: 'error' | 'warning' | 'info' | 'success';
-  /** Custom className */
   className?: string;
-  /** Children to render below error message */
   children?: ReactNode;
 }
 

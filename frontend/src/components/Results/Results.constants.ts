@@ -1,8 +1,3 @@
-/**
- * Results Display Constants
- * Labels and UI text for Results component
- */
-
 export const RESULTS_LABELS = {
   HEADING: 'Survey Results',
   TOTAL_SURVEYS: 'Total number of surveys',
