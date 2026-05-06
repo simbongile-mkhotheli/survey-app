@@ -1,6 +1,9 @@
-// backend/src/interfaces/repository.interface.ts
 import type { SurveyInput } from '@/validation/validation';
 import type { SurveyResultsDTO } from '@/types/resultsDTO';
+
+export type SurveyCreated = {
+  id: number;
+};
 
 export interface SurveyResponse {
   id: number;
@@ -18,7 +21,7 @@ export interface SurveyResponse {
 }
 
 export interface ISurveyRepository {
-  create(data: SurveyInput): Promise<SurveyResponse>;
+  create(data: SurveyInput): Promise<SurveyCreated>;
 }
 
 export interface IResultsRepository {

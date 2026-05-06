@@ -1,36 +1,16 @@
-// backend/src/repositories/survey.repository.ts
 import { PrismaClient } from '@prisma/client';
-import type { ISurveyRepository } from '@/interfaces/repository.interface';
+import type {
+  ISurveyRepository,
+  SurveyCreated,
+} from '@/interfaces/repository.interface';
 import type { SurveyInput } from '@/validation/validation';
-import type { SurveyResponse } from '@/interfaces/repository.interface';
 import { foodUtils } from '@/utils/foodUtils';
 import { parseDate } from '@/utils/dateUtils';
-
-type SurveyRecord = Awaited<
-  ReturnType<PrismaClient['surveyResponse']['findUniqueOrThrow']>
->;
 
 export class SurveyRepository implements ISurveyRepository {
   constructor(private prisma: PrismaClient) {}
 
-  private mapToDomain(raw: SurveyRecord): SurveyResponse {
-    return {
-      id: raw.id,
-      firstName: raw.firstName,
-      lastName: raw.lastName,
-      email: raw.email,
-      contactNumber: raw.contactNumber,
-      dateOfBirth: raw.dateOfBirth,
-      foods: raw.foods,
-      ratingMovies: raw.ratingMovies,
-      ratingRadio: raw.ratingRadio,
-      ratingEatOut: raw.ratingEatOut,
-      ratingTV: raw.ratingTV,
-      submittedAt: raw.submittedAt,
-    };
-  }
-
-  async create(data: SurveyInput): Promise<SurveyResponse> {
+  async create(data: SurveyInput): Promise<SurveyCreated> {
     const dob = parseDate(data.dateOfBirth);
     const foodsCsv = foodUtils.toCSV(data.foods);
 
@@ -49,6 +29,6 @@ export class SurveyRepository implements ISurveyRepository {
       },
     });
 
-    return this.mapToDomain(created);
+    return { id: created.id };
   }
 }
