@@ -1,9 +1,7 @@
 import { z } from 'zod';
 
-// Security: Prevent XSS and injection attacks
 const sanitizeString = (val: string) => val.trim().replace(/[<>]/g, '');
 
-// Security: Maximum lengths to prevent DOS attacks
 const MAX_NAME_LENGTH = 100;
 const MAX_EMAIL_LENGTH = 255;
 const MAX_PHONE_LENGTH = 20;

@@ -1,6 +1,24 @@
 import { PrismaClient } from '@prisma/client';
-import type { IResultsRepository } from '@/interfaces/repository.interface';
-import type { SurveyResultsDTO } from '@/types/resultsDTO';
+
+export type SurveyResultsDTO = {
+  totalCount: number;
+  age: {
+    avg: number | null;
+    min: number | null;
+    max: number | null;
+  };
+  foodPercentages: {
+    pizza: number | null;
+    pasta: number | null;
+    papAndWors: number | null;
+  };
+  avgRatings: {
+    movies: number | null;
+    radio: number | null;
+    eatOut: number | null;
+    tv: number | null;
+  };
+};
 
 type ResultsRow = {
   totalCount: bigint | number | string;
@@ -16,7 +34,7 @@ type ResultsRow = {
   papAndWorsCount: bigint | number | string | null;
 };
 
-export class ResultsRepository implements IResultsRepository {
+export class ResultsRepository {
   constructor(private prisma: PrismaClient) {}
 
   async getResults(): Promise<SurveyResultsDTO> {

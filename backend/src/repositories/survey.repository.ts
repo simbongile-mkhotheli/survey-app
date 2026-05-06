@@ -1,13 +1,13 @@
 import { PrismaClient } from '@prisma/client';
-import type {
-  ISurveyRepository,
-  SurveyCreated,
-} from '@/interfaces/repository.interface';
 import type { SurveyInput } from '@/validation/validation';
 import { foodUtils } from '@/utils/foodUtils';
 import { parseDate } from '@/utils/dateUtils';
 
-export class SurveyRepository implements ISurveyRepository {
+export type SurveyCreated = {
+  id: number;
+};
+
+export class SurveyRepository {
   constructor(private prisma: PrismaClient) {}
 
   async create(data: SurveyInput): Promise<SurveyCreated> {
