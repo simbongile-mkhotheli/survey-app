@@ -1,36 +1,21 @@
-/**
- * Error Message Component
- * ======================
- * Consistent error display with retry functionality
- */
-
 import type { ReactNode } from 'react';
 import styles from './ErrorMessage.module.css';
 
 export interface ErrorMessageProps {
-  /** Error message to display */
   message: string;
-  /** Error title */
   title?: string;
-  /** Show retry button */
   showRetry?: boolean;
-  /** Retry button text */
   retryText?: string;
-  /** Retry callback */
   onRetry?: () => void;
-  /** Close callback */
   onClose?: () => void;
-  /** Error severity */
   severity?: 'error' | 'warning' | 'info' | 'success';
-  /** Custom className */
   className?: string;
-  /** Children to render below error message */
   children?: ReactNode;
 }
 
 export function ErrorMessage({
   message,
-  title = 'Error',
+  title = 'Notice',
   showRetry = false,
   retryText = 'Try Again',
   onRetry,
@@ -43,24 +28,22 @@ export function ErrorMessage({
     .filter(Boolean)
     .join(' ');
 
-  const getIcon = () => {
-    switch (severity) {
-      case 'warning':
-        return '⚠️';
-      case 'info':
-        return 'ℹ️';
-      case 'success':
-        return '✅';
-      default:
-        return '❌';
-    }
-  };
+  const icon =
+    severity === 'warning'
+      ? '⚠️'
+      : severity === 'info'
+        ? 'ℹ️'
+        : severity === 'success'
+          ? '✅'
+          : '❌';
 
   return (
     <div className={containerClasses}>
       <div className={styles.content}>
         <div className={styles.header}>
-          <span className={styles.icon}>{getIcon()}</span>
+          <span className={styles.icon} aria-hidden="true">
+            {icon}
+          </span>
           <h3 className={styles.title}>{title}</h3>
         </div>
 
@@ -68,35 +51,32 @@ export function ErrorMessage({
 
         {children}
 
-        {showRetry && onRetry && (
-          <button
-            className={styles.retryButton}
-            onClick={onRetry}
-            type="button"
-          >
-            {retryText}
-          </button>
-        )}
+        <div className={styles.actions}>
+          {showRetry && onRetry && (
+            <button
+              className={styles.retryButton}
+              onClick={onRetry}
+              type="button"
+            >
+              {retryText}
+            </button>
+          )}
 
-        {onClose && (
-          <button
-            className={styles.retryButton}
-            onClick={onClose}
-            type="button"
-          >
-            Dismiss
-          </button>
-        )}
+          {onClose && (
+            <button
+              className={`${styles.retryButton} ${styles.secondary}`}
+              onClick={onClose}
+              type="button"
+            >
+              Dismiss
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
-/**
- * Inline Error Component
- * =====================
- * For form field errors and smaller inline messages
- */
 export interface InlineErrorProps {
   message: string;
   className?: string;

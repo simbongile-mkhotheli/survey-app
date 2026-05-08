@@ -1,8 +1,6 @@
-// RatingRow.tsx
 import { memo } from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 import type { SurveyFormValues } from '@/validation';
-import { RATING_SCALE_LABELS } from './SurveyForm.constants';
 import styles from './RatingRow.module.css';
 
 interface RatingRowProps {
@@ -10,31 +8,19 @@ interface RatingRowProps {
   fieldName: keyof SurveyFormValues;
   register: UseFormRegister<SurveyFormValues>;
   error?: string;
-  isEvenRow?: boolean;
 }
 
-function RatingRow({
-  label,
-  fieldName,
-  register,
-  error,
-  isEvenRow = false,
-}: RatingRowProps) {
-  const values = [1, 2, 3, 4, 5];
+function RatingRow({ label, fieldName, register, error }: RatingRowProps) {
+  const values = [5, 4, 3, 2, 1];
 
   return (
-    <>
-      <tr className={`${styles.row} ${isEvenRow ? styles.evenRow : ''}`}>
-        <td className={styles.labelCell}>{label}</td>
-
-        {values.map((value, idx) => {
+    <div className={styles.ratingCard}>
+      <div className={styles.statementLabel}>{label}</div>
+      <div className={styles.ratingOptions}>
+        {values.map((value) => {
           const id = `${String(fieldName)}-${value}`;
           return (
-            <td key={value} className={styles.cell}>
-              <label htmlFor={id} className={styles.cellLabel}>
-                {RATING_SCALE_LABELS[idx]}
-              </label>
-
+            <label key={value} className={styles.ratingOption}>
               <input
                 id={id}
                 type="radio"
@@ -46,24 +32,19 @@ function RatingRow({
                   error ? `${String(fieldName)}-error` : undefined
                 }
               />
-            </td>
+              <span className={styles.optionButton} aria-hidden="true">
+                {value}
+              </span>
+            </label>
           );
         })}
-      </tr>
-
+      </div>
       {error && (
-        <tr className={styles.errorRow}>
-          <td colSpan={6}>
-            <div
-              id={`${String(fieldName)}-error`}
-              className={styles.errorContainer}
-            >
-              <span className={styles.errorText}>{error}</span>
-            </div>
-          </td>
-        </tr>
+        <div id={`${String(fieldName)}-error`} className={styles.errorText}>
+          {error}
+        </div>
       )}
-    </>
+    </div>
   );
 }
 

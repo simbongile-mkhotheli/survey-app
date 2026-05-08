@@ -1,67 +1,79 @@
-/* Field group container */
 .fieldGroup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-1);
-  margin-bottom: var(--spacing-3);
+  display: grid;
+  gap: 10px;
 }
 
-/* Field label */
 .fieldLabel {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-gray-700);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #3f4760;
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.required {
+  color: #d24f62;
+}
+
+.inputShell {
   display: flex;
   align-items: center;
-  gap: var(--spacing-1);
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1.5px solid #dde3f1;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
 }
 
-/* Required indicator */
-.required {
-  color: var(--color-error);
-  font-weight: var(--font-weight-bold);
+.inputShell:focus-within {
+  border-color: rgba(92, 93, 227, 0.55);
+  box-shadow: 0 0 0 4px rgba(92, 93, 227, 0.12);
+  transform: translateY(-1px);
 }
 
-/* Text input */
+.inputShellError {
+  border-color: rgba(216, 74, 74, 0.6);
+  box-shadow: 0 0 0 4px rgba(216, 74, 74, 0.08);
+}
+
+.leadingIcon {
+  width: 18px;
+  height: 18px;
+  color: #7d7ea8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.leadingIcon :global(svg) {
+  width: 18px;
+  height: 18px;
+}
+
 .textbox {
-  padding: var(--spacing-2) var(--spacing-3);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  font-size: var(--font-size-sm);
-  color: var(--color-text);
-  background: var(--color-surface);
-  transition: all var(--transition-base);
-  font-family: inherit;
-  box-shadow: var(--shadow-sm);
-  max-width: 400px;
-}
-
-.textbox:focus {
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  border: 0;
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow:
-    0 0 0 3px rgba(40, 160, 229, 0.15),
-    var(--shadow-base);
-  transform: translateY(-2px);
+  background: transparent;
+  color: #1f2a3d;
+  font-size: 0.98rem;
 }
 
 .textbox::placeholder {
-  color: var(--color-text-tertiary);
+  color: #9aa3b8;
 }
 
 .textbox:disabled {
-  background: var(--color-neutral-100);
   cursor: not-allowed;
-  opacity: 0.6;
-}
-
-/* Error state */
-.textboxError {
-  border-color: var(--color-error);
-  background: #fff5f5;
-}
-
-.textboxError:focus {
-  border-color: var(--color-error);
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+  opacity: 0.7;
 }

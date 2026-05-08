@@ -4,6 +4,7 @@ import type {
   FieldValues,
   Path,
 } from 'react-hook-form';
+import type { ReactNode } from 'react';
 import { InlineError } from '@/components/ui';
 import styles from './TextField.module.css';
 
@@ -16,6 +17,7 @@ interface TextFieldProps<T extends FieldValues = FieldValues> {
   error?: FieldError;
   required?: boolean;
   autoComplete?: string;
+  icon?: ReactNode;
 }
 
 export default function TextField<T extends FieldValues = FieldValues>({
@@ -27,6 +29,7 @@ export default function TextField<T extends FieldValues = FieldValues>({
   error,
   required = false,
   autoComplete,
+  icon,
 }: TextFieldProps<T>) {
   return (
     <div className={styles.fieldGroup}>
@@ -34,16 +37,23 @@ export default function TextField<T extends FieldValues = FieldValues>({
         {label}
         {required && <span className={styles.required}>*</span>}
       </label>
-      <input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        className={`${styles.textbox} ${error ? styles.textboxError : ''}`}
-        aria-invalid={error ? 'true' : 'false'}
-        aria-describedby={error ? `${id}-error` : undefined}
-        {...register(id)}
-      />
+
+      <div
+        className={`${styles.inputShell} ${error ? styles.inputShellError : ''}`}
+      >
+        {icon && <span className={styles.leadingIcon}>{icon}</span>}
+        <input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          className={styles.textbox}
+          aria-invalid={error ? 'true' : 'false'}
+          aria-describedby={error ? `${id}-error` : undefined}
+          {...register(id)}
+        />
+      </div>
+
       <InlineError message={error?.message || ''} id={`${id}-error`} />
     </div>
   );

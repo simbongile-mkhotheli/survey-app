@@ -1,30 +1,3 @@
-/**
- * Results Component
- * =================
- * Displays aggregated survey results including totals, age statistics,
- * food preferences, and rating averages.
- *
- * Features:
- * - Automatic data formatting (decimals, integers, percentages)
- * - Loading and error state handling
- * - Empty state messaging
- * - Responsive card layout
- * - Optimized rendering with memoization
- *
- * @component
- * @returns {JSX.Element} Rendered results display or loading/error state
- *
- * @dependencies
- * - useResults hook: Provides survey results data via React Query
- * - Loading, ErrorMessage: UI components for state display
- * - formatDecimal, formatInteger, formatPercentage, formatAge: Number formatters
- *
- * @example
- * <Results />
- *
- * @throws {Error} Gracefully displays error state with retry option
- */
-
 import { useResults } from '@/hooks/useQuery';
 import { Loading, ErrorMessage } from '@/components/ui';
 import {
@@ -55,14 +28,6 @@ function ResultRow({
   );
 }
 
-/**
- * Results display component
- *
- * Fetches and displays aggregated survey data with proper formatting.
- * Handles loading, error, and empty states gracefully.
- *
- * @returns {JSX.Element} Results card or appropriate state display
- */
 function Results() {
   const { data: results, isLoading, error, refetch } = useResults();
 
@@ -103,52 +68,60 @@ function Results() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <h2 className={styles.heading}>
-          <span aria-hidden="true">📊 </span>
-          <span>{RESULTS_LABELS.HEADING}</span>
-        </h2>
+        <div className={styles.summaryGrid}>
+          <div className={styles.summaryTile}>
+            <span className={styles.summaryLabel}>Total surveys</span>
+            <strong className={styles.summaryValue}>{totalCount}</strong>
+          </div>
+          <div className={styles.summaryTile}>
+            <span className={styles.summaryLabel}>Average age</span>
+            <strong className={styles.summaryValue}>{formatAge(avg)}</strong>
+          </div>
+          <div className={styles.summaryTile}>
+            <span className={styles.summaryLabel}>Oldest</span>
+            <strong className={styles.summaryValue}>{formatAge(max)}</strong>
+          </div>
+          <div className={styles.summaryTile}>
+            <span className={styles.summaryLabel}>Youngest</span>
+            <strong className={styles.summaryValue}>{formatAge(min)}</strong>
+          </div>
+        </div>
 
-        <ResultRow label={RESULTS_LABELS.TOTAL_SURVEYS} value={totalCount} />
-        <ResultRow label={RESULTS_LABELS.AVERAGE_AGE} value={formatAge(avg)} />
-        <ResultRow
-          label={RESULTS_LABELS.OLDEST_PARTICIPANT}
-          value={formatAge(max)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.YOUNGEST_PARTICIPANT}
-          value={formatAge(min)}
-        />
+        <div className={styles.sectionTitle}>{RESULTS_LABELS.HEADING}</div>
 
-        <div className={styles.spacer} />
+        <div className={styles.listBlock}>
+          <ResultRow
+            label={RESULTS_LABELS.PIZZA_PREFERENCE}
+            value={formatPercentage(pizza)}
+          />
+          <ResultRow
+            label={RESULTS_LABELS.PASTA_PREFERENCE}
+            value={formatPercentage(pasta)}
+          />
+          <ResultRow
+            label={RESULTS_LABELS.PAP_WORS_PREFERENCE}
+            value={formatPercentage(papAndWors)}
+          />
+        </div>
 
-        <ResultRow
-          label={RESULTS_LABELS.PIZZA_PREFERENCE}
-          value={formatPercentage(pizza)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.PASTA_PREFERENCE}
-          value={formatPercentage(pasta)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.PAP_WORS_PREFERENCE}
-          value={formatPercentage(papAndWors)}
-        />
-
-        <div className={styles.spacer} />
-
-        <ResultRow
-          label={RESULTS_LABELS.MOVIES_RATING}
-          value={formatDecimal(movies)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.RADIO_RATING}
-          value={formatDecimal(radio)}
-        />
-        <ResultRow
-          label={RESULTS_LABELS.EATOUT_RATING}
-          value={formatDecimal(eatOut)}
-        />
-        <ResultRow label={RESULTS_LABELS.TV_RATING} value={formatDecimal(tv)} />
+        <div className={styles.listBlock}>
+          <ResultRow
+            label={RESULTS_LABELS.MOVIES_RATING}
+            value={formatDecimal(movies)}
+          />
+          <ResultRow
+            label={RESULTS_LABELS.RADIO_RATING}
+            value={formatDecimal(radio)}
+          />
+          <ResultRow
+            label={RESULTS_LABELS.EATOUT_RATING}
+            value={formatDecimal(eatOut)}
+          />
+          <ResultRow
+            label={RESULTS_LABELS.TV_RATING}
+            value={formatDecimal(tv)}
+          />
+        </div>
       </div>
     </div>
   );

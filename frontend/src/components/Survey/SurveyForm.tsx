@@ -1,17 +1,37 @@
-// SurveyForm.tsx
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 
+import {
+  CalendarIcon,
+  ForkIcon,
+  MailIcon,
+  PhoneIcon,
+  StarIcon,
+  UserIcon,
+} from '@/components/icons';
+import { Loading, ErrorMessage, InlineError, TextField } from '@/components/ui';
+import { submitSurvey } from '@/services/api';
 import { SurveySchema } from '@/validation';
 import type { SurveyFormValues } from '@/validation';
-import { submitSurvey } from '@/services/api';
-import { Loading, ErrorMessage, InlineError, TextField } from '@/components/ui';
 
 import RatingRow from './RatingRow';
+import { FOOD_OPTIONS } from './SurveyForm.constants';
 import styles from './SurveyForm.module.css';
-import { FOOD_OPTIONS, RATING_SCALE_LABELS } from './SurveyForm.constants';
 import { formatErrorMessage } from './SurveyForm.utils';
+
+const defaultValues: SurveyFormValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  contactNumber: '',
+  dateOfBirth: '',
+  foods: [],
+  ratingMovies: undefined,
+  ratingRadio: undefined,
+  ratingEatOut: undefined,
+  ratingTV: undefined,
+};
 
 export default function SurveyForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -27,18 +47,7 @@ export default function SurveyForm() {
     resolver: zodResolver(SurveySchema),
     mode: 'onBlur',
     reValidateMode: 'onBlur',
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      contactNumber: '',
-      dateOfBirth: '',
-      foods: [],
-      ratingMovies: undefined,
-      ratingRadio: undefined,
-      ratingEatOut: undefined,
-      ratingTV: undefined,
-    },
+    defaultValues,
   });
 
   const clearSuccessTimer = () => {
@@ -48,38 +57,20 @@ export default function SurveyForm() {
     }
   };
 
-  useEffect(() => {
-    return () => {
-      clearSuccessTimer();
-    };
-  }, []);
+  useEffect(() => () => clearSuccessTimer(), []);
 
   const resetToDefaults = useCallback(() => {
-    reset({
-      firstName: '',
-      lastName: '',
-      email: '',
-      contactNumber: '',
-      dateOfBirth: '',
-      foods: [],
-      ratingMovies: undefined,
-      ratingRadio: undefined,
-      ratingEatOut: undefined,
-      ratingTV: undefined,
-    });
+    reset(defaultValues);
   }, [reset]);
 
   const onSubmit: SubmitHandler<SurveyFormValues> = useCallback(
     async (data) => {
       try {
         setSubmitError(null);
-
         await submitSurvey(data);
-
         resetToDefaults();
 
         setShowSuccessMessage(true);
-
         clearSuccessTimer();
         successTimerRef.current = window.setTimeout(() => {
           setShowSuccessMessage(false);
@@ -108,178 +99,229 @@ export default function SurveyForm() {
       {isSubmitting && <Loading text="Submitting survey..." overlay />}
 
       {submitError && (
-        <ErrorMessage
-          message={submitError}
-          title="Submission Failed"
-          severity="error"
-          showRetry
-          onRetry={handleRetry}
-          onClose={handleClearError}
-        />
+        <div className={styles.alertWrap}>
+          <ErrorMessage
+            message={submitError}
+            title="Submission Failed"
+            severity="error"
+            showRetry
+            onRetry={handleRetry}
+            onClose={handleClearError}
+          />
+        </div>
       )}
 
-      <main className={styles.main}>
-        <div className={styles.formCard}>
-          <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <div className={styles.row}>
-              <div className={styles.colLabel}>
-                <span className={styles.labelText}>Personal Details</span>
-              </div>
-              <div className={styles.colInput}>
-                <TextField<SurveyFormValues>
-                  id="firstName"
-                  label="First Name"
-                  type="text"
-                  placeholder="Enter first name"
-                  register={register}
-                  error={errors.firstName}
-                  required
-                  autoComplete="given-name"
-                />
-
-                <TextField<SurveyFormValues>
-                  id="lastName"
-                  label="Last Name"
-                  type="text"
-                  placeholder="Enter last name"
-                  register={register}
-                  error={errors.lastName}
-                  required
-                  autoComplete="family-name"
-                />
-
-                <TextField<SurveyFormValues>
-                  id="email"
-                  label="Email"
-                  type="email"
-                  placeholder="you@example.com"
-                  register={register}
-                  error={errors.email}
-                  required
-                  autoComplete="email"
-                />
-
-                <TextField<SurveyFormValues>
-                  id="contactNumber"
-                  label="Contact Number"
-                  type="tel"
-                  placeholder="+1234567890"
-                  register={register}
-                  error={errors.contactNumber}
-                  required
-                  autoComplete="tel"
-                />
-
-                <TextField<SurveyFormValues>
-                  id="dateOfBirth"
-                  label="Date of Birth"
-                  type="date"
-                  register={register}
-                  error={errors.dateOfBirth}
-                  required
-                  autoComplete="bday"
-                />
-              </div>
-            </div>
-
-            <div className={styles.row}>
-              <div className={styles.colFull}>
-                <span className={styles.labelText}>
-                  What is your favorite food?
-                </span>
-                <div className={styles.checkboxGroup}>
-                  {FOOD_OPTIONS.map((food) => (
-                    <label key={food} className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        value={food}
-                        className={styles.checkbox}
-                        {...register('foods')}
-                      />{' '}
-                      {food}
-                    </label>
-                  ))}
-                </div>
-                <InlineError message={errors.foods?.message || ''} />
-              </div>
-            </div>
-
-            <div className={styles.row}>
-              <div className={styles.colFull}>
-                <div className={styles.instruction}>
-                  Please rate your level of agreement on a scale from{' '}
-                  <strong>1 (Strongly Agree)</strong> to{' '}
-                  <strong>5 (Strongly Disagree)</strong>.
-                </div>
-
-                <div className={styles.tableWrapper}>
-                  <table className={styles.table}>
-                    <thead>
-                      <tr>
-                        <th className={styles.thLabel}></th>
-                        {RATING_SCALE_LABELS.map((label) => (
-                          <th key={label} className={styles.th}>
-                            {label}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <RatingRow
-                        label="I like to watch movies"
-                        fieldName="ratingMovies"
-                        register={register}
-                        error={errors.ratingMovies?.message}
-                        isEvenRow
-                      />
-                      <RatingRow
-                        label="I like to listen to radio"
-                        fieldName="ratingRadio"
-                        register={register}
-                        error={errors.ratingRadio?.message}
-                      />
-                      <RatingRow
-                        label="I like to eat out"
-                        fieldName="ratingEatOut"
-                        register={register}
-                        error={errors.ratingEatOut?.message}
-                        isEvenRow
-                      />
-                      <RatingRow
-                        label="I like to watch TV"
-                        fieldName="ratingTV"
-                        register={register}
-                        error={errors.ratingTV?.message}
-                      />
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.submitContainer}>
-              <button
-                type="submit"
-                className={`${styles.submitButton} ${
-                  isSubmitting ? styles.submitButtonDisabled : ''
-                }`}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Submitting…' : 'SUBMIT'}
-              </button>
-            </div>
-          </form>
-
-          {showSuccessMessage && (
-            <ErrorMessage
-              message="Your survey has been submitted successfully! Thank you for your participation."
-              title="Success!"
-              severity="success"
-              onClose={() => setShowSuccessMessage(false)}
-            />
-          )}
+      {showSuccessMessage && (
+        <div className={styles.alertWrap}>
+          <ErrorMessage
+            message="Your survey has been submitted successfully. Thank you for your participation."
+            title="Success"
+            severity="success"
+            onClose={() => setShowSuccessMessage(false)}
+          />
         </div>
-      </main>
+      )}
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className={styles.form}
+      >
+        <div className={styles.gridTwo}>
+          <section className={styles.sectionCard}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon} aria-hidden="true">
+                <UserIcon className={styles.sectionIconSvg} />
+              </div>
+              <div>
+                <h2 className={styles.sectionTitle}>Personal Details</h2>
+                <p className={styles.sectionSubtitle}>
+                  Please provide your basic information.
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.fieldStack}>
+              <TextField<SurveyFormValues>
+                id="firstName"
+                label="First Name"
+                type="text"
+                placeholder="Enter your first name"
+                register={register}
+                error={errors.firstName}
+                required
+                autoComplete="given-name"
+                icon={<UserIcon />}
+              />
+
+              <TextField<SurveyFormValues>
+                id="lastName"
+                label="Last Name"
+                type="text"
+                placeholder="Enter your last name"
+                register={register}
+                error={errors.lastName}
+                required
+                autoComplete="family-name"
+                icon={<UserIcon />}
+              />
+
+              <TextField<SurveyFormValues>
+                id="email"
+                label="Email"
+                type="email"
+                placeholder="you@example.com"
+                register={register}
+                error={errors.email}
+                required
+                autoComplete="email"
+                icon={<MailIcon />}
+              />
+
+              <TextField<SurveyFormValues>
+                id="contactNumber"
+                label="Contact Number"
+                type="tel"
+                placeholder="+1 (234) 567-8900"
+                register={register}
+                error={errors.contactNumber}
+                required
+                autoComplete="tel"
+                icon={<PhoneIcon />}
+              />
+
+              <TextField<SurveyFormValues>
+                id="dateOfBirth"
+                label="Date of Birth"
+                type="date"
+                register={register}
+                error={errors.dateOfBirth}
+                required
+                autoComplete="bday"
+                icon={<CalendarIcon />}
+              />
+            </div>
+          </section>
+
+          <section className={styles.sectionCard}>
+            <div className={styles.sectionHeaderCompact}>
+              <div className={styles.sectionIcon} aria-hidden="true">
+                <ForkIcon className={styles.sectionIconSvg} />
+              </div>
+              <div>
+                <h2 className={styles.sectionTitle}>Preferences</h2>
+                <p className={styles.sectionSubtitle}>
+                  Tell us about your favorites.
+                </p>
+              </div>
+            </div>
+
+            <div className={styles.questionTitle}>
+              What is your favorite food?
+            </div>
+
+            <div className={styles.choiceGrid}>
+              {FOOD_OPTIONS.map((food) => (
+                <label key={food} className={styles.choiceCard}>
+                  <span className={styles.choiceEmoji} aria-hidden="true">
+                    {food === 'Pizza'
+                      ? '🍕'
+                      : food === 'Pasta'
+                        ? '🍝'
+                        : food === 'Pap and Wors'
+                          ? '🌭'
+                          : '•••'}
+                  </span>
+                  <span className={styles.choiceLabel}>{food}</span>
+                  <input
+                    type="checkbox"
+                    value={food}
+                    className={styles.choiceInput}
+                    {...register('foods')}
+                  />
+                  <span className={styles.choiceBox} aria-hidden="true" />
+                </label>
+              ))}
+            </div>
+            <InlineError message={errors.foods?.message || ''} />
+          </section>
+        </div>
+
+        <section className={styles.sectionCard}>
+          <div className={styles.sectionHeaderCompact}>
+            <div className={styles.sectionIcon} aria-hidden="true">
+              <StarIcon className={styles.sectionIconSvg} />
+            </div>
+            <div>
+              <h2 className={styles.sectionTitle}>Rate Your Preferences</h2>
+              <p className={styles.sectionSubtitle}>
+                Please rate your level of agreement from Strongly Agree to
+                Strongly Disagree.
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.ratingGrid}>
+            <div className={styles.ratingScaleGuide}>
+              <div className={styles.scaleItem}>
+                <span className={styles.scaleNumber}>5</span>
+                <span className={styles.scaleLabel}>Strongly Agree</span>
+              </div>
+              <div className={styles.scaleItem}>
+                <span className={styles.scaleNumber}>4</span>
+                <span className={styles.scaleLabel}>Agree</span>
+              </div>
+              <div className={styles.scaleItem}>
+                <span className={styles.scaleNumber}>3</span>
+                <span className={styles.scaleLabel}>Neutral</span>
+              </div>
+              <div className={styles.scaleItem}>
+                <span className={styles.scaleNumber}>2</span>
+                <span className={styles.scaleLabel}>Disagree</span>
+              </div>
+              <div className={styles.scaleItem}>
+                <span className={styles.scaleNumber}>1</span>
+                <span className={styles.scaleLabel}>Strongly Disagree</span>
+              </div>
+            </div>
+
+            <RatingRow
+              label="I like to watch movies"
+              fieldName="ratingMovies"
+              register={register}
+              error={errors.ratingMovies?.message}
+            />
+            <RatingRow
+              label="I like to listen to radio"
+              fieldName="ratingRadio"
+              register={register}
+              error={errors.ratingRadio?.message}
+            />
+            <RatingRow
+              label="I like to eat out"
+              fieldName="ratingEatOut"
+              register={register}
+              error={errors.ratingEatOut?.message}
+            />
+            <RatingRow
+              label="I like to watch TV"
+              fieldName="ratingTV"
+              register={register}
+              error={errors.ratingTV?.message}
+            />
+          </div>
+        </section>
+
+        <div className={styles.submitWrap}>
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Submitting…' : 'Submit Survey'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
