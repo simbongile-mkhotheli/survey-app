@@ -1,6 +1,6 @@
 .fieldGroup {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .fieldLabel {
@@ -8,8 +8,8 @@
   align-items: center;
   gap: 4px;
   color: #3f4760;
-  font-size: 0.94rem;
-  font-weight: 700;
+  font-size: 0.92rem;
+  font-weight: 800;
 }
 
 .required {
@@ -20,26 +20,28 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: 48px;
+  min-height: 50px;
   padding: 0 14px;
-  border-radius: 14px;
-  border: 1.5px solid #dde3f1;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+  border-radius: 16px;
+  border: 1.5px solid #dfe4f1;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
   transition:
     border-color 160ms ease,
     box-shadow 160ms ease,
-    transform 160ms ease;
+    transform 160ms ease,
+    background 160ms ease;
 }
 
 .inputShell:focus-within {
-  border-color: rgba(92, 93, 227, 0.55);
+  border-color: rgba(92, 93, 227, 0.58);
   box-shadow: 0 0 0 4px rgba(92, 93, 227, 0.12);
   transform: translateY(-1px);
+  background: #fff;
 }
 
 .inputShellError {
-  border-color: rgba(216, 74, 74, 0.6);
+  border-color: rgba(216, 74, 74, 0.68);
   box-shadow: 0 0 0 4px rgba(216, 74, 74, 0.08);
 }
 
@@ -61,7 +63,7 @@
 .textbox {
   flex: 1;
   min-width: 0;
-  height: 46px;
+  height: 48px;
   border: 0;
   outline: none;
   background: transparent;
@@ -75,5 +77,19 @@
 
 .textbox:disabled {
   cursor: not-allowed;
-  opacity: 0.7;
+  opacity: 0.72;
+}
+
+@media (min-width: 1024px) {
+  .fieldLabel {
+    font-size: 0.94rem;
+  }
+
+  .inputShell {
+    min-height: 52px;
+  }
+
+  .textbox {
+    font-size: 1rem;
+  }
 }

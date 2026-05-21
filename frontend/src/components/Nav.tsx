@@ -27,7 +27,7 @@ export default function Nav() {
         <div className={styles.brandIcon} aria-hidden="true">
           <ClipboardIcon className={styles.brandSvg} />
         </div>
-        <span className={styles.brandText}>Surveys</span>
+        <span className={styles.brandText}>PulseCheck</span>
       </div>
 
       <div className={styles.menu}>
@@ -43,7 +43,7 @@ export default function Nav() {
           </span>
           <span className={styles.itemCopy}>
             <span className={styles.itemTitle}>Survey</span>
-            <span className={styles.itemSubtitle}>Fill out the survey</span>
+            <span className={styles.itemSubtitle}>Share your voice</span>
           </span>
         </NavLink>
 
@@ -58,7 +58,7 @@ export default function Nav() {
           </span>
           <span className={styles.itemCopy}>
             <span className={styles.itemTitle}>Results</span>
-            <span className={styles.itemSubtitle}>View survey results</span>
+            <span className={styles.itemSubtitle}>Real-time insights</span>
           </span>
         </NavLink>
       </div>
@@ -66,12 +66,8 @@ export default function Nav() {
       <div className={styles.footerCard}>
         <FeedbackIllustration />
         <div className={styles.footerTextBlock}>
-          <h2 className={styles.footerTitle}>
-            Your feedback helps us improve!
-          </h2>
-          <p className={styles.footerText}>
-            Thank you for taking the time to complete this survey.
-          </p>
+          <h2 className={styles.footerTitle}>You're making an impact</h2>
+          <p className={styles.footerText}>Every response shapes the future.</p>
         </div>
       </div>
     </nav>

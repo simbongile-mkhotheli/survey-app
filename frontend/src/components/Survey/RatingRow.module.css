@@ -1,41 +1,32 @@
-.ratingCard {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 18px 16px 14px;
-  background: #fff;
-  border: 1px solid #cfd7e6;
-  border-radius: 18px;
-  min-height: 110px;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+.ratingTableRow {
+  border-bottom: 1px solid #e4e8f4;
 }
 
-.ratingCard:hover {
-  border-color: #7aa0e6;
-  box-shadow: 0 6px 18px rgba(61, 91, 153, 0.08);
+.ratingTableRow:last-child {
+  border-bottom: none;
 }
 
-.statementLabel {
-  font-size: 0.95rem;
-  font-weight: 700;
+.statementCell {
+  padding: 12px 10px;
+  text-align: left;
   color: #2b3553;
-  text-align: center;
-  line-height: 1.3;
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: #fff;
+  line-height: 1.35;
 }
 
-.ratingOptions {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-  width: 100%;
-  margin-top: auto;
+.ratingCell {
+  padding: 10px 6px;
+  text-align: center;
+  background: #fff;
 }
 
 .ratingOption {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .radioInput {
@@ -50,30 +41,45 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 34px;
-  border: 1px solid #8b97a8;
-  border-radius: 6px;
-  background: #8f99a8;
-  color: #111;
-  font-size: 0.9rem;
-  font-weight: 600;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #dde3f1;
+  border-radius: 50%;
+  background: #fff;
+  font-size: 0;
   cursor: pointer;
   user-select: none;
-  transition: all 140ms ease;
+  transition: all 160ms ease;
 }
 
 .radioInput:hover ~ .optionButton {
-  background: #7f8a9b;
+  border-color: rgba(91, 92, 226, 0.3);
+  box-shadow: 0 2px 8px rgba(91, 92, 226, 0.1);
 }
 
 .radioInput:checked ~ .optionButton {
   background: #5b5ce2;
-  color: #fff;
   border-color: #5b5ce2;
-  box-shadow: 0 4px 10px rgba(91, 92, 226, 0.22);
+  box-shadow: 0 4px 12px rgba(91, 92, 226, 0.25);
 }
 
 .radioInput:focus-visible ~ .optionButton {
   outline: 2px solid #5b5ce2;
   outline-offset: 2px;
+}
+
+@media (min-width: 1024px) {
+  .statementCell {
+    padding: 16px;
+    font-size: 0.95rem;
+  }
+
+  .ratingCell {
+    padding: 12px 10px;
+  }
+
+  .optionButton {
+    width: 32px;
+    height: 32px;
+  }
 }

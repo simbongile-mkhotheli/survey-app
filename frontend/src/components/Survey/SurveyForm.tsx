@@ -127,125 +127,123 @@ export default function SurveyForm() {
         noValidate
         className={styles.form}
       >
-        <div className={styles.gridTwo}>
-          <section className={styles.sectionCard}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.sectionIcon} aria-hidden="true">
-                <UserIcon className={styles.sectionIconSvg} />
-              </div>
-              <div>
-                <h2 className={styles.sectionTitle}>Personal Details</h2>
-                <p className={styles.sectionSubtitle}>
-                  Please provide your basic information.
-                </p>
-              </div>
+        <section className={styles.sectionCard}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.sectionIcon} aria-hidden="true">
+              <UserIcon className={styles.sectionIconSvg} />
             </div>
-
-            <div className={styles.fieldStack}>
-              <TextField<SurveyFormValues>
-                id="firstName"
-                label="First Name"
-                type="text"
-                placeholder="Enter your first name"
-                register={register}
-                error={errors.firstName}
-                required
-                autoComplete="given-name"
-                icon={<UserIcon />}
-              />
-
-              <TextField<SurveyFormValues>
-                id="lastName"
-                label="Last Name"
-                type="text"
-                placeholder="Enter your last name"
-                register={register}
-                error={errors.lastName}
-                required
-                autoComplete="family-name"
-                icon={<UserIcon />}
-              />
-
-              <TextField<SurveyFormValues>
-                id="email"
-                label="Email"
-                type="email"
-                placeholder="you@example.com"
-                register={register}
-                error={errors.email}
-                required
-                autoComplete="email"
-                icon={<MailIcon />}
-              />
-
-              <TextField<SurveyFormValues>
-                id="contactNumber"
-                label="Contact Number"
-                type="tel"
-                placeholder="+1 (234) 567-8900"
-                register={register}
-                error={errors.contactNumber}
-                required
-                autoComplete="tel"
-                icon={<PhoneIcon />}
-              />
-
-              <TextField<SurveyFormValues>
-                id="dateOfBirth"
-                label="Date of Birth"
-                type="date"
-                register={register}
-                error={errors.dateOfBirth}
-                required
-                autoComplete="bday"
-                icon={<CalendarIcon />}
-              />
+            <div>
+              <h2 className={styles.sectionTitle}>Personal Details</h2>
+              <p className={styles.sectionSubtitle}>
+                Please provide your basic information.
+              </p>
             </div>
-          </section>
+          </div>
 
-          <section className={styles.sectionCard}>
-            <div className={styles.sectionHeaderCompact}>
-              <div className={styles.sectionIcon} aria-hidden="true">
-                <ForkIcon className={styles.sectionIconSvg} />
-              </div>
-              <div>
-                <h2 className={styles.sectionTitle}>Preferences</h2>
-                <p className={styles.sectionSubtitle}>
-                  Tell us about your favorites.
-                </p>
-              </div>
-            </div>
+          <div className={styles.fieldGridTwo}>
+            <TextField<SurveyFormValues>
+              id="firstName"
+              label="First Name"
+              type="text"
+              placeholder="Enter your first name"
+              register={register}
+              error={errors.firstName}
+              required
+              autoComplete="given-name"
+              icon={<UserIcon />}
+            />
 
-            <div className={styles.questionTitle}>
-              What is your favorite food?
-            </div>
+            <TextField<SurveyFormValues>
+              id="lastName"
+              label="Last Name"
+              type="text"
+              placeholder="Enter your last name"
+              register={register}
+              error={errors.lastName}
+              required
+              autoComplete="family-name"
+              icon={<UserIcon />}
+            />
 
-            <div className={styles.choiceGrid}>
-              {FOOD_OPTIONS.map((food) => (
-                <label key={food} className={styles.choiceCard}>
-                  <span className={styles.choiceEmoji} aria-hidden="true">
-                    {food === 'Pizza'
-                      ? '🍕'
-                      : food === 'Pasta'
-                        ? '🍝'
-                        : food === 'Pap and Wors'
-                          ? '🌭'
-                          : '•••'}
-                  </span>
-                  <span className={styles.choiceLabel}>{food}</span>
-                  <input
-                    type="checkbox"
-                    value={food}
-                    className={styles.choiceInput}
-                    {...register('foods')}
-                  />
-                  <span className={styles.choiceBox} aria-hidden="true" />
-                </label>
-              ))}
+            <TextField<SurveyFormValues>
+              id="email"
+              label="Email"
+              type="email"
+              placeholder="you@example.com"
+              register={register}
+              error={errors.email}
+              required
+              autoComplete="email"
+              icon={<MailIcon />}
+            />
+
+            <TextField<SurveyFormValues>
+              id="contactNumber"
+              label="Contact Number"
+              type="tel"
+              placeholder="+1 (234) 567-8900"
+              register={register}
+              error={errors.contactNumber}
+              required
+              autoComplete="tel"
+              icon={<PhoneIcon />}
+            />
+
+            <TextField<SurveyFormValues>
+              id="dateOfBirth"
+              label="Date of Birth"
+              type="date"
+              register={register}
+              error={errors.dateOfBirth}
+              required
+              autoComplete="bday"
+              icon={<CalendarIcon />}
+            />
+          </div>
+        </section>
+
+        <section className={styles.sectionCard}>
+          <div className={styles.sectionHeaderCompact}>
+            <div className={styles.sectionIcon} aria-hidden="true">
+              <ForkIcon className={styles.sectionIconSvg} />
             </div>
-            <InlineError message={errors.foods?.message || ''} />
-          </section>
-        </div>
+            <div>
+              <h2 className={styles.sectionTitle}>Preferences</h2>
+              <p className={styles.sectionSubtitle}>
+                Tell us about your favorites.
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.questionTitle}>
+            What is your favorite food?
+          </div>
+
+          <div className={styles.choiceGrid}>
+            {FOOD_OPTIONS.map((food) => (
+              <label key={food} className={styles.choiceCard}>
+                <span className={styles.choiceEmoji} aria-hidden="true">
+                  {food === 'Pizza'
+                    ? '🍕'
+                    : food === 'Pasta'
+                      ? '🍝'
+                      : food === 'Pap and Wors'
+                        ? '🌭'
+                        : '•••'}
+                </span>
+                <span className={styles.choiceLabel}>{food}</span>
+                <input
+                  type="checkbox"
+                  value={food}
+                  className={styles.choiceInput}
+                  {...register('foods')}
+                />
+                <span className={styles.choiceBox} aria-hidden="true" />
+              </label>
+            ))}
+          </div>
+          <InlineError message={errors.foods?.message || ''} />
+        </section>
 
         <section className={styles.sectionCard}>
           <div className={styles.sectionHeaderCompact}>
@@ -255,60 +253,68 @@ export default function SurveyForm() {
             <div>
               <h2 className={styles.sectionTitle}>Rate Your Preferences</h2>
               <p className={styles.sectionSubtitle}>
-                Please rate your level of agreement from Strongly Agree to
-                Strongly Disagree.
+                Please rate your level of agreement on a scale from 1 (Strongly
+                Agree) to 5 (Strongly Disagree).
               </p>
             </div>
           </div>
 
-          <div className={styles.ratingGrid}>
-            <div className={styles.ratingScaleGuide}>
-              <div className={styles.scaleItem}>
-                <span className={styles.scaleNumber}>5</span>
-                <span className={styles.scaleLabel}>Strongly Agree</span>
-              </div>
-              <div className={styles.scaleItem}>
-                <span className={styles.scaleNumber}>4</span>
-                <span className={styles.scaleLabel}>Agree</span>
-              </div>
-              <div className={styles.scaleItem}>
-                <span className={styles.scaleNumber}>3</span>
-                <span className={styles.scaleLabel}>Neutral</span>
-              </div>
-              <div className={styles.scaleItem}>
-                <span className={styles.scaleNumber}>2</span>
-                <span className={styles.scaleLabel}>Disagree</span>
-              </div>
-              <div className={styles.scaleItem}>
-                <span className={styles.scaleNumber}>1</span>
-                <span className={styles.scaleLabel}>Strongly Disagree</span>
-              </div>
-            </div>
-
-            <RatingRow
-              label="I like to watch movies"
-              fieldName="ratingMovies"
-              register={register}
-              error={errors.ratingMovies?.message}
-            />
-            <RatingRow
-              label="I like to listen to radio"
-              fieldName="ratingRadio"
-              register={register}
-              error={errors.ratingRadio?.message}
-            />
-            <RatingRow
-              label="I like to eat out"
-              fieldName="ratingEatOut"
-              register={register}
-              error={errors.ratingEatOut?.message}
-            />
-            <RatingRow
-              label="I like to watch TV"
-              fieldName="ratingTV"
-              register={register}
-              error={errors.ratingTV?.message}
-            />
+          <div className={styles.tableWrap}>
+            <table className={styles.ratingTable}>
+              <thead>
+                <tr>
+                  <th className={styles.headLabel}>
+                    <div>Statement</div>
+                  </th>
+                  <th className={styles.headCell}>
+                    <span>Strongly Agree</span>
+                    <small>5</small>
+                  </th>
+                  <th className={styles.headCell}>
+                    <span>Agree</span>
+                    <small>4</small>
+                  </th>
+                  <th className={styles.headCell}>
+                    <span>Neutral</span>
+                    <small>3</small>
+                  </th>
+                  <th className={styles.headCell}>
+                    <span>Disagree</span>
+                    <small>2</small>
+                  </th>
+                  <th className={styles.headCell}>
+                    <span>Strongly Disagree</span>
+                    <small>1</small>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <RatingRow
+                  label="I like to watch movies"
+                  fieldName="ratingMovies"
+                  register={register}
+                  error={errors.ratingMovies?.message}
+                />
+                <RatingRow
+                  label="I like to listen to radio"
+                  fieldName="ratingRadio"
+                  register={register}
+                  error={errors.ratingRadio?.message}
+                />
+                <RatingRow
+                  label="I like to eat out"
+                  fieldName="ratingEatOut"
+                  register={register}
+                  error={errors.ratingEatOut?.message}
+                />
+                <RatingRow
+                  label="I like to watch TV"
+                  fieldName="ratingTV"
+                  register={register}
+                  error={errors.ratingTV?.message}
+                />
+              </tbody>
+            </table>
           </div>
         </section>
 
@@ -318,7 +324,7 @@ export default function SurveyForm() {
             className={styles.submitButton}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Submitting…' : 'Submit Survey'}
+            {isSubmitting ? 'Submitting…' : 'Submit'}
           </button>
         </div>
       </form>

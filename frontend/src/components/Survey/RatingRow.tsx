@@ -14,13 +14,13 @@ function RatingRow({ label, fieldName, register, error }: RatingRowProps) {
   const values = [5, 4, 3, 2, 1];
 
   return (
-    <div className={styles.ratingCard}>
-      <div className={styles.statementLabel}>{label}</div>
-      <div className={styles.ratingOptions}>
-        {values.map((value) => {
-          const id = `${String(fieldName)}-${value}`;
-          return (
-            <label key={value} className={styles.ratingOption}>
+    <tr className={styles.ratingTableRow}>
+      <td className={styles.statementCell}>{label}</td>
+      {values.map((value) => {
+        const id = `${String(fieldName)}-${value}`;
+        return (
+          <td key={value} className={styles.ratingCell}>
+            <label className={styles.ratingOption}>
               <input
                 id={id}
                 type="radio"
@@ -32,19 +32,12 @@ function RatingRow({ label, fieldName, register, error }: RatingRowProps) {
                   error ? `${String(fieldName)}-error` : undefined
                 }
               />
-              <span className={styles.optionButton} aria-hidden="true">
-                {value}
-              </span>
+              <span className={styles.optionButton} aria-hidden="true" />
             </label>
-          );
-        })}
-      </div>
-      {error && (
-        <div id={`${String(fieldName)}-error`} className={styles.errorText}>
-          {error}
-        </div>
-      )}
-    </div>
+          </td>
+        );
+      })}
+    </tr>
   );
 }
 

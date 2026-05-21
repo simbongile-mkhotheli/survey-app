@@ -12,13 +12,13 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(9, 14, 31, 0.45);
-  backdrop-filter: blur(6px);
+  background: rgba(9, 14, 31, 0.48);
+  backdrop-filter: blur(8px);
 }
 
 .spinner {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border: 3px solid rgba(255, 255, 255, 0.45);
   border-top-color: #5b5ce2;
   border-radius: 999px;
@@ -28,7 +28,7 @@
 .text {
   margin: 0;
   color: #68708a;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 0.98rem;
 }
 
