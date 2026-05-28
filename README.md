@@ -1,108 +1,59 @@
 # Lifestyle Survey App
 
-A simple full-stack survey application with a React frontend and an Express + Prisma backend.
+A small full-stack survey application with a React frontend and an Express + Prisma backend.
 
-## What’s included
+## Stack
 
-- Frontend built with React, Vite, TypeScript, and Zod
-- Backend built with Express, Prisma, PostgreSQL, and TypeScript
-- Shared validation helpers and API response handling
-- Basic survey submission and results views
+- Frontend: React, Vite, TypeScript, React Hook Form, React Query, Zod
+- Backend: Express, Prisma, PostgreSQL, TypeScript, Zod
+- Shared validation between frontend and backend
 
-## Project structure
+## Project Structure
 
 ```text
-├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── errors/
-│   │   ├── interfaces/
-│   │   ├── middleware/
-│   │   ├── repositories/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── test/
-│   │   ├── types/
-│   │   ├── utils/
-│   │   ├── validation/
-│   │   ├── container.ts
-│   │   └── server.ts
-│   ├── prisma/
-│   └── package.json
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── config/
-│   │   ├── hooks/
-│   │   ├── services/
-│   │   ├── store/
-│   │   ├── test/
-│   │   ├── types/
-│   │   ├── utils/
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   └── package.json
-└── README.md
+backend/
+  prisma/
+  src/
+    controllers/
+    middleware/
+    repositories/
+    routes/
+    utils/
+    validation/
+frontend/
+  src/
+    components/
+    config/
+    hooks/
+    services/
+    utils/
+shared/
+  validation.ts
 ```
 
-## Prerequisites
-
-- Node.js
-- PostgreSQL
-- npm
-
 ## Setup
-
-Install dependencies from the repo root:
 
 ```bash
 npm install
 ```
 
-### Environment files
-
-Copy the example env files and update them for your local setup:
+Copy the example environment files and update them for your machine:
 
 ```bash
-cd backend
-cp .env.example .env
-
-cd ../frontend
-cp .env.example .env
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 ```
 
-Make sure the frontend API URL points to your backend.
-
-## Running locally
-
-Start the backend:
+## Run Locally
 
 ```bash
 npm run dev --workspace backend
-```
-
-Start the frontend in a second terminal:
-
-```bash
 npm run dev --workspace frontend
 ```
 
-## Building
-
-Build the backend:
+## Checks
 
 ```bash
-npm run build --workspace backend
+npm run typecheck
+npm run lint
 ```
-
-Build the frontend:
-
-```bash
-npm run build --workspace frontend
-```
-
-## Notes
-
-- The project is intentionally kept basic and easy to follow
-- The backend uses a small service/repository structure
-- The frontend uses simple React components and shared form validation

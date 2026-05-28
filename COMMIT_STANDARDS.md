@@ -48,18 +48,13 @@ Must be one of:
   - Example: `perf(results): memoize expensive calculation in Results component`
   - Does NOT trigger version bump
 
-- **test**: Adding or updating tests
-
-  - Example: `test: add comprehensive validation tests for SurveyForm`
-  - Does NOT trigger version bump
-
 - **chore**: Changes to build process, dependencies, tooling (not production code)
 
   - Example: `chore: update eslint configuration`
   - Does NOT trigger version bump
 
 - **ci**: Changes to CI/CD configuration
-  - Example: `ci: add code coverage threshold to GitHub Actions`
+  - Example: `ci: add deployment workflow to GitHub Actions`
   - Does NOT trigger version bump
 
 ### 2. Scope (Optional but Recommended)
@@ -83,13 +78,11 @@ Specifies what part of the codebase is affected:
 - `config` - Configuration files
 - `monorepo` - Monorepo structure
 - `deps` - Dependencies management
-- `tests` - Test infrastructure
 
 **Examples:**
 
 - `feat(survey): add survey export feature`
 - `fix(form): handle empty food selection validation`
-- `test(results): add performance optimization tests`
 
 ### 3. Subject (Required)
 
@@ -237,7 +230,6 @@ feat(kubelet): allow recovery from container logs rotation
 
 - `feat(survey): add survey creation form`
 - `fix(validation): handle null phone numbers correctly`
-- `test(form): add comprehensive validation test suite`
 - `refactor(cache): extract invalidation logic to utility function`
 
 ## Semantic Versioning Connection
@@ -268,7 +260,6 @@ feat(scope): description          # New feature
 fix(scope): description           # Bug fix
 refactor(scope): description      # Code refactoring
 perf(scope): description          # Performance improvement
-test(scope): description          # Tests added/updated
 docs: description                 # Documentation
 style: description                # Formatting (no code change)
 chore: description                # Build/tooling/dependencies

@@ -21,7 +21,6 @@ npm run dev
 1. **Verify Everything Works**
 
 ```bash
-npm run test
 npm run lint
 npm run typecheck
 ```
@@ -37,8 +36,6 @@ git checkout -b feat/your-feature-name
 ### Make Changes
 
 - Follow coding standards (TypeScript strict, ESLint rules)
-- Write tests for new features
-- Ensure all tests pass: `npm run test`
 
 ### Commit Changes
 
@@ -70,13 +67,6 @@ git commit -m "docs: description"
 - Always use path aliases: `@/components`, `@/services`
 - Never use relative imports: `../../`
 
-### Testing
-
-- Write tests for new code
-- Maintain ≥95% coverage
-- Use mocks for dependencies
-- Run tests locally before commit: `npm run test`
-
 ### Formatting
 
 - ESLint auto-fixes: `npm run lint:fix`
@@ -93,7 +83,6 @@ Quick reference:
 - `fix(scope): fix bug` → Patch version bump
 - `docs: update docs` → No version change
 - `refactor(scope): improve code` → No version change
-- `test: add tests` → No version change
 
 ## Questions?
 
