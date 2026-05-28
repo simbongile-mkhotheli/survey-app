@@ -40,6 +40,7 @@ function RatingRow({ label, fieldName, register, error }: RatingRowProps) {
                 aria-describedby={error ? errorId : undefined}
               />
               <span className={styles.optionButton} aria-hidden="true" />
+              <span className={styles.mobileOptionLabel}>{option.value}</span>
             </label>
           </td>
         );

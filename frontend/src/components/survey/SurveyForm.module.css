@@ -155,18 +155,17 @@
 }
 
 .tableWrap {
-  overflow-x: auto;
+  overflow: visible;
   border-radius: 18px;
   border: 1px solid #e4e8f4;
   background: #fff;
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
-  -webkit-overflow-scrolling: touch;
 }
 
 .ratingTable {
   width: 100%;
-  min-width: 650px;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .ratingTable thead th {
@@ -197,7 +196,7 @@
 }
 
 .headCell {
-  min-width: 72px;
+  width: 13.6%;
 }
 
 .headCell span,
@@ -281,6 +280,41 @@
     min-width: 260px;
     min-height: 56px;
     padding: 0 28px;
+  }
+}
+
+@media (max-width: 719px) {
+  .tableWrap {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .ratingTable,
+  .ratingTable thead,
+  .ratingTable tbody,
+  .ratingTable td {
+    display: block;
+    width: 100%;
+  }
+
+  .ratingTable thead {
+    display: none;
+  }
+
+  .ratingTable tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  .ratingTable tbody td {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .headLabel,
+  .headCell {
+    width: auto;
   }
 }
 

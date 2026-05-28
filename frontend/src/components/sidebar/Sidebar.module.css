@@ -1,18 +1,21 @@
 .sidebar {
-  height: 100%;
-  padding: 28px 18px 22px;
+  height: auto;
+  min-height: 0;
+  padding: 12px;
+  border-radius: 0 0 22px 22px;
   background: linear-gradient(180deg, #4d5ee8 0%, #474ccf 34%, #4336b1 100%);
   color: #fff;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 12px;
+  box-shadow: 0 14px 34px rgba(31, 37, 105, 0.22);
 }
 
 .brandRow {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 2px 6px 10px;
+  padding: 2px 4px;
 }
 
 .brandIcon {
@@ -39,15 +42,16 @@
 
 .menu {
   display: grid;
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .navItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-height: 74px;
-  padding: 14px 15px;
+  gap: 10px;
+  min-height: 56px;
+  padding: 10px;
   border-radius: 14px;
   text-decoration: none;
   color: rgba(255, 255, 255, 0.84);
@@ -67,8 +71,8 @@
 }
 
 .itemIcon {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   flex: 0 0 auto;
   border-radius: 12px;
   display: grid;
@@ -94,22 +98,23 @@
 }
 
 .itemTitle {
-  font-size: 0.98rem;
+  font-size: 0.92rem;
   font-weight: 800;
   line-height: 1.1;
 }
 
 .itemSubtitle {
+  display: none;
   font-size: 0.86rem;
   line-height: 1.2;
   color: rgba(237, 240, 255, 0.74);
 }
 
 .footerCard {
+  display: none;
   margin-top: auto;
   border-radius: 18px;
   padding: 18px 16px 18px 14px;
-  display: flex;
   align-items: flex-start;
   gap: 14px;
   background: linear-gradient(
@@ -187,14 +192,46 @@
   line-height: 1.45;
 }
 
-@media (max-width: 920px) {
+@media (min-width: 480px) {
+  .itemSubtitle {
+    display: block;
+  }
+}
+
+@media (min-width: 960px) {
   .sidebar {
-    height: auto;
-    min-height: 0;
-    border-radius: 0 0 24px 24px;
+    height: 100%;
+    padding: 28px 18px 22px;
+    border-radius: 0;
+    gap: 22px;
+    box-shadow: none;
+  }
+
+  .brandRow {
+    padding: 2px 6px 10px;
+  }
+
+  .menu {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .navItem {
+    gap: 12px;
+    min-height: 74px;
+    padding: 14px 15px;
+  }
+
+  .itemIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .itemTitle {
+    font-size: 0.98rem;
   }
 
   .footerCard {
-    display: none;
+    display: flex;
   }
 }
