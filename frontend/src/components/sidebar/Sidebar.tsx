@@ -1,11 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { ChartIcon, ClipboardIcon } from '@/components/icons';
-import styles from './Nav.module.css';
-
-export const ROUTES = {
-  HOME: '/' as const,
-  RESULTS: '/results' as const,
-} as const;
+import { ROUTES } from '@/constants/routes';
+import styles from './Sidebar.module.css';
 
 function FeedbackIllustration() {
   return (
@@ -20,7 +16,7 @@ function FeedbackIllustration() {
   );
 }
 
-export default function Nav() {
+export default function Sidebar() {
   return (
     <nav className={styles.sidebar} aria-label="Main navigation">
       <div className={styles.brandRow}>

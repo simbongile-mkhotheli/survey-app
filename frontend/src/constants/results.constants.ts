@@ -2,13 +2,12 @@ export const RESULTS_LABELS = {
   HEADING: 'Survey Results',
   PIZZA_PREFERENCE: '🍕 Percentage who like Pizza',
   PASTA_PREFERENCE: '🍝 Percentage who like Pasta',
-  PAP_WORS_PREFERENCE: '🍖 Percentage who like Pap and Wors',
+  PAP_WORS_PREFERENCE: '🌭 Percentage who like Pap and Wors',
   MOVIES_RATING: '🎬 I like to watch movies',
   RADIO_RATING: '📻 I like to listen to radio',
   EATOUT_RATING: '🍽️ I like to eat out',
   TV_RATING: '📺 I like to watch TV',
 } as const;
-
 export const RESULTS_LOADING = {
   MESSAGE: 'Loading survey results...',
 } as const;

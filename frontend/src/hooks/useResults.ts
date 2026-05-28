@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import type { UseQueryOptions } from '@tanstack/react-query';
 
-import { fetchResults } from '@/services/api';
-import type { ResultsData } from '@/services/api';
-
-const resultsQueryKey = ['results'] as const;
+import { queryKeys } from '@/constants/queryKeys';
+import { fetchResults } from '@/services/resultsService';
+import type { ResultsData } from '@/services/resultsService';
 
 export function useResults(
   options?: Omit<
@@ -13,7 +12,7 @@ export function useResults(
   >,
 ) {
   return useQuery<ResultsData>({
-    queryKey: resultsQueryKey,
+    queryKey: queryKeys.results,
     queryFn: fetchResults,
     ...options,
   });
