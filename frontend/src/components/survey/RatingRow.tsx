@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 import type { SurveyFormValues } from '@/validation';
-import { RATING_OPTIONS } from './SurveyForm.constants';
+import { RATING_OPTIONS } from '@/constants/survey.constants';
 import styles from './RatingRow.module.css';
 
 interface RatingRowProps {

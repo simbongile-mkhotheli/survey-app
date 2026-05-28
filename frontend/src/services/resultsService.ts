@@ -1,28 +1,6 @@
-import axios from 'axios';
-import { formToPayload, type SurveyFormValues } from '@/validation';
-import { config } from '@/config/env';
 import { unwrapResponse } from '@/utils/response';
 import type { ApiResponse } from '@/utils/response';
-
-const apiClient = axios.create({
-  baseURL: config.apiUrl,
-  timeout: config.apiTimeout,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-export async function submitSurvey(
-  data: SurveyFormValues,
-): Promise<{ id: number }> {
-  const payload = formToPayload(data);
-
-  const response = await apiClient.post<ApiResponse<{ id: number }>>(
-    '/api/survey',
-    payload,
-  );
-  return unwrapResponse(response.data);
-}
+import { apiClient } from './apiClient';
 
 export type ResultsData = {
   totalCount: number;
