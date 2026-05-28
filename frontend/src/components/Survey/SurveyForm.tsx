@@ -10,13 +10,12 @@ import {
   StarIcon,
   UserIcon,
 } from '@/components/icons';
-import { Loading, ErrorMessage, InlineError, TextField } from '@/components/ui';
+import { ErrorMessage, InlineError, Loading, TextField } from '@/components/ui';
 import { submitSurvey } from '@/services/api';
-import { SurveySchema } from '@/validation';
-import type { SurveyFormValues } from '@/validation';
+import { SurveySchema, type SurveyFormValues } from '@/validation';
 
 import RatingRow from './RatingRow';
-import { FOOD_OPTIONS } from './SurveyForm.constants';
+import { FOOD_OPTIONS, RATING_OPTIONS } from './SurveyForm.constants';
 import styles from './SurveyForm.module.css';
 import { formatErrorMessage } from './SurveyForm.utils';
 
@@ -27,10 +26,17 @@ const defaultValues: SurveyFormValues = {
   contactNumber: '',
   dateOfBirth: '',
   foods: [],
-  ratingMovies: undefined,
-  ratingRadio: undefined,
-  ratingEatOut: undefined,
-  ratingTV: undefined,
+  ratingMovies: '',
+  ratingRadio: '',
+  ratingEatOut: '',
+  ratingTV: '',
+};
+
+const foodBadge = (food: string) => {
+  if (food === 'Pizza') return '🍕';
+  if (food === 'Pasta') return '🍝';
+  if (food === 'Pap and Wors') return '🍖';
+  return '...';
 };
 
 export default function SurveyForm() {
@@ -223,13 +229,7 @@ export default function SurveyForm() {
             {FOOD_OPTIONS.map((food) => (
               <label key={food} className={styles.choiceCard}>
                 <span className={styles.choiceEmoji} aria-hidden="true">
-                  {food === 'Pizza'
-                    ? '🍕'
-                    : food === 'Pasta'
-                      ? '🍝'
-                      : food === 'Pap and Wors'
-                        ? '🌭'
-                        : '•••'}
+                  {foodBadge(food)}
                 </span>
                 <span className={styles.choiceLabel}>{food}</span>
                 <input
@@ -254,7 +254,7 @@ export default function SurveyForm() {
               <h2 className={styles.sectionTitle}>Rate Your Preferences</h2>
               <p className={styles.sectionSubtitle}>
                 Please rate your level of agreement on a scale from 1 (Strongly
-                Agree) to 5 (Strongly Disagree).
+                Disagree) to 5 (Strongly Agree).
               </p>
             </div>
           </div>
@@ -266,26 +266,12 @@ export default function SurveyForm() {
                   <th className={styles.headLabel}>
                     <div>Statement</div>
                   </th>
-                  <th className={styles.headCell}>
-                    <span>Strongly Agree</span>
-                    <small>5</small>
-                  </th>
-                  <th className={styles.headCell}>
-                    <span>Agree</span>
-                    <small>4</small>
-                  </th>
-                  <th className={styles.headCell}>
-                    <span>Neutral</span>
-                    <small>3</small>
-                  </th>
-                  <th className={styles.headCell}>
-                    <span>Disagree</span>
-                    <small>2</small>
-                  </th>
-                  <th className={styles.headCell}>
-                    <span>Strongly Disagree</span>
-                    <small>1</small>
-                  </th>
+                  {RATING_OPTIONS.map((option) => (
+                    <th key={option.value} className={styles.headCell}>
+                      <span>{option.label}</span>
+                      <small>{option.value}</small>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -324,7 +310,7 @@ export default function SurveyForm() {
             className={styles.submitButton}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Submitting…' : 'Submit'}
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
         </div>
       </form>

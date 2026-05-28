@@ -89,7 +89,7 @@ function DesktopRail(): React.ReactNode {
           <SparkIcon className={styles.railHeroIcon} />
         </div>
         <h2 className={styles.railHeroTitle}>
-          {isResults ? 'Insights are ready.' : 'Let’s finish strong!'}
+          {isResults ? 'Insights are ready.' : "Let's finish strong!"}
         </h2>
         <p className={styles.railHeroText}>
           {isResults
@@ -123,7 +123,7 @@ function DesktopRail(): React.ReactNode {
               </span>
 
               <span className={styles.railActionArrow} aria-hidden="true">
-                →
+                -&gt;
               </span>
             </NavLink>
           ))}

@@ -1,1 +1,1 @@
-export { useResults, useSubmitSurvey } from './useQuery';
+export { useResults } from './useQuery';

@@ -14,7 +14,7 @@ function FeedbackIllustration() {
         <ClipboardIcon className={styles.footerIllustrationIcon} />
       </div>
       <div className={styles.footerIllustrationBadge}>
-        <span className={styles.footerIllustrationCheck}>✓</span>
+        <span className={styles.footerIllustrationCheck}>OK</span>
       </div>
     </div>
   );

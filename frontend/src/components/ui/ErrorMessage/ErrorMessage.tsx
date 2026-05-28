@@ -27,18 +27,19 @@ export function ErrorMessage({
   const containerClasses = [styles.container, styles[severity], className]
     .filter(Boolean)
     .join(' ');
-
   const icon =
     severity === 'warning'
-      ? '⚠️'
+      ? '!'
       : severity === 'info'
-        ? 'ℹ️'
+        ? 'i'
         : severity === 'success'
-          ? '✅'
-          : '❌';
+          ? 'ok'
+          : 'x';
+  const liveRole =
+    severity === 'error' || severity === 'warning' ? 'alert' : 'status';
 
   return (
-    <div className={containerClasses}>
+    <div className={containerClasses} role={liveRole} aria-live="polite">
       <div className={styles.content}>
         <div className={styles.header}>
           <span className={styles.icon} aria-hidden="true">
@@ -94,7 +95,7 @@ export function InlineError({ message, className = '', id }: InlineErrorProps) {
       aria-live="polite"
     >
       <span className={styles.inlineIcon} aria-hidden="true">
-        ⚠️
+        !
       </span>
       <span className={styles.inlineMessage}>{message}</span>
     </div>

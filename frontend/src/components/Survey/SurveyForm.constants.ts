@@ -1,8 +1,3 @@
-/**
- * SurveyForm Constants
- * Minimal configuration needed for the form
- */
-
 export const FOOD_OPTIONS = [
   'Pizza',
   'Pasta',
@@ -10,10 +5,10 @@ export const FOOD_OPTIONS = [
   'Other',
 ] as const;
 
-export const RATING_SCALE_LABELS = [
-  'Strongly Agree',
-  'Agree',
-  'Neutral',
-  'Disagree',
-  'Strongly Disagree',
+export const RATING_OPTIONS = [
+  { value: '1', label: 'Strongly Disagree' },
+  { value: '2', label: 'Disagree' },
+  { value: '3', label: 'Neutral' },
+  { value: '4', label: 'Agree' },
+  { value: '5', label: 'Strongly Agree' },
 ] as const;

@@ -7,8 +7,6 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run --config vitest.config.ts",
-    "test:watch": "vitest --config vitest.config.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --quiet"
   },
@@ -16,21 +14,14 @@
     "@hookform/resolvers": "^5.0.1",
     "@tanstack/react-query": "^5.90.10",
     "axios": "^1.9.0",
-    "immer": "^10.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.57.0",
     "react-router-dom": "^6.30.1",
-    "zod": "^4.1.12",
-    "zustand": "^5.0.5"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@faker-js/faker": "^10.1.0",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.0.2",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.6.0",
     "@types/node": "^24.10.0",
     "@types/react": "^18.2.26",
     "@types/react-dom": "^18.2.10",
@@ -39,16 +30,13 @@
     "@vitejs/plugin-react": "^4.4.1",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "^5.4.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.5.0",
-    "jsdom": "^22.1.0",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vitest": "^1.4.7"
+    "vite": "^6.3.5"
   }
 }
