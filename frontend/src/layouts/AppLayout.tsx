@@ -30,18 +30,6 @@ function AppHeader() {
           </p>
         </div>
       </div>
-
-      <div className={styles.headerMeta}>
-        <div className={styles.progressBlock} aria-label="Survey progress">
-          <div className={styles.progressLabelRow}>
-            <span className={styles.progressLabel}>Step 1 of 3</span>
-          </div>
-
-          <div className={styles.progressTrack} aria-hidden="true">
-            <span className={styles.progressFill} />
-          </div>
-        </div>
-      </div>
     </header>
   );
 }
