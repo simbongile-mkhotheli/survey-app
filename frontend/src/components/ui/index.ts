@@ -1,3 +1,3 @@
 export { Loading } from './Loading/Loading';
 export { ErrorMessage, InlineError } from './ErrorMessage/ErrorMessage';
-export { TextField } from './TextField';
+export { default as TextField } from './TextField/TextField';

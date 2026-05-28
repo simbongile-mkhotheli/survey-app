@@ -14,7 +14,7 @@ const parseEnv = () => {
   }
 };
 
-export const env = parseEnv();
+const env = parseEnv();
 
 export const config = {
   apiUrl: env.VITE_API_URL,
