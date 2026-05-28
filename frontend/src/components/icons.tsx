@@ -81,19 +81,6 @@ export function ChartIcon(props: IconProps) {
   );
 }
 
-export function BookmarkIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <path
-        d="M7 4.5A2.5 2.5 0 0 1 9.5 2h5A2.5 2.5 0 0 1 17 4.5v17l-4.5-3-4.5 3v-17Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-    </IconBase>
-  );
-}
-
 export function UserIcon(props: IconProps) {
   return (
     <IconBase {...props}>
@@ -183,16 +170,6 @@ export function ForkIcon(props: IconProps) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </IconBase>
-  );
-}
-
-export function DotsIcon(props: IconProps) {
-  return (
-    <IconBase {...props}>
-      <circle cx="6.5" cy="12" r="1.2" fill="currentColor" />
-      <circle cx="12" cy="12" r="1.2" fill="currentColor" />
-      <circle cx="17.5" cy="12" r="1.2" fill="currentColor" />
     </IconBase>
   );
 }

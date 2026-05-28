@@ -16,6 +16,14 @@
   line-height: 1.35;
 }
 
+.rowError {
+  display: block;
+  margin-top: 6px;
+  color: #b42318;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .ratingCell {
   padding: 10px 6px;
   text-align: center;

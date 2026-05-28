@@ -1,14 +1,5 @@
-/**
- * Results Display Constants
- * Labels and UI text for Results component
- */
-
 export const RESULTS_LABELS = {
   HEADING: 'Survey Results',
-  TOTAL_SURVEYS: 'Total number of surveys',
-  AVERAGE_AGE: 'Average Age',
-  OLDEST_PARTICIPANT: 'Oldest person who participated',
-  YOUNGEST_PARTICIPANT: 'Youngest person who participated',
   PIZZA_PREFERENCE: '🍕 Percentage who like Pizza',
   PASTA_PREFERENCE: '🍝 Percentage who like Pasta',
   PAP_WORS_PREFERENCE: '🍖 Percentage who like Pap and Wors',
@@ -30,5 +21,5 @@ export const RESULTS_ERROR = {
 export const RESULTS_EMPTY = {
   TITLE: 'No Data',
   MESSAGE:
-    'No survey responses available yet. Be the first to submit a survey!',
+    'No survey responses available yet. Be the first to submit a survey.',
 } as const;

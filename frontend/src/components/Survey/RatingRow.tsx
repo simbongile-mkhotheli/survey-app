@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 import type { SurveyFormValues } from '@/validation';
+import { RATING_OPTIONS } from './SurveyForm.constants';
 import styles from './RatingRow.module.css';
 
 interface RatingRowProps {
@@ -11,26 +12,32 @@ interface RatingRowProps {
 }
 
 function RatingRow({ label, fieldName, register, error }: RatingRowProps) {
-  const values = [5, 4, 3, 2, 1];
+  const errorId = `${String(fieldName)}-error`;
 
   return (
     <tr className={styles.ratingTableRow}>
-      <td className={styles.statementCell}>{label}</td>
-      {values.map((value) => {
-        const id = `${String(fieldName)}-${value}`;
+      <td className={styles.statementCell}>
+        <span>{label}</span>
+        {error && (
+          <span id={errorId} className={styles.rowError}>
+            {error}
+          </span>
+        )}
+      </td>
+      {RATING_OPTIONS.map((option) => {
+        const id = `${String(fieldName)}-${option.value}`;
         return (
-          <td key={value} className={styles.ratingCell}>
+          <td key={option.value} className={styles.ratingCell}>
             <label className={styles.ratingOption}>
               <input
                 id={id}
                 type="radio"
-                {...register(fieldName, { setValueAs: (v) => Number(v) })}
-                value={String(value)}
+                {...register(fieldName)}
+                value={option.value}
                 className={styles.radioInput}
+                aria-label={`${label}: ${option.label}`}
                 aria-invalid={Boolean(error)}
-                aria-describedby={
-                  error ? `${String(fieldName)}-error` : undefined
-                }
+                aria-describedby={error ? errorId : undefined}
               />
               <span className={styles.optionButton} aria-hidden="true" />
             </label>

@@ -5,7 +5,7 @@ import type {
   Path,
 } from 'react-hook-form';
 import type { ReactNode } from 'react';
-import { InlineError } from '@/components/ui';
+import { InlineError } from '@/components/ui/ErrorMessage/ErrorMessage';
 import styles from './TextField.module.css';
 
 interface TextFieldProps<T extends FieldValues = FieldValues> {
