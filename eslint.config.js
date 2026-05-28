@@ -11,7 +11,6 @@ export default [
       '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
-      '**/coverage/**',
       '**/.husky/**',
       '**/prisma/migrations/**',
       '**/scripts/**',

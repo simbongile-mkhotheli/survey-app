@@ -2,6 +2,7 @@
   "name": "survey-app",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "workspaces": [
     "backend",
     "frontend"
@@ -12,7 +13,6 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "typecheck": "npm run typecheck --workspaces",
-    "test": "npm run test --workspaces",
     "prepare": "husky || true"
   },
   "dependencies": {
