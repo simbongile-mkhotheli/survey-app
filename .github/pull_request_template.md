@@ -1,6 +1,6 @@
 ## Summary
 
-What does this PR do?
+What changed, and why?
 
 ## Changes
 
@@ -8,16 +8,21 @@ What does this PR do?
 -
 -
 
-## Reason
+## Verification
 
-Why was this change needed?
+- [ ] `npm run typecheck`
+- [ ] `npm run lint --workspace frontend`
+- [ ] `npm run build --workspace frontend`
+- [ ] Manual submit/results flow checked when relevant
 
-## Impact
+## Supabase Impact
 
-Any breaking changes or side effects?
+- [ ] No Supabase changes
+- [ ] SQL changes included in `supabase/schema.sql`
+- [ ] RLS/policy impact reviewed
 
 ## Checklist
 
-- [ ] Code builds
-- [ ] Self-reviewed
+- [ ] Documentation updated when behavior/setup changed
+- [ ] No secrets or service-role keys committed
 - [ ] No unrelated changes
