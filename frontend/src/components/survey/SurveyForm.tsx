@@ -34,6 +34,7 @@ export default function SurveyForm() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting: isFormSubmitting },
     reset,
   } = useForm<SurveyFormValues>({
@@ -123,7 +124,11 @@ export default function SurveyForm() {
       >
         <PersonalDetailsSection register={register} errors={errors} />
         <FoodPreferencesSection register={register} errors={errors} />
-        <RatingPreferencesSection register={register} errors={errors} />
+        <RatingPreferencesSection
+          register={register}
+          watch={watch}
+          errors={errors}
+        />
 
         <div className={styles.submitWrap}>
           <button

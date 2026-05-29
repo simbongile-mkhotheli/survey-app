@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { UseFormRegister } from 'react-hook-form';
+import type { UseFormRegister, UseFormWatch } from 'react-hook-form';
 import type { SurveyFormValues } from '@/validation';
 import { RATING_OPTIONS } from '@/constants/survey.constants';
 import styles from './RatingRow.module.css';
@@ -8,11 +8,19 @@ interface RatingRowProps {
   label: string;
   fieldName: keyof SurveyFormValues;
   register: UseFormRegister<SurveyFormValues>;
+  watch: UseFormWatch<SurveyFormValues>;
   error?: string;
 }
 
-function RatingRow({ label, fieldName, register, error }: RatingRowProps) {
+function RatingRow({
+  label,
+  fieldName,
+  register,
+  watch,
+  error,
+}: RatingRowProps) {
   const errorId = `${String(fieldName)}-error`;
+  const selectedValue = watch(fieldName);
 
   return (
     <tr className={styles.ratingTableRow}>
@@ -34,6 +42,7 @@ function RatingRow({ label, fieldName, register, error }: RatingRowProps) {
                 type="radio"
                 {...register(fieldName)}
                 value={option.value}
+                checked={selectedValue === option.value}
                 className={styles.radioInput}
                 aria-label={`${label}: ${option.label}`}
                 aria-invalid={Boolean(error)}

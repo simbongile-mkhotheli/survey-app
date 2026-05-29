@@ -12,7 +12,6 @@ node_modules/
 .env
 .env.local
 .env.*.local
-backend/.env.test
 
 # Docker
 docker-compose.override.yml
@@ -24,7 +23,6 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-backend/logs/
 
 # Testing
 coverage/
@@ -46,7 +44,6 @@ Thumbs.db
 
 # Private files (do not push to GitHub)
 .github/workflows/test.yml
-backend/TEST_DATABASE_SETUP.md
 
 # Git commit messages
 .git-commit-message.txt
@@ -58,7 +55,6 @@ backend/TEST_DATABASE_SETUP.md
 !CONTRIBUTING.md
 !COMMIT_STANDARDS.md
 frontend/*.md
-backend/*.md
 scripts/*.md
 monitoring/*.md
 shared/*.md
