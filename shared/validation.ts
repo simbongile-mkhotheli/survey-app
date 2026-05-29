@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 // Security: Prevent XSS and injection attacks
 const sanitizeString = (val: string) => val.trim().replace(/[<>]/g, '');
+const sanitizeContactNumber = (val: string) =>
+  val.trim().replace(/[\s()-]/g, '');
 
 // Security: Maximum lengths to prevent DOS attacks
 const MAX_NAME_LENGTH = 100;
@@ -64,8 +66,13 @@ const baseFields = {
     .trim(),
   contactNumber: z
     .string()
-    .regex(/^\+?\d{10,15}$/, 'Invalid contact number')
-    .max(MAX_PHONE_LENGTH, 'Contact number too long'),
+    .transform(sanitizeContactNumber)
+    .pipe(
+      z
+        .string()
+        .regex(/^\+?\d{10,15}$/, 'Invalid contact number')
+        .max(MAX_PHONE_LENGTH, 'Contact number too long'),
+    ),
   dateOfBirth: z.string().refine(validateAgeString, {
     message: 'Date of birth must correspond to an age between 5 and 120 years',
   }),

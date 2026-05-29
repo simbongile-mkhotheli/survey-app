@@ -1,4 +1,8 @@
-import type { FieldErrors, UseFormRegister } from 'react-hook-form';
+import type {
+  FieldErrors,
+  UseFormRegister,
+  UseFormWatch,
+} from 'react-hook-form';
 
 import { StarIcon } from '@/components/icons';
 import { RATING_FIELDS, RATING_OPTIONS } from '@/constants/survey.constants';
@@ -9,10 +13,12 @@ import styles from './SurveyForm.module.css';
 
 interface RatingPreferencesSectionProps {
   register: UseFormRegister<SurveyFormValues>;
+  watch: UseFormWatch<SurveyFormValues>;
   errors: FieldErrors<SurveyFormValues>;
 }
 export default function RatingPreferencesSection({
   register,
+  watch,
   errors,
 }: RatingPreferencesSectionProps) {
   return (
@@ -52,6 +58,7 @@ export default function RatingPreferencesSection({
                 label={label}
                 fieldName={fieldName}
                 register={register}
+                watch={watch}
                 error={errors[fieldName]?.message}
               />
             ))}

@@ -1,13 +1,15 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  VITE_API_URL: z.string().url('Invalid API URL'),
+  VITE_SUPABASE_URL: z.string().url('Invalid Supabase URL'),
+  VITE_SUPABASE_ANON_KEY: z.string().min(1, 'Supabase anon key is required'),
 });
 
 const parseEnv = () => {
   try {
     return envSchema.parse({
-      VITE_API_URL: import.meta.env.VITE_API_URL,
+      VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
+      VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
     });
   } catch {
     throw new Error('Invalid environment configuration. Check your .env file.');
@@ -17,6 +19,6 @@ const parseEnv = () => {
 const env = parseEnv();
 
 export const config = {
-  apiUrl: env.VITE_API_URL,
-  apiTimeout: 20000,
+  supabaseUrl: env.VITE_SUPABASE_URL,
+  supabaseAnonKey: env.VITE_SUPABASE_ANON_KEY,
 } as const;

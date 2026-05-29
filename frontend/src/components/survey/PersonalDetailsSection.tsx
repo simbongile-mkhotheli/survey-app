@@ -74,7 +74,7 @@ export default function PersonalDetailsSection({
           id="contactNumber"
           label="Contact Number"
           type="tel"
-          placeholder="+1 (234) 567-8900"
+          placeholder="+1234567890"
           register={register}
           error={errors.contactNumber}
           required

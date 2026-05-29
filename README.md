@@ -1,34 +1,26 @@
 # Lifestyle Survey App
 
-A small full-stack survey application with a React frontend and an Express + Prisma backend.
+A small survey application with a React frontend and Supabase persistence.
 
 ## Stack
 
-- Frontend: React, Vite, TypeScript, React Hook Form, React Query, Zod
-- Backend: Express, Prisma, PostgreSQL, TypeScript, Zod
-- Shared validation between frontend and backend
+- React, Vite, TypeScript
+- React Hook Form, React Query, Zod
+- Supabase Postgres
 
 ## Project Structure
 
 ```text
-backend/
-  prisma/
-  src/
-    controllers/
-    middleware/
-    repositories/
-    routes/
-    utils/
-    validation/
 frontend/
   src/
     components/
-    config/
     hooks/
     services/
     utils/
 shared/
   validation.ts
+supabase/
+  schema.sql
 ```
 
 ## Setup
@@ -37,17 +29,17 @@ shared/
 npm install
 ```
 
-Copy the example environment files and update them for your machine:
+Copy the frontend example environment file and update it with your Supabase project values:
 
 ```bash
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env
+cp frontend/.env.example frontend/.env.local
 ```
+
+Run `supabase/schema.sql` in the Supabase SQL Editor before using the app.
 
 ## Run Locally
 
 ```bash
-npm run dev --workspace backend
 npm run dev --workspace frontend
 ```
 
